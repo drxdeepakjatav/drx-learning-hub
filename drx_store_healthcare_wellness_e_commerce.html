@@ -1,0 +1,2255 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DRx Store - Premium Healthcare, Wellness & Pharmacy</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf9',
+              100: '#ccfbf1',
+              200: '#99f6e4',
+              500: '#0d9488', // Medical teal
+              600: '#0f766e',
+              700: '#115e59',
+              800: '#134e4a',
+            },
+            accent: {
+              500: '#0284c7',
+              600: '#0369a1',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* Smooth custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .badge-pulse {
+      animation: pulse-badge 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse-badge {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .85; transform: scale(1.05); }
+    }
+    .razorpay-gradient {
+      background: linear-gradient(135deg, #0c2340 0%, #153e75 50%, #0c2340 100%);
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen antialiased">
+
+  <div class="bg-brand-700 text-white text-xs py-2 px-4">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <div class="flex items-center gap-2 font-medium">
+        <span class="bg-white/20 px-2 py-0.5 rounded text-[11px] font-semibold uppercase tracking-wider">Super Saver</span>
+        <span>Get Flat 20% OFF on first medicine orders | Use code: <strong class="underline tracking-wide">SAVE20</strong></span>
+      </div>
+      <div class="flex items-center gap-4 text-xs">
+        <span class="hidden sm:inline-flex items-center gap-1">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-300"></i> 100% Verified Pharmacy
+        </span>
+        <button onclick="app.toggleAdminMode()" class="bg-white text-brand-800 hover:bg-slate-100 font-semibold px-2.5 py-0.5 rounded flex items-center gap-1 transition shadow-sm">
+          <i data-lucide="layout-dashboard" class="w-3 h-3"></i>
+          <span id="top-admin-btn-text">Admin Panel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-20 gap-3">
+        
+        <!-- Logo -->
+        <div class="flex items-center gap-3 cursor-pointer select-none" onclick="app.navigate('home')">
+          <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-brand-600 to-teal-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+            <i data-lucide="plus-square" class="w-6 h-6 stroke-[2.5]"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-1">
+              <span class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900">DR<span class="text-brand-600">x</span></span>
+              <span class="text-xs bg-brand-50 text-brand-700 font-bold px-1.5 py-0.5 rounded border border-brand-200">STORE</span>
+            </div>
+            <p class="text-[10px] text-slate-600 hidden sm:block">Digital Health & Pharmacy</p>
+          </div>
+        </div>
+
+        <!-- Global Search Bar -->
+        <div class="flex-1 max-w-xl mx-2 sm:mx-6">
+          <div class="relative">
+            <input 
+              type="text" 
+              id="globalSearchInput"
+              placeholder="Search for medicines, vitamins, whey protein, monitors..." 
+              class="w-full bg-slate-100/90 border border-slate-200 focus:border-brand-500 focus:bg-white pl-10 pr-10 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm transition outline-none shadow-inner"
+              oninput="app.handleSearchInput(this.value)"
+              onkeydown="if(event.key==='Enter') app.executeSearch()"
+            >
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+            <button onclick="app.clearSearch()" id="clearSearchBtn" class="hidden absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Quick Actions -->
+        <div class="flex items-center gap-1 sm:gap-3">
+          <!-- Prescription Upload Quick CTA -->
+          <button onclick="app.showPrescriptionModal()" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-brand-500 text-brand-600 hover:bg-brand-50 text-xs font-semibold transition">
+            <i data-lucide="file-up" class="w-4 h-4"></i>
+            <span>Upload Rx</span>
+          </button>
+
+          <!-- Wishlist Button -->
+          <button onclick="app.navigate('wishlist')" class="relative p-2 text-slate-600 hover:text-rose-600 hover:bg-slate-100 rounded-full transition" title="Wishlist">
+            <i data-lucide="heart" class="w-5 h-5"></i>
+            <span id="wishlistCountBadge" class="hidden absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">0</span>
+          </button>
+
+          <!-- Cart Drawer Button -->
+          <button onclick="app.openCartDrawer()" class="relative p-2 text-slate-600 hover:text-brand-600 hover:bg-slate-100 rounded-full transition" title="Shopping Cart">
+            <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+            <span id="cartCountBadge" class="hidden absolute -top-1 -right-1 bg-brand-600 text-white text-[10px] font-bold h-4.5 min-w-[18px] px-1 rounded-full flex items-center justify-center">0</span>
+          </button>
+
+          <!-- User Account Dropdown -->
+          <div class="relative">
+            <button onclick="app.toggleUserMenu()" class="flex items-center gap-2 p-1.5 sm:px-3 sm:py-1.5 rounded-lg text-slate-700 hover:bg-slate-100 text-xs sm:text-sm font-medium transition">
+              <div class="w-7 h-7 rounded-full bg-slate-200 text-brand-700 font-bold flex items-center justify-center text-xs" id="userAvatar">
+                JD
+              </div>
+              <span class="hidden sm:inline font-semibold" id="headerUserName">John Doe</span>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 hidden sm:inline"></i>
+            </button>
+            <!-- Dropdown Menu -->
+            <div id="userDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 py-1.5 z-50 animate-in fade-in slide-in-from-top-1">
+              <div class="px-4 py-2 border-b border-slate-100">
+                <p class="text-xs font-semibold text-slate-900" id="dropdownUserFull">Dr. John Doe</p>
+                <p class="text-[11px] text-slate-500 truncate" id="dropdownUserEmail">john.doe@example.com</p>
+              </div>
+              <a href="javascript:void(0)" onclick="app.navigate('dashboard'); app.toggleUserMenu()" class="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50">
+                <i data-lucide="user" class="w-3.5 h-3.5"></i> My Account & Orders
+              </a>
+              <a href="javascript:void(0)" onclick="app.navigate('orders'); app.toggleUserMenu()" class="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50">
+                <i data-lucide="package" class="w-3.5 h-3.5"></i> Track Orders
+              </a>
+              <a href="javascript:void(0)" onclick="app.toggleAdminMode(); app.toggleUserMenu()" class="flex items-center gap-2 px-4 py-2 text-xs text-brand-600 font-medium hover:bg-brand-50">
+                <i data-lucide="sliders" class="w-3.5 h-3.5"></i> Admin Dashboard
+              </a>
+              <div class="border-t border-slate-100 my-1"></div>
+              <a href="javascript:void(0)" onclick="app.switchUser(); app.toggleUserMenu()" class="flex items-center gap-2 px-4 py-2 text-xs text-rose-600 hover:bg-rose-50">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Switch Mock User
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <nav class="flex items-center gap-2 overflow-x-auto py-2.5 text-xs font-medium scrollbar-none border-t border-slate-100">
+        <button onclick="app.filterByCategory('All')" class="category-pill active whitespace-nowrap px-3.5 py-1.5 rounded-full bg-brand-600 text-white shadow-sm font-semibold transition" data-category="All">
+          All Products
+        </button>
+        <button onclick="app.filterByCategory('Vitamins & Nutrition')" class="category-pill whitespace-nowrap px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition" data-category="Vitamins & Nutrition">
+          💊 Vitamins & Supplements
+        </button>
+        <button onclick="app.filterByCategory('Ayurveda & Herbal')" class="category-pill whitespace-nowrap px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition" data-category="Ayurveda & Herbal">
+          🌿 Ayurveda & Herbal
+        </button>
+        <button onclick="app.filterByCategory('Healthcare Devices')" class="category-pill whitespace-nowrap px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition" data-category="Healthcare Devices">
+          🩺 Devices & Monitors
+        </button>
+        <button onclick="app.filterByCategory('Personal Care')" class="category-pill whitespace-nowrap px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition" data-category="Personal Care">
+          🧴 Personal Care
+        </button>
+        <button onclick="app.filterByCategory('First Aid & Medicines')" class="category-pill whitespace-nowrap px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition" data-category="First Aid & Medicines">
+          🩹 First Aid & Rx
+        </button>
+        <button onclick="app.filterByCategory('Fitness & Diet')" class="category-pill whitespace-nowrap px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition" data-category="Fitness & Diet">
+          ⚡ Fitness & Protein
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="appContent" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Dynamic views will be rendered here (Home/Shop, Product Details, Dashboard, Admin) -->
+  </main>
+
+  <div id="cartDrawerBackdrop" class="fixed inset-0 bg-slate-900/60 z-50 backdrop-blur-sm hidden transition-opacity" onclick="app.closeCartDrawer()"></div>
+  <div id="cartDrawer" class="fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+    <div class="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50/70">
+      <div class="flex items-center gap-2">
+        <i data-lucide="shopping-cart" class="w-5 h-5 text-brand-600"></i>
+        <h2 class="font-bold text-slate-900 text-lg">Your Cart (<span id="cartTotalItems">0</span>)</h2>
+      </div>
+      <button onclick="app.closeCartDrawer()" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-200 transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- Free Delivery Progress Tracker -->
+    <div class="bg-teal-50/70 px-5 py-3 border-b border-teal-100">
+      <div class="flex justify-between text-xs font-semibold mb-1.5">
+        <span id="freeShippingText" class="text-teal-900">Add ₹250 more for FREE Express Delivery!</span>
+        <span id="freeShippingPercent" class="text-teal-700">60%</span>
+      </div>
+      <div class="w-full bg-teal-200/60 h-2 rounded-full overflow-hidden">
+        <div id="freeShippingBar" class="bg-brand-500 h-full rounded-full transition-all duration-300" style="width: 60%"></div>
+      </div>
+    </div>
+
+    <!-- Cart Items Scrollable List -->
+    <div id="cartItemsList" class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
+      <!-- Items dynamically injected -->
+    </div>
+
+    <!-- Coupon Box & Summary Checkout Footer -->
+    <div class="border-t border-slate-200 p-4 sm:p-5 bg-slate-50 space-y-3.5">
+      <!-- Coupon Code Input -->
+      <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">Have a Doctor's or Promo Coupon?</label>
+        <div class="flex gap-2">
+          <div class="relative flex-1">
+            <input type="text" id="couponInput" placeholder="Try SAVE20 or DRX10" class="w-full text-xs uppercase px-3 py-2 bg-white border border-slate-300 rounded-lg outline-none focus:border-brand-500 font-semibold tracking-wider">
+            <button onclick="app.removeCoupon()" id="removeCouponBtn" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-rose-500 hover:text-rose-700 text-xs">Remove</button>
+          </div>
+          <button onclick="app.applyCoupon()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-semibold transition">Apply</button>
+        </div>
+        <div id="couponMessage" class="text-[11px] mt-1 font-medium hidden"></div>
+      </div>
+
+      <!-- Financial Calculation Summary -->
+      <div class="space-y-1.5 text-xs text-slate-600 pt-2 border-t border-slate-200">
+        <div class="flex justify-between">
+          <span>Subtotal</span>
+          <span class="font-medium text-slate-900" id="cartSubtotalText">₹0</span>
+        </div>
+        <div class="flex justify-between" id="couponDiscountRow" style="display: none;">
+          <span class="text-emerald-700 font-medium">Coupon Discount</span>
+          <span class="text-emerald-700 font-semibold" id="cartCouponDiscountText">-₹0</span>
+        </div>
+        <div class="flex justify-between">
+          <span>Delivery Charges</span>
+          <span id="cartShippingText" class="font-medium text-slate-900">₹49</span>
+        </div>
+        <div class="flex justify-between text-sm font-bold text-slate-900 pt-2 border-t border-slate-200">
+          <span>Total Amount</span>
+          <span class="text-brand-700 text-base" id="cartTotalPayable">₹0</span>
+        </div>
+      </div>
+
+      <!-- Checkout CTA Button -->
+      <button onclick="app.startCheckout()" id="btnCheckoutProceed" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-brand-600/30 transition">
+        <span>Proceed to Buy</span>
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </div>
+
+  <div id="checkoutModal" class="fixed inset-0 bg-slate-900/70 z-50 backdrop-blur-sm hidden overflow-y-auto">
+    <div class="min-h-full flex items-center justify-center p-3 sm:p-6">
+      <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden border border-slate-200 animate-in zoom-in-95 duration-200">
+        <!-- Header -->
+        <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <span class="w-7 h-7 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-xs">₹</span>
+            <h3 class="font-bold text-slate-900 text-base sm:text-lg">Secure Indian Health Checkout</h3>
+          </div>
+          <button onclick="app.closeCheckoutModal()" class="text-slate-400 hover:text-slate-600 p-1">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Checkout Form Body -->
+        <div class="p-6 space-y-5">
+          <!-- Stepper Progress Indicator -->
+          <div class="flex items-center justify-between border-b pb-4 text-xs font-semibold text-slate-500">
+            <span class="text-brand-600 flex items-center gap-1.5"><i data-lucide="map-pin" class="w-4 h-4"></i> 1. Delivery Address</span>
+            <span class="text-slate-300">———</span>
+            <span class="text-brand-600 flex items-center gap-1.5"><i data-lucide="credit-card" class="w-4 h-4"></i> 2. Payment Mode</span>
+            <span class="text-slate-300">———</span>
+            <span class="text-slate-400 flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4"></i> 3. Confirmation</span>
+          </div>
+
+          <!-- Address Fields -->
+          <div class="space-y-3">
+            <h4 class="text-xs uppercase tracking-wider font-bold text-slate-500">Delivery Information</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-medium text-slate-700 mb-1">Full Name</label>
+                <input type="text" id="chkName" class="w-full text-xs p-2.5 border rounded-lg focus:border-brand-500 outline-none" value="Dr. John Doe">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-700 mb-1">Phone (For OTP & Delivery)</label>
+                <input type="tel" id="chkPhone" class="w-full text-xs p-2.5 border rounded-lg focus:border-brand-500 outline-none" value="+91 98765 43210">
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-700 mb-1">Street Address, Landmark, Flat No.</label>
+              <input type="text" id="chkAddress" class="w-full text-xs p-2.5 border rounded-lg focus:border-brand-500 outline-none" value="Flat 402, Green Meadows, MG Road">
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+              <div>
+                <label class="block text-xs font-medium text-slate-700 mb-1">City</label>
+                <input type="text" id="chkCity" class="w-full text-xs p-2.5 border rounded-lg focus:border-brand-500 outline-none" value="Bengaluru">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-700 mb-1">State</label>
+                <select id="chkState" class="w-full text-xs p-2.5 border rounded-lg focus:border-brand-500 outline-none bg-white">
+                  <option value="Karnataka" selected>Karnataka</option>
+                  <option value="Maharashtra">Maharashtra</option>
+                  <option value="Delhi">Delhi NCR</option>
+                  <option value="Tamil Nadu">Tamil Nadu</option>
+                  <option value="Telangana">Telangana</option>
+                  <option value="Gujarat">Gujarat</option>
+                  <option value="Uttar Pradesh">Uttar Pradesh</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-700 mb-1">PIN Code</label>
+                <input type="text" id="chkPin" class="w-full text-xs p-2.5 border rounded-lg focus:border-brand-500 outline-none" value="560001">
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Options -->
+          <div class="space-y-3 pt-2">
+            <h4 class="text-xs uppercase tracking-wider font-bold text-slate-500">Select Payment Method</h4>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- Razorpay Option -->
+              <label class="border-2 border-brand-500 bg-brand-50/40 p-3.5 rounded-xl cursor-pointer flex items-start gap-3 transition">
+                <input type="radio" name="paymentMethod" value="razorpay" checked class="mt-1 text-brand-600 focus:ring-brand-500">
+                <div class="flex-1">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-xs text-slate-900 flex items-center gap-1.5">
+                      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                      Razorpay Gateway
+                    </span>
+                    <span class="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold">Recommended</span>
+                  </div>
+                  <p class="text-[11px] text-slate-500 mt-1">UPI (GPay, PhonePe, Paytm), Credit/Debit Card, Netbanking.</p>
+                </div>
+              </label>
+
+              <!-- Cash On Delivery Option -->
+              <label class="border border-slate-200 hover:border-slate-300 p-3.5 rounded-xl cursor-pointer flex items-start gap-3 transition">
+                <input type="radio" name="paymentMethod" value="cod" class="mt-1 text-brand-600 focus:ring-brand-500">
+                <div>
+                  <span class="font-bold text-xs text-slate-900">Cash on Delivery (COD)</span>
+                  <p class="text-[11px] text-slate-500 mt-1">Pay at doorstep upon receiving medicines.</p>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Final Price Confirmation in Checkout -->
+          <div class="bg-slate-50 p-4 rounded-xl flex items-center justify-between">
+            <div>
+              <p class="text-xs text-slate-500">Total Payable Amount:</p>
+              <p class="text-xl font-extrabold text-brand-700" id="checkoutPayableText">₹0</p>
+            </div>
+            <button onclick="app.executePaymentProcess()" class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg shadow-brand-600/30 text-sm flex items-center gap-2 transition">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+              <span>Pay & Place Order</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="razorpayPopup" class="fixed inset-0 bg-slate-950/80 z-50 backdrop-blur-sm hidden flex items-center justify-center p-3">
+    <div class="w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl bg-white animate-in zoom-in-90 duration-150">
+      <!-- Razorpay Custom Simulated Banner -->
+      <div class="razorpay-gradient text-white p-5 relative">
+        <button onclick="app.cancelRazorpay()" class="absolute top-4 right-4 text-white/70 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center font-black text-white text-base">₹</div>
+          <span class="font-bold tracking-tight text-base">Razorpay Checkout</span>
+        </div>
+        <p class="text-xs text-white/80">DRx Pharmacy Services Pvt Ltd</p>
+        <div class="mt-4 flex items-baseline justify-between">
+          <span class="text-xs text-white/70">Amount to Pay</span>
+          <span class="text-2xl font-black" id="rzpAmountDisplay">₹0</span>
+        </div>
+      </div>
+
+      <!-- Razorpay Payment Tabs -->
+      <div class="p-5 space-y-4">
+        <p class="text-xs font-semibold text-slate-700">Choose simulated payment mode:</p>
+        
+        <div class="space-y-2 text-xs">
+          <!-- UPI -->
+          <button onclick="app.completeRazorpaySim('UPI - Google Pay')" class="w-full p-3 rounded-xl border border-slate-200 hover:border-brand-500 hover:bg-brand-50/50 flex items-center justify-between font-medium transition text-left">
+            <span class="flex items-center gap-2.5">
+              <i data-lucide="smartphone" class="w-4 h-4 text-brand-600"></i> UPI (Instant: PhonePe / GPay)
+            </span>
+            <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">FAST</span>
+          </button>
+          <!-- Card -->
+          <button onclick="app.completeRazorpaySim('Visa / Mastercard (**** 4021)')" class="w-full p-3 rounded-xl border border-slate-200 hover:border-brand-500 hover:bg-brand-50/50 flex items-center justify-between font-medium transition text-left">
+            <span class="flex items-center gap-2.5">
+              <i data-lucide="credit-card" class="w-4 h-4 text-brand-600"></i> Cards (Credit/Debit)
+            </span>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i>
+          </button>
+          <!-- NetBanking -->
+          <button onclick="app.completeRazorpaySim('NetBanking (HDFC Bank)')" class="w-full p-3 rounded-xl border border-slate-200 hover:border-brand-500 hover:bg-brand-50/50 flex items-center justify-between font-medium transition text-left">
+            <span class="flex items-center gap-2.5">
+              <i data-lucide="building-2" class="w-4 h-4 text-brand-600"></i> NetBanking (All Major Indian Banks)
+            </span>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i>
+          </button>
+        </div>
+
+        <div class="pt-2 text-center">
+          <p class="text-[10px] text-slate-400 flex items-center justify-center gap-1">
+            <i data-lucide="lock" class="w-3 h-3"></i> 256-Bit SSL Encrypted Simulated Sandbox
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="orderSuccessModal" class="fixed inset-0 bg-slate-900/80 z-50 backdrop-blur-sm hidden flex items-center justify-center p-3">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-xl w-full p-6 text-center animate-in zoom-in-95">
+      <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i data-lucide="check" class="w-8 h-8 stroke-[3]"></i>
+      </div>
+      <h3 class="text-xl font-bold text-slate-900">Order Successfully Placed!</h3>
+      <p class="text-xs text-slate-500 mt-1">Order ID: <span id="confirmedOrderId" class="font-mono font-bold text-slate-800">DRX-89210</span></p>
+
+      <!-- Live Stepper inside confirmation -->
+      <div class="my-6 p-4 bg-slate-50 rounded-xl text-left">
+        <h4 class="text-xs font-bold text-slate-700 mb-3 flex items-center gap-1.5">
+          <i data-lucide="truck" class="w-4 h-4 text-brand-600"></i> Estimated Delivery: 2 Days Across India
+        </h4>
+        <div class="relative pl-6 space-y-4 border-l-2 border-brand-500 ml-2 text-xs">
+          <div class="relative">
+            <div class="w-3 h-3 rounded-full bg-brand-600 absolute -left-[31px] top-0.5 border-2 border-white"></div>
+            <p class="font-bold text-slate-800">Order Received & Approved</p>
+            <p class="text-[11px] text-slate-500">Verified by DRx Certified Registered Pharmacist</p>
+          </div>
+          <div class="relative">
+            <div class="w-3 h-3 rounded-full bg-brand-300 absolute -left-[31px] top-0.5 border-2 border-white"></div>
+            <p class="font-bold text-slate-500">Pharmacy Dispensing & Cold Pack</p>
+            <p class="text-[11px] text-slate-400">Warehouse processing underway</p>
+          </div>
+          <div class="relative">
+            <div class="w-3 h-3 rounded-full bg-slate-200 absolute -left-[31px] top-0.5 border-2 border-white"></div>
+            <p class="font-bold text-slate-400">Out For Fast Delivery</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-3 justify-center">
+        <button onclick="app.viewOrderDetailsFromModal()" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+          <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Track Live Status
+        </button>
+        <button onclick="app.closeOrderSuccessModal()" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition">
+          Continue Shopping
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="productDetailModal" class="fixed inset-0 bg-slate-900/70 z-50 backdrop-blur-sm hidden overflow-y-auto">
+    <div class="min-h-full flex items-center justify-center p-3 sm:p-6">
+      <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full overflow-hidden border border-slate-200 relative animate-in zoom-in-95">
+        <button onclick="app.closeProductDetailModal()" class="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-slate-500 hover:text-slate-800 shadow flex items-center justify-center transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <div class="grid grid-cols-1 md:grid-cols-2">
+          <!-- Image Section -->
+          <div class="p-6 bg-slate-50 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-slate-100">
+            <div class="relative w-full max-w-[280px] aspect-square rounded-xl overflow-hidden bg-white p-4 shadow-sm border border-slate-100 flex items-center justify-center">
+              <img id="detailModalImg" src="" alt="" class="max-h-full object-contain">
+              <span id="detailModalRxBadge" class="hidden absolute top-2 left-2 bg-rose-100 text-rose-700 text-[10px] font-extrabold px-2 py-0.5 rounded border border-rose-200">
+                Rx Required
+              </span>
+            </div>
+            <div class="mt-4 flex items-center gap-2 text-xs text-slate-500">
+              <i data-lucide="shield" class="w-4 h-4 text-brand-600"></i>
+              <span>100% Genuine Medicine Guaranteed</span>
+            </div>
+          </div>
+
+          <!-- Content Section -->
+          <div class="p-6 flex flex-col justify-between space-y-4">
+            <div>
+              <div class="flex items-center gap-2 mb-1.5">
+                <span id="detailModalCategory" class="text-[11px] font-bold text-brand-600 uppercase tracking-wider bg-brand-50 px-2 py-0.5 rounded">Category</span>
+                <span id="detailModalStockBadge" class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">In Stock</span>
+              </div>
+              <h2 id="detailModalTitle" class="text-xl font-bold text-slate-900 leading-snug">Product Title</h2>
+              
+              <!-- Ratings -->
+              <div class="flex items-center gap-2 mt-2">
+                <div class="flex text-amber-400" id="detailModalStars"></div>
+                <span id="detailModalRatingValue" class="text-xs font-bold text-slate-700">4.8</span>
+                <span class="text-xs text-slate-400">·</span>
+                <span id="detailModalReviewCount" class="text-xs text-slate-500 underline cursor-pointer">128 reviews</span>
+              </div>
+
+              <!-- Price -->
+              <div class="mt-3 flex items-baseline gap-2.5">
+                <span id="detailModalPrice" class="text-2xl font-black text-slate-900">₹499</span>
+                <span id="detailModalOriginalPrice" class="text-sm line-through text-slate-400">₹799</span>
+                <span id="detailModalDiscount" class="text-xs font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">35% OFF</span>
+              </div>
+
+              <p id="detailModalDesc" class="mt-3 text-xs text-slate-600 leading-relaxed">
+                Detailed description goes here.
+              </p>
+
+              <!-- Dosage / Highlights info -->
+              <div class="mt-4 p-3 bg-slate-50 rounded-xl border border-slate-100 text-[11px] space-y-1 text-slate-600">
+                <p><strong>Dosage/Usage:</strong> <span id="detailModalUsage">As directed by physician or on pack.</span></p>
+                <p><strong>Manufacturer:</strong> <span id="detailModalMfg">DRx Healthcare Labs India</span></p>
+              </div>
+            </div>
+
+            <!-- Action CTA -->
+            <div class="space-y-2 pt-4 border-t border-slate-100">
+              <div class="flex gap-2">
+                <button id="detailModalAddToCartBtn" class="flex-1 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-md">
+                  <i data-lucide="shopping-bag" class="w-4 h-4"></i> Add To Cart
+                </button>
+                <button id="detailModalWishlistBtn" class="p-2.5 rounded-xl border border-slate-200 hover:border-rose-500 text-slate-600 hover:text-rose-600 transition">
+                  <i data-lucide="heart" class="w-4 h-4"></i>
+                </button>
+              </div>
+              <button id="detailModalBuyNowBtn" class="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold transition">
+                Instant Buy Now
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Customer Reviews Section inside modal -->
+        <div class="border-t border-slate-200 p-6 bg-slate-50/50">
+          <h4 class="font-bold text-slate-900 text-sm mb-3">Customer Feedback & Reviews</h4>
+          
+          <!-- Submit review input -->
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm mb-4">
+            <p class="text-xs font-semibold text-slate-700 mb-2">Write a Verified Review:</p>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-xs text-slate-500">Your Rating:</span>
+              <div class="flex gap-1 text-amber-400 cursor-pointer" id="newReviewRatingSelector">
+                <i data-lucide="star" class="w-4 h-4 fill-current" onclick="app.setNewReviewRating(1)"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-current" onclick="app.setNewReviewRating(2)"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-current" onclick="app.setNewReviewRating(3)"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-current" onclick="app.setNewReviewRating(4)"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-current" onclick="app.setNewReviewRating(5)"></i>
+              </div>
+            </div>
+            <textarea id="newReviewComment" rows="2" placeholder="Tell other patients how this product helped you..." class="w-full text-xs p-2 border rounded-lg focus:border-brand-500 outline-none"></textarea>
+            <button onclick="app.submitProductReview()" class="mt-2 px-3.5 py-1.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold rounded-lg">Submit Review</button>
+          </div>
+
+          <!-- Existing Reviews List -->
+          <div id="detailModalReviewsList" class="space-y-2.5 max-h-48 overflow-y-auto">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="rxUploadModal" class="fixed inset-0 bg-slate-900/70 z-50 backdrop-blur-sm hidden flex items-center justify-center p-3">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 text-center animate-in zoom-in-95">
+      <div class="w-12 h-12 rounded-xl bg-teal-50 text-brand-600 flex items-center justify-center mx-auto mb-3">
+        <i data-lucide="file-text" class="w-6 h-6"></i>
+      </div>
+      <h3 class="text-lg font-bold text-slate-900">Upload Doctor's Prescription</h3>
+      <p class="text-xs text-slate-500 mt-1">Upload a valid medical prescription (JPG, PNG or PDF). Our registered pharmacist will review & dispense your medications.</p>
+      
+      <div class="my-5 border-2 border-dashed border-slate-300 hover:border-brand-500 rounded-xl p-6 cursor-pointer bg-slate-50 transition" onclick="document.getElementById('rxFileInput').click()">
+        <i data-lucide="upload-cloud" class="w-8 h-8 text-slate-400 mx-auto mb-2"></i>
+        <p class="text-xs font-semibold text-slate-700">Click to browse or drop Rx document here</p>
+        <p class="text-[10px] text-slate-400 mt-1">Govt. Certified e-Prescriptions Accepted</p>
+        <input type="file" id="rxFileInput" class="hidden" onchange="app.handleRxFileUploaded(this)">
+      </div>
+
+      <div id="rxUploadStatus" class="text-xs font-semibold text-emerald-600 hidden mb-4">
+        ✓ Prescription uploaded and linked to your cart!
+      </div>
+
+      <div class="flex gap-2 justify-end">
+        <button onclick="app.closePrescriptionModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <footer class="bg-slate-900 text-slate-400 text-xs mt-auto border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+        <div>
+          <div class="flex items-center gap-2 text-white font-extrabold text-base mb-3">
+            <span class="w-6 h-6 rounded bg-brand-500 flex items-center justify-center text-white"><i data-lucide="plus" class="w-4 h-4"></i></span>
+            <span>DRx Store</span>
+          </div>
+          <p class="text-[11px] leading-relaxed text-slate-400">
+            India's Trusted Digital Healthcare & Wellness Ecosystem. Delivering genuine pharmaceuticals, medical devices, vitamins and Ayurvedic products right to your doorstep.
+          </p>
+          <div class="mt-4 flex items-center gap-3">
+            <span class="text-[10px] bg-slate-800 text-emerald-400 px-2 py-1 rounded font-bold border border-slate-700">ISO 9001:2026 Certified</span>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-white font-bold mb-3 uppercase tracking-wider text-[11px]">Popular Categories</h4>
+          <ul class="space-y-2 text-[11px]">
+            <li><a href="javascript:void(0)" onclick="app.filterByCategory('Vitamins & Nutrition')" class="hover:text-white transition">Vitamins & Multivitamin Gummies</a></li>
+            <li><a href="javascript:void(0)" onclick="app.filterByCategory('Ayurveda & Herbal')" class="hover:text-white transition">Ashwagandha & Pure Shilajit</a></li>
+            <li><a href="javascript:void(0)" onclick="app.filterByCategory('Healthcare Devices')" class="hover:text-white transition">Blood Glucose & BP Monitors</a></li>
+            <li><a href="javascript:void(0)" onclick="app.filterByCategory('Fitness & Diet')" class="hover:text-white transition">Whey Protein & Creatine</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-white font-bold mb-3 uppercase tracking-wider text-[11px]">Help & Policies</h4>
+          <ul class="space-y-2 text-[11px]">
+            <li><a href="javascript:void(0)" onclick="app.showToast('Prescription policy: Valid doctor prescription required for scheduled drugs.', 'info')" class="hover:text-white transition">Prescription Guidelines</a></li>
+            <li><a href="javascript:void(0)" onclick="app.showToast('Return Policy: 7 Days easy return on non-perishables.', 'info')" class="hover:text-white transition">Return & Refund Policy</a></li>
+            <li><a href="javascript:void(0)" onclick="app.showToast('Delivery available in 19,000+ PIN codes across India.', 'info')" class="hover:text-white transition">Shipping Across India</a></li>
+            <li><a href="javascript:void(0)" onclick="app.showToast('24/7 Pharmacist Helpline: 1800-DRX-HELP', 'info')" class="hover:text-white transition">Contact Pharmacist Support</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-white font-bold mb-3 uppercase tracking-wider text-[11px]">Secure Payments & Delivery</h4>
+          <p class="text-[11px] mb-3">Accepting UPI (GPay/PhonePe), All Major Debit/Credit Cards & Cash on Delivery.</p>
+          <div class="flex flex-wrap gap-2 text-slate-300 text-xs font-semibold">
+            <span class="bg-slate-800 px-2 py-1 rounded border border-slate-700">UPI</span>
+            <span class="bg-slate-800 px-2 py-1 rounded border border-slate-700">Razorpay</span>
+            <span class="bg-slate-800 px-2 py-1 rounded border border-slate-700">RuPay</span>
+            <span class="bg-slate-800 px-2 py-1 rounded border border-slate-700">NetBanking</span>
+          </div>
+          <p class="mt-4 text-[10px] text-slate-500">© 2026 DRx Store India Ltd. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const INITIAL_PRODUCTS = [
+      {
+        id: 'drx-101',
+        title: 'DRx Ultra Immunity Vitamin C 1000mg + Zinc (60 Effervescent Tabs)',
+        category: 'Vitamins & Nutrition',
+        price: 349,
+        originalPrice: 599,
+        stock: 45,
+        rating: 4.8,
+        reviewsCount: 142,
+        requiresRx: false,
+        image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80',
+        description: 'Boost natural defense with natural Amla extract, Vitamin C and elemental Zinc. Sugar-free orange flavor formulated for quick absorption.',
+        usage: 'Dissolve 1 tablet in 200ml water daily after breakfast.',
+        reviews: [
+          { user: 'Dr. Ramesh Sharma', rating: 5, comment: 'Prescribing to patients recovering from fatigue. Great taste and high bio-availability.' },
+          { user: 'Priya Mehta', rating: 5, comment: 'Super refreshing morning drink. Keeps energy levels steady throughout the day.' }
+        ]
+      },
+      {
+        id: 'drx-102',
+        title: 'AccuCheck Digital Blood Pressure Monitor with Heart Arrhythmia Sensor',
+        category: 'Healthcare Devices',
+        price: 1899,
+        originalPrice: 2850,
+        stock: 18,
+        rating: 4.9,
+        reviewsCount: 89,
+        requiresRx: false,
+        image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&auto=format&fit=crop&q=80',
+        description: 'Fully automatic upper-arm blood pressure checker featuring dual-user 120 memory sets, irregular heartbeat detection, and large backlit LCD display.',
+        usage: 'Wrap comfortably around upper left arm at heart level, press start while seated quietly.',
+        reviews: [
+          { user: 'Vikram Sethi', rating: 5, comment: 'Very accurate readings comparable to clinic mercury monitors. Clear display for senior parents.' }
+        ]
+      },
+      {
+        id: 'drx-103',
+        title: 'DRx Pure Himalayan Shilajit Gold Resin 20g (With KSM-66 Ashwagandha)',
+        category: 'Ayurveda & Herbal',
+        price: 999,
+        originalPrice: 1599,
+        stock: 32,
+        rating: 4.7,
+        reviewsCount: 310,
+        requiresRx: false,
+        image: 'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=600&auto=format&fit=crop&q=80',
+        description: 'Grade-A purified Himalayan resin rich in >80% Fulvic acid and 84+ essential trace minerals for endurance, stamina, and cellular vitality.',
+        usage: 'Take pea-sized quantity (300-500mg) dissolved in lukewarm milk or green tea daily.',
+        reviews: [
+          { user: 'Anil Kapoor', rating: 5, comment: 'Authentic quality, lab-tested report included in box. Noticeable boost in workout stamina.' }
+        ]
+      },
+      {
+        id: 'drx-104',
+        title: 'Paracetamol 650mg Fast Relief (Pack of 30 Tablets)',
+        category: 'First Aid & Medicines',
+        price: 65,
+        originalPrice: 90,
+        stock: 120,
+        rating: 4.9,
+        reviewsCount: 420,
+        requiresRx: true,
+        image: 'https://images.unsplash.com/photo-1550572017-ed200f5e5a43?w=600&auto=format&fit=crop&q=80',
+        description: 'Fast acting anti-pyretic and analgesic for fever, headache, body aches and flu symptoms. Gentle on stomach lining.',
+        usage: '1 tablet every 6 to 8 hours as prescribed by physician. Do not exceed 4g in 24 hours.',
+        reviews: [
+          { user: 'Sangeeta R.', rating: 5, comment: 'Standard essential medicine for first-aid kit.' }
+        ]
+      },
+      {
+        id: 'drx-105',
+        title: 'Hydro-Boost Hyaluronic Acid & Ceramide Deep Moisturizing Cream 100g',
+        category: 'Personal Care',
+        price: 499,
+        originalPrice: 750,
+        stock: 24,
+        rating: 4.6,
+        reviewsCount: 77,
+        requiresRx: false,
+        image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=600&auto=format&fit=crop&q=80',
+        description: 'Dermatologist tested barrier-repair formula with 5 essential ceramides, botanical squalane, and hyaluronic acid for 72hr intense hydration.',
+        usage: 'Apply evenly over face and neck twice daily after cleansing.',
+        reviews: [
+          { user: 'Kavita Das', rating: 5, comment: 'Leaves skin glowing without being greasy. Perfect under sunscreen.' }
+        ]
+      },
+      {
+        id: 'drx-106',
+        title: 'DRx Pro 100% Whey Isolate Protein Powder 1kg (Swiss Double Chocolate)',
+        category: 'Fitness & Diet',
+        price: 2499,
+        originalPrice: 3499,
+        stock: 14,
+        rating: 4.9,
+        reviewsCount: 198,
+        requiresRx: false,
+        image: 'https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?w=600&auto=format&fit=crop&q=80',
+        description: '27g pure protein per scoop with 6.2g BCAAs and zero added sugar. Ultra-filtered cold-pressed isolate for rapid post-workout muscle repair.',
+        usage: 'Blend 1 scoop with 250ml water or chilled almond milk immediately post training.',
+        reviews: [
+          { user: 'Rahul Verma', rating: 5, comment: 'Zero bloating! Mixes seamlessly in a simple shaker with no clumps.' }
+        ]
+      },
+      {
+        id: 'drx-107',
+        title: 'Smart Instant Digital Infrared Thermometer (Forehead & Ear)',
+        category: 'Healthcare Devices',
+        price: 799,
+        originalPrice: 1499,
+        stock: 29,
+        rating: 4.7,
+        reviewsCount: 95,
+        requiresRx: false,
+        image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=600&auto=format&fit=crop&q=80',
+        description: 'Non-contact hygienic 1-second temperature detection with color-coded fever guidance screen and silent mode for infants.',
+        usage: 'Hold 3-5 cm away from middle of forehead and tap button.',
+        reviews: [
+          { user: 'Pooja Nair', rating: 4, comment: 'Very convenient for checking baby temperature during sleep.' }
+        ]
+      },
+      {
+        id: 'drx-108',
+        title: 'Organic Certified Tulsi Holy Basil Drops 30ml Immunity Elixir',
+        category: 'Ayurveda & Herbal',
+        price: 199,
+        originalPrice: 299,
+        stock: 60,
+        rating: 4.8,
+        reviewsCount: 65,
+        requiresRx: false,
+        image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=600&auto=format&fit=crop&q=80',
+        description: 'Extracted from 5 distinct sacred Tulsi varieties. Helps relieve cough, respiratory congestion, and promotes natural detoxification.',
+        usage: 'Add 3-4 drops in a warm cup of water or tea 2-3 times daily.',
+        reviews: [
+          { user: 'Manoj Joshi', rating: 5, comment: 'Pleasant natural aroma. Great relief during seasonal changes.' }
+        ]
+      }
+    ];
+
+    class DRxApp {
+      constructor() {
+        this.products = this.loadFromStorage('drx_products', INITIAL_PRODUCTS);
+        this.cart = this.loadFromStorage('drx_cart', [
+          { productId: 'drx-101', quantity: 2 }
+        ]);
+        this.wishlist = this.loadFromStorage('drx_wishlist', ['drx-103']);
+        this.orders = this.loadFromStorage('drx_orders', [
+          {
+            id: 'DRX-77402',
+            date: '2026-09-18',
+            items: [{ productId: 'drx-101', title: 'DRx Ultra Immunity Vitamin C 1000mg', price: 349, quantity: 2 }],
+            subtotal: 698,
+            shipping: 0,
+            total: 698,
+            status: 'Out for Delivery',
+            paymentMethod: 'Razorpay UPI',
+            address: 'Flat 402, Green Meadows, Bengaluru, KA - 560001'
+          }
+        ]);
+
+        this.currentUser = {
+          name: 'Dr. John Doe',
+          email: 'john.doe@example.com',
+          phone: '+91 98765 43210',
+          role: 'Customer'
+        };
+
+        this.activeView = 'home'; // 'home', 'wishlist', 'orders', 'dashboard', 'admin'
+        this.selectedCategory = 'All';
+        this.searchQuery = '';
+        this.sortBy = 'featured'; // 'featured', 'price-low', 'price-high', 'rating'
+        this.maxPriceFilter = 4000;
+        this.appliedCoupon = null; // { code, discountPercent, fixedDiscount }
+        this.activeProductModalId = null;
+        this.currentSelectedReviewRating = 5;
+        this.pendingCheckoutData = null;
+
+        this.init();
+      }
+
+      saveToStorage(key, value) {
+        try {
+          localStorage.setItem(key, JSON.stringify(value));
+        } catch (e) {
+          console.warn('Storage error', e);
+        }
+      }
+
+      loadFromStorage(key, defaultVal) {
+        try {
+          const stored = localStorage.getItem(key);
+          return stored ? JSON.parse(stored) : defaultVal;
+        } catch (e) {
+          return defaultVal;
+        }
+      }
+
+      init() {
+        this.updateHeaderBadges();
+        this.renderCurrentView();
+        lucide.createIcons();
+      }
+
+      updateHeaderBadges() {
+        const totalItemsInCart = this.cart.reduce((acc, item) => acc + item.quantity, 0);
+        const cartBadge = document.getElementById('cartCountBadge');
+        if (totalItemsInCart > 0) {
+          cartBadge.textContent = totalItemsInCart;
+          cartBadge.classList.remove('hidden');
+        } else {
+          cartBadge.classList.add('hidden');
+        }
+
+        const wishlistBadge = document.getElementById('wishlistCountBadge');
+        if (this.wishlist.length > 0) {
+          wishlistBadge.textContent = this.wishlist.length;
+          wishlistBadge.classList.remove('hidden');
+        } else {
+          wishlistBadge.classList.add('hidden');
+        }
+      }
+
+      showToast(message, type = 'success') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        const iconName = type === 'success' ? 'check-circle-2' : (type === 'error' ? 'alert-triangle' : 'info');
+        const bgColors = type === 'success' ? 'bg-emerald-800 text-white' : (type === 'error' ? 'bg-rose-800 text-white' : 'bg-slate-800 text-white');
+        
+        toast.className = `${bgColors} pointer-events-auto px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 text-xs font-medium transition-all transform duration-300 opacity-0 translate-y-2 border border-white/10`;
+        toast.innerHTML = `<i data-lucide="${iconName}" class="w-4 h-4"></i><span>${message}</span>`;
+        container.appendChild(toast);
+        lucide.createIcons();
+
+        setTimeout(() => {
+          toast.classList.remove('opacity-0', 'translate-y-2');
+        }, 10);
+
+        setTimeout(() => {
+          toast.classList.add('opacity-0', 'translate-y-2');
+          setTimeout(() => toast.remove(), 300);
+        }, 3200);
+      }
+
+      navigate(viewName) {
+        this.activeView = viewName;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.renderCurrentView();
+      }
+
+      toggleUserMenu() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('hidden');
+      }
+
+      toggleAdminMode() {
+        if (this.activeView === 'admin') {
+          this.navigate('home');
+          document.getElementById('top-admin-btn-text').textContent = 'Admin Panel';
+          this.showToast('Exited Admin Mode to Customer Store');
+        } else {
+          this.navigate('admin');
+          document.getElementById('top-admin-btn-text').textContent = 'Exit Admin';
+          this.showToast('Welcome to DRx Admin Dashboard');
+        }
+      }
+
+      switchUser() {
+        if (this.currentUser.name.includes('John')) {
+          this.currentUser = { name: 'Anita Rao', email: 'anita.rao@health.in', phone: '+91 94455 12345', role: 'Customer' };
+        } else {
+          this.currentUser = { name: 'Dr. John Doe', email: 'john.doe@example.com', phone: '+91 98765 43210', role: 'Customer' };
+        }
+        document.getElementById('headerUserName').textContent = this.currentUser.name;
+        document.getElementById('dropdownUserFull').textContent = this.currentUser.name;
+        document.getElementById('dropdownUserEmail').textContent = this.currentUser.email;
+        document.getElementById('userAvatar').textContent = this.currentUser.name.split(' ').map(n=>n[0]).join('');
+        this.showToast(`Switched active user to ${this.currentUser.name}`);
+      }
+
+      handleSearchInput(val) {
+        this.searchQuery = val.trim();
+        const clearBtn = document.getElementById('clearSearchBtn');
+        if (this.searchQuery.length > 0) {
+          clearBtn.classList.remove('hidden');
+        } else {
+          clearBtn.classList.add('hidden');
+        }
+        // Auto filter if in shop or home
+        if (this.activeView === 'home' || this.activeView === 'shop') {
+          this.renderProductsGrid();
+        }
+      }
+
+      executeSearch() {
+        if (this.activeView !== 'home' && this.activeView !== 'shop') {
+          this.navigate('home');
+        } else {
+          this.renderProductsGrid();
+        }
+      }
+
+      clearSearch() {
+        document.getElementById('globalSearchInput').value = '';
+        this.searchQuery = '';
+        document.getElementById('clearSearchBtn').classList.add('hidden');
+        this.renderProductsGrid();
+      }
+
+      filterByCategory(cat) {
+        this.selectedCategory = cat;
+        // Update pill UI
+        document.querySelectorAll('.category-pill').forEach(btn => {
+          if (btn.getAttribute('data-category') === cat) {
+            btn.className = 'category-pill active whitespace-nowrap px-3.5 py-1.5 rounded-full bg-brand-600 text-white shadow-sm font-semibold transition';
+          } else {
+            btn.className = 'category-pill whitespace-nowrap px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition';
+          }
+        });
+        if (this.activeView !== 'home') {
+          this.navigate('home');
+        } else {
+          this.renderProductsGrid();
+        }
+      }
+
+      renderCurrentView() {
+        const container = document.getElementById('appContent');
+        
+        switch (this.activeView) {
+          case 'home':
+          case 'shop':
+            this.renderHomeView(container);
+            break;
+          case 'wishlist':
+            this.renderWishlistView(container);
+            break;
+          case 'orders':
+            this.renderOrdersView(container);
+            break;
+          case 'dashboard':
+            this.renderDashboardView(container);
+            break;
+          case 'admin':
+            this.renderAdminDashboard(container);
+            break;
+          default:
+            this.renderHomeView(container);
+        }
+        lucide.createIcons();
+      }
+
+      renderHomeView(container) {
+        container.innerHTML = `
+          <!-- Hero Banner -->
+          <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-brand-800 via-brand-700 to-teal-800 text-white p-6 sm:p-10 mb-8 shadow-xl">
+            <div class="relative z-10 max-w-2xl space-y-3 sm:space-y-4">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-semibold backdrop-blur">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-300"></i> Indian Health Festival 2026
+              </span>
+              <h1 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight">
+                Authentic Medicines & Wellness Delivered with Care
+              </h1>
+              <p class="text-xs sm:text-sm text-teal-100 max-w-lg leading-relaxed">
+                Doctor-approved vitamins, diagnostics, organic Ayurveda, and prescription refills. Fast cold-chain shipping with verified pharmacist oversight.
+              </p>
+              
+              <div class="flex flex-wrap items-center gap-3 pt-2">
+                <button onclick="document.getElementById('shopSectionAnchor').scrollIntoView({behavior:'smooth'})" class="px-5 py-2.5 bg-white text-brand-800 hover:bg-slate-100 rounded-xl font-bold text-xs sm:text-sm transition shadow-lg flex items-center gap-2">
+                  <i data-lucide="shopping-bag" class="w-4 h-4"></i> Explore Deals
+                </button>
+                <button onclick="app.showPrescriptionModal()" class="px-5 py-2.5 bg-brand-900/60 hover:bg-brand-900/80 text-white border border-teal-300/30 rounded-xl font-semibold text-xs sm:text-sm transition backdrop-blur flex items-center gap-2">
+                  <i data-lucide="upload" class="w-4 h-4"></i> Upload Prescription
+                </button>
+              </div>
+            </div>
+
+            <!-- Decorative Illustration Elements -->
+            <div class="absolute right-0 bottom-0 opacity-15 sm:opacity-25 pointer-events-none p-6 transform translate-x-10 translate-y-10">
+              <i data-lucide="cross" class="w-80 h-80 text-white"></i>
+            </div>
+          </div>
+
+          <!-- Trust Badges Row -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-teal-50 text-brand-600 flex items-center justify-center shrink-0">
+                <i data-lucide="shield-check" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-slate-900">100% Genuine</h4>
+                <p class="text-[11px] text-slate-500">Sourced directly from manufacturers</p>
+              </div>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                <i data-lucide="truck" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-slate-900">Rapid Delivery</h4>
+                <p class="text-[11px] text-slate-500">Pan-India express delivery network</p>
+              </div>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                <i data-lucide="user-check" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-slate-900">Expert Pharmacists</h4>
+                <p class="text-[11px] text-slate-500">All orders validated by pharmacists</p>
+              </div>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+                <i data-lucide="credit-card" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-slate-900">Razorpay Protected</h4>
+                <p class="text-[11px] text-slate-500">UPI, Cards, COD & NetBanking</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Flash Deals Banner with Countdown -->
+          <div class="bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl p-4 sm:p-5 text-white mb-8 shadow-md flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center font-black text-white">⚡</span>
+              <div>
+                <h3 class="font-bold text-sm sm:text-base">Flash Health Clearance: Up to 50% OFF</h3>
+                <p class="text-xs text-amber-100">Limited quantity deals expiring soon!</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 font-mono text-xs font-bold">
+              <span>Offer Ends In:</span>
+              <span class="bg-black/20 px-2 py-1 rounded">08h</span> :
+              <span class="bg-black/20 px-2 py-1 rounded">42m</span> :
+              <span class="bg-black/20 px-2 py-1 rounded" id="timerSeconds">33s</span>
+            </div>
+          </div>
+
+          <!-- Product Catalog Section -->
+          <div id="shopSectionAnchor" class="pt-2">
+            <!-- Filter Bar -->
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-200">
+              <div class="flex items-center gap-2">
+                <h2 class="text-lg font-bold text-slate-900" id="currentSectionTitle">Available Health Products</h2>
+                <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-semibold" id="catalogProductCount">0 items</span>
+              </div>
+
+              <!-- Sorting & Price Range Filter -->
+              <div class="flex flex-wrap items-center gap-3">
+                <div class="flex items-center gap-1.5 text-xs text-slate-600">
+                  <span>Max: ₹</span>
+                  <input type="range" min="100" max="4000" step="100" value="${this.maxPriceFilter}" 
+                    class="w-24 accent-brand-600 cursor-pointer"
+                    oninput="app.handlePriceFilter(this.value)"
+                  >
+                  <span id="priceFilterDisplay" class="font-bold text-slate-900">₹${this.maxPriceFilter}</span>
+                </div>
+
+                <div class="flex items-center gap-1 text-xs">
+                  <label class="text-slate-500 font-medium">Sort:</label>
+                  <select onchange="app.handleSortChange(this.value)" class="text-xs bg-white border border-slate-300 rounded-lg p-1.5 font-medium outline-none focus:border-brand-500">
+                    <option value="featured">Featured First</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="rating">Top Rated</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        `;
+
+        this.renderProductsGrid();
+        this.startTimerSimulation();
+      }
+
+      startTimerSimulation() {
+        if (this.timerInterval) clearInterval(this.timerInterval);
+        let sec = 45;
+        this.timerInterval = setInterval(() => {
+          sec = sec > 0 ? sec - 1 : 59;
+          const el = document.getElementById('timerSeconds');
+          if (el) el.textContent = `${sec < 10 ? '0' : ''}${sec}s`;
+        }, 1000);
+      }
+
+      handlePriceFilter(val) {
+        this.maxPriceFilter = parseInt(val);
+        const display = document.getElementById('priceFilterDisplay');
+        if (display) display.textContent = `₹${this.maxPriceFilter}`;
+        this.renderProductsGrid();
+      }
+
+      handleSortChange(val) {
+        this.sortBy = val;
+        this.renderProductsGrid();
+      }
+
+      renderProductsGrid() {
+        const grid = document.getElementById('productsGrid');
+        const countBadge = document.getElementById('catalogProductCount');
+        if (!grid) return;
+
+        // Apply filtering logic
+        let filtered = this.products.filter(p => {
+          const matchesCategory = this.selectedCategory === 'All' || p.category === this.selectedCategory;
+          const matchesPrice = p.price <= this.maxPriceFilter;
+          const matchesSearch = this.searchQuery === '' || 
+            p.title.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
+            p.category.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+            p.description.toLowerCase().includes(this.searchQuery.toLowerCase());
+          return matchesCategory && matchesPrice && matchesSearch;
+        });
+
+        // Apply sorting
+        if (this.sortBy === 'price-low') {
+          filtered.sort((a, b) => a.price - b.price);
+        } else if (this.sortBy === 'price-high') {
+          filtered.sort((a, b) => b.price - a.price);
+        } else if (this.sortBy === 'rating') {
+          filtered.sort((a, b) => b.rating - a.rating);
+        }
+
+        if (countBadge) countBadge.textContent = `${filtered.length} items`;
+
+        if (filtered.length === 0) {
+          grid.innerHTML = `
+            <div class="col-span-full py-16 text-center bg-white rounded-2xl border border-slate-200 p-8">
+              <div class="w-14 h-14 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+                <i data-lucide="search-x" class="w-7 h-7"></i>
+              </div>
+              <h3 class="text-sm font-bold text-slate-800">No matching medical products found</h3>
+              <p class="text-xs text-slate-500 mt-1">Try resetting search keywords or increasing your budget range filter.</p>
+              <button onclick="app.resetAllFilters()" class="mt-4 px-4 py-2 bg-brand-600 text-white rounded-lg text-xs font-semibold hover:bg-brand-700 transition">
+                Reset All Filters
+              </button>
+            </div>
+          `;
+          lucide.createIcons();
+          return;
+        }
+
+        grid.innerHTML = filtered.map(p => {
+          const isWishlisted = this.wishlist.includes(p.id);
+          const discountPercent = Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100);
+
+          return `
+            <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md transition duration-200 flex flex-col justify-between overflow-hidden group">
+              <!-- Product Image & Badges -->
+              <div class="relative bg-slate-50 p-4 aspect-square flex items-center justify-center cursor-pointer overflow-hidden" onclick="app.openProductDetailModal('${p.id}')">
+                <img src="${p.image}" alt="${p.title}" class="max-h-full object-contain group-hover:scale-105 transition duration-300" onerror="this.src='https://placehold.co/400x400/f1f5f9/0f766e?text=DRx+Product'">
+                
+                <!-- Discount Pill -->
+                <span class="absolute top-3 left-3 bg-emerald-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full shadow-sm">
+                  ${discountPercent}% OFF
+                </span>
+
+                ${p.requiresRx ? `
+                  <span class="absolute bottom-3 left-3 bg-rose-100 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded border border-rose-200">
+                    Rx Required
+                  </span>
+                ` : ''}
+
+                <!-- Wishlist heart button -->
+                <button onclick="event.stopPropagation(); app.toggleWishlist('${p.id}')" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 hover:bg-white text-slate-400 hover:text-rose-500 shadow-sm flex items-center justify-center transition">
+                  <i data-lucide="heart" class="w-4 h-4 ${isWishlisted ? 'fill-rose-500 text-rose-500' : ''}"></i>
+                </button>
+              </div>
+
+              <!-- Product Info -->
+              <div class="p-4 flex-1 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between text-[11px] text-slate-400 mb-1">
+                    <span class="font-semibold text-brand-600 truncate max-w-[130px]">${p.category}</span>
+                    <div class="flex items-center gap-1 text-amber-500 font-bold">
+                      <i data-lucide="star" class="w-3 h-3 fill-current"></i>
+                      <span>${p.rating}</span>
+                    </div>
+                  </div>
+
+                  <h3 class="font-bold text-slate-900 text-xs sm:text-sm line-clamp-2 hover:text-brand-600 cursor-pointer transition mb-2" onclick="app.openProductDetailModal('${p.id}')">
+                    ${p.title}
+                  </h3>
+                </div>
+
+                <div>
+                  <div class="flex items-baseline gap-2 mb-3">
+                    <span class="text-base sm:text-lg font-black text-slate-900">₹${p.price}</span>
+                    <span class="text-xs line-through text-slate-400">₹${p.originalPrice}</span>
+                  </div>
+
+                  <div class="flex gap-2">
+                    <button onclick="app.addToCart('${p.id}')" class="flex-1 py-2 bg-brand-50 hover:bg-brand-600 text-brand-700 hover:text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 border border-brand-200 hover:border-transparent shadow-sm">
+                      <i data-lucide="shopping-cart" class="w-3.5 h-3.5"></i>
+                      <span>Add</span>
+                    </button>
+                    <button onclick="app.buyNow('${p.id}')" class="px-3 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold transition">
+                      Buy
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        lucide.createIcons();
+      }
+
+      resetAllFilters() {
+        this.selectedCategory = 'All';
+        this.searchQuery = '';
+        this.maxPriceFilter = 4000;
+        this.sortBy = 'featured';
+        document.getElementById('globalSearchInput').value = '';
+        this.filterByCategory('All');
+      }
+
+      toggleWishlist(productId) {
+        const index = this.wishlist.indexOf(productId);
+        if (index > -1) {
+          this.wishlist.splice(index, 1);
+          this.showToast('Removed from Wishlist', 'info');
+        } else {
+          this.wishlist.push(productId);
+          this.showToast('Added to your Wishlist ❤️');
+        }
+        this.saveToStorage('drx_wishlist', this.wishlist);
+        this.updateHeaderBadges();
+        if (this.activeView === 'wishlist') {
+          this.renderWishlistView(document.getElementById('appContent'));
+        } else {
+          this.renderProductsGrid();
+        }
+      }
+
+      openCartDrawer() {
+        document.getElementById('cartDrawerBackdrop').classList.remove('hidden');
+        document.getElementById('cartDrawer').classList.remove('translate-x-full');
+        this.renderCartDrawerContents();
+      }
+
+      closeCartDrawer() {
+        document.getElementById('cartDrawer').classList.add('translate-x-full');
+        setTimeout(() => {
+          document.getElementById('cartDrawerBackdrop').classList.add('hidden');
+        }, 250);
+      }
+
+      addToCart(productId, qty = 1) {
+        const existing = this.cart.find(i => i.productId === productId);
+        if (existing) {
+          existing.quantity += qty;
+        } else {
+          this.cart.push({ productId, quantity: qty });
+        }
+        this.saveToStorage('drx_cart', this.cart);
+        this.updateHeaderBadges();
+        this.showToast('Product added to your cart! 🛒');
+        this.openCartDrawer();
+      }
+
+      buyNow(productId) {
+        this.addToCart(productId, 1);
+        this.closeCartDrawer();
+        this.startCheckout();
+      }
+
+      updateCartQuantity(productId, delta) {
+        const item = this.cart.find(i => i.productId === productId);
+        if (!item) return;
+        item.quantity += delta;
+        if (item.quantity <= 0) {
+          this.cart = this.cart.filter(i => i.productId !== productId);
+        }
+        this.saveToStorage('drx_cart', this.cart);
+        this.updateHeaderBadges();
+        this.renderCartDrawerContents();
+      }
+
+      removeFromCart(productId) {
+        this.cart = this.cart.filter(i => i.productId !== productId);
+        this.saveToStorage('drx_cart', this.cart);
+        this.updateHeaderBadges();
+        this.renderCartDrawerContents();
+        this.showToast('Item removed from cart', 'info');
+      }
+
+      applyCoupon() {
+        const val = document.getElementById('couponInput').value.trim().toUpperCase();
+        const msg = document.getElementById('couponMessage');
+        msg.classList.remove('hidden');
+
+        if (val === 'SAVE20') {
+          this.appliedCoupon = { code: 'SAVE20', percent: 20 };
+          msg.textContent = 'Coupon applied: Flat 20% discount activated!';
+          msg.className = 'text-[11px] mt-1 font-semibold text-emerald-600';
+          document.getElementById('removeCouponBtn').classList.remove('hidden');
+          this.showToast('Coupon SAVE20 applied successfully!');
+        } else if (val === 'DRX10') {
+          this.appliedCoupon = { code: 'DRX10', percent: 10 };
+          msg.textContent = 'Coupon applied: 10% Doctor order discount!';
+          msg.className = 'text-[11px] mt-1 font-semibold text-emerald-600';
+          document.getElementById('removeCouponBtn').classList.remove('hidden');
+          this.showToast('Coupon DRX10 applied successfully!');
+        } else if (val === 'WELCOME100') {
+          this.appliedCoupon = { code: 'WELCOME100', fixed: 100 };
+          msg.textContent = 'Coupon applied: ₹100 flat savings!';
+          msg.className = 'text-[11px] mt-1 font-semibold text-emerald-600';
+          document.getElementById('removeCouponBtn').classList.remove('hidden');
+          this.showToast('Coupon WELCOME100 applied successfully!');
+        } else {
+          msg.textContent = 'Invalid promo coupon. Try SAVE20 or DRX10';
+          msg.className = 'text-[11px] mt-1 font-semibold text-rose-600';
+        }
+        this.renderCartDrawerContents();
+      }
+
+      removeCoupon() {
+        this.appliedCoupon = null;
+        document.getElementById('couponInput').value = '';
+        document.getElementById('removeCouponBtn').classList.add('hidden');
+        document.getElementById('couponMessage').classList.add('hidden');
+        this.renderCartDrawerContents();
+        this.showToast('Coupon removed', 'info');
+      }
+
+      calculateCartTotals() {
+        let subtotal = 0;
+        this.cart.forEach(item => {
+          const product = this.products.find(p => p.id === item.productId);
+          if (product) {
+            subtotal += product.price * item.quantity;
+          }
+        });
+
+        // Shipping rule: Free above ₹500, else ₹49
+        const shipping = subtotal >= 500 || subtotal === 0 ? 0 : 49;
+
+        // Coupon calculation
+        let discount = 0;
+        if (this.appliedCoupon) {
+          if (this.appliedCoupon.percent) {
+            discount = Math.round((subtotal * this.appliedCoupon.percent) / 100);
+          } else if (this.appliedCoupon.fixed) {
+            discount = Math.min(subtotal, this.appliedCoupon.fixed);
+          }
+        }
+
+        const total = Math.max(0, subtotal - discount + shipping);
+
+        return { subtotal, shipping, discount, total };
+      }
+
+      renderCartDrawerContents() {
+        const container = document.getElementById('cartItemsList');
+        const countSpan = document.getElementById('cartTotalItems');
+        const freeShipText = document.getElementById('freeShippingText');
+        const freeShipBar = document.getElementById('freeShippingBar');
+        const freeShipPercent = document.getElementById('freeShippingPercent');
+
+        const totals = this.calculateCartTotals();
+        countSpan.textContent = this.cart.reduce((a, b) => a + b.quantity, 0);
+
+        // Progress bar for Free Delivery (Threshold: ₹500)
+        if (totals.subtotal >= 500) {
+          freeShipText.textContent = '🎉 You unlocked FREE Express Shipping!';
+          freeShipBar.style.width = '100%';
+          freeShipPercent.textContent = '100%';
+        } else {
+          const needed = 500 - totals.subtotal;
+          const percent = Math.min(100, Math.round((totals.subtotal / 500) * 100));
+          freeShipText.textContent = `Add ₹${needed} more for FREE Express Shipping!`;
+          freeShipBar.style.width = `${percent}%`;
+          freeShipPercent.textContent = `${percent}%`;
+        }
+
+        if (this.cart.length === 0) {
+          container.innerHTML = `
+            <div class="h-full flex flex-col items-center justify-center text-center p-6 text-slate-400">
+              <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-3 text-slate-300">
+                <i data-lucide="shopping-bag" class="w-8 h-8"></i>
+              </div>
+              <h3 class="text-sm font-bold text-slate-700">Your Medical Cart is Empty</h3>
+              <p class="text-xs text-slate-400 mt-1 max-w-xs">Explore vitamins, essential diagnostics, and healthcare supplies.</p>
+              <button onclick="app.closeCartDrawer()" class="mt-4 px-4 py-2 bg-brand-600 text-white text-xs font-semibold rounded-xl">
+                Browse Store
+              </button>
+            </div>
+          `;
+          document.getElementById('btnCheckoutProceed').disabled = true;
+          document.getElementById('btnCheckoutProceed').classList.add('opacity-50', 'pointer-events-none');
+        } else {
+          document.getElementById('btnCheckoutProceed').disabled = false;
+          document.getElementById('btnCheckoutProceed').classList.remove('opacity-50', 'pointer-events-none');
+          
+          container.innerHTML = this.cart.map(item => {
+            const product = this.products.find(p => p.id === item.productId);
+            if (!product) return '';
+
+            return `
+              <div class="flex gap-3 bg-white p-3 rounded-xl border border-slate-200/80 shadow-xs items-center">
+                <img src="${product.image}" class="w-14 h-14 object-contain rounded-lg bg-slate-50 p-1 shrink-0">
+                <div class="flex-1 min-w-0">
+                  <h4 class="text-xs font-bold text-slate-900 truncate">${product.title}</h4>
+                  <div class="text-xs font-black text-slate-900 mt-0.5">₹${product.price}</div>
+                  
+                  <div class="flex items-center justify-between mt-2">
+                    <!-- Qty Stepper -->
+                    <div class="flex items-center border border-slate-200 rounded-lg bg-slate-50">
+                      <button onclick="app.updateCartQuantity('${product.id}', -1)" class="px-2 py-0.5 text-xs text-slate-600 hover:bg-slate-200 rounded-l">-</button>
+                      <span class="px-2 text-xs font-bold text-slate-800">${item.quantity}</span>
+                      <button onclick="app.updateCartQuantity('${product.id}', 1)" class="px-2 py-0.5 text-xs text-slate-600 hover:bg-slate-200 rounded-r">+</button>
+                    </div>
+
+                    <!-- Remove -->
+                    <button onclick="app.removeFromCart('${product.id}')" class="text-rose-500 hover:text-rose-700 text-xs flex items-center gap-1 font-medium">
+                      <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                      <span>Remove</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+
+        // Update financial summary texts
+        document.getElementById('cartSubtotalText').textContent = `₹${totals.subtotal}`;
+        const discountRow = document.getElementById('couponDiscountRow');
+        if (totals.discount > 0) {
+          discountRow.style.display = 'flex';
+          document.getElementById('cartCouponDiscountText').textContent = `-₹${totals.discount}`;
+        } else {
+          discountRow.style.display = 'none';
+        }
+        document.getElementById('cartShippingText').textContent = totals.shipping === 0 ? 'FREE' : `₹${totals.shipping}`;
+        document.getElementById('cartTotalPayable').textContent = `₹${totals.total}`;
+
+        lucide.createIcons();
+      }
+
+      startCheckout() {
+        if (this.cart.length === 0) {
+          this.showToast('Your cart is currently empty!', 'error');
+          return;
+        }
+        this.closeCartDrawer();
+        const totals = this.calculateCartTotals();
+        document.getElementById('checkoutPayableText').textContent = `₹${totals.total}`;
+        document.getElementById('checkoutModal').classList.remove('hidden');
+      }
+
+      closeCheckoutModal() {
+        document.getElementById('checkoutModal').classList.add('hidden');
+      }
+
+      executePaymentProcess() {
+        const name = document.getElementById('chkName').value.trim();
+        const phone = document.getElementById('chkPhone').value.trim();
+        const address = document.getElementById('chkAddress').value.trim();
+        const city = document.getElementById('chkCity').value.trim();
+        const state = document.getElementById('chkState').value;
+        const pin = document.getElementById('chkPin').value.trim();
+        const method = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+        if (!name || !phone || !address || !pin) {
+          this.showToast('Please fill out all delivery address fields.', 'error');
+          return;
+        }
+
+        const totals = this.calculateCartTotals();
+        this.pendingCheckoutData = {
+          name, phone, fullAddress: `${address}, ${city}, ${state} - ${pin}`,
+          totals, method
+        };
+
+        this.closeCheckoutModal();
+
+        if (method === 'razorpay') {
+          // Open Simulated Razorpay Gateway
+          document.getElementById('rzpAmountDisplay').textContent = `₹${totals.total}`;
+          document.getElementById('razorpayPopup').classList.remove('hidden');
+        } else {
+          // COD Immediate confirmation
+          this.finalizeOrder('Cash On Delivery (COD)');
+        }
+      }
+
+      cancelRazorpay() {
+        document.getElementById('razorpayPopup').classList.add('hidden');
+        this.showToast('Payment cancelled by user', 'info');
+      }
+
+      completeRazorpaySim(paymentSubtype) {
+        document.getElementById('razorpayPopup').classList.add('hidden');
+        this.finalizeOrder(paymentSubtype);
+      }
+
+      finalizeOrder(paymentName) {
+        const newOrderId = 'DRX-' + Math.floor(10000 + Math.random() * 90000);
+        const orderItems = this.cart.map(item => {
+          const product = this.products.find(p => p.id === item.productId);
+          return {
+            productId: item.productId,
+            title: product ? product.title : 'Medicine Item',
+            price: product ? product.price : 0,
+            quantity: item.quantity
+          };
+        });
+
+        const newOrder = {
+          id: newOrderId,
+          date: new Date().toISOString().split('T')[0],
+          items: orderItems,
+          subtotal: this.pendingCheckoutData.totals.subtotal,
+          shipping: this.pendingCheckoutData.totals.shipping,
+          discount: this.pendingCheckoutData.totals.discount,
+          total: this.pendingCheckoutData.totals.total,
+          status: 'Confirmed & Packed',
+          paymentMethod: paymentName,
+          address: this.pendingCheckoutData.fullAddress
+        };
+
+        this.orders.unshift(newOrder);
+        this.saveToStorage('drx_orders', this.orders);
+
+        // Clear cart
+        this.cart = [];
+        this.appliedCoupon = null;
+        this.saveToStorage('drx_cart', this.cart);
+        this.updateHeaderBadges();
+
+        // Show Success confirmation Modal
+        document.getElementById('confirmedOrderId').textContent = newOrderId;
+        document.getElementById('orderSuccessModal').classList.remove('hidden');
+        this.showToast(`Order #${newOrderId} placed successfully!`);
+      }
+
+      closeOrderSuccessModal() {
+        document.getElementById('orderSuccessModal').classList.add('hidden');
+        this.navigate('home');
+      }
+
+      viewOrderDetailsFromModal() {
+        document.getElementById('orderSuccessModal').classList.add('hidden');
+        this.navigate('orders');
+      }
+
+      openProductDetailModal(productId) {
+        const product = this.products.find(p => p.id === productId);
+        if (!product) return;
+        this.activeProductModalId = productId;
+
+        document.getElementById('detailModalImg').src = product.image;
+        document.getElementById('detailModalCategory').textContent = product.category;
+        document.getElementById('detailModalTitle').textContent = product.title;
+        document.getElementById('detailModalPrice').textContent = `₹${product.price}`;
+        document.getElementById('detailModalOriginalPrice').textContent = `₹${product.originalPrice}`;
+        
+        const discountPercent = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+        document.getElementById('detailModalDiscount').textContent = `${discountPercent}% OFF`;
+        document.getElementById('detailModalDesc').textContent = product.description;
+        document.getElementById('detailModalUsage').textContent = product.usage || 'Take as advised by qualified medical practitioner.';
+        document.getElementById('detailModalRatingValue').textContent = product.rating;
+        document.getElementById('detailModalReviewCount').textContent = `${product.reviewsCount || product.reviews.length} reviews`;
+
+        // Rx badge
+        const rxBadge = document.getElementById('detailModalRxBadge');
+        if (product.requiresRx) rxBadge.classList.remove('hidden');
+        else rxBadge.classList.add('hidden');
+
+        // Render Star SVGs
+        const starsContainer = document.getElementById('detailModalStars');
+        starsContainer.innerHTML = Array(5).fill(0).map((_, i) => 
+          `<i data-lucide="star" class="w-3.5 h-3.5 ${i < Math.floor(product.rating) ? 'fill-current' : ''}"></i>`
+        ).join('');
+
+        // Wire Action Buttons
+        document.getElementById('detailModalAddToCartBtn').onclick = () => {
+          this.addToCart(product.id, 1);
+          this.closeProductDetailModal();
+        };
+        document.getElementById('detailModalBuyNowBtn').onclick = () => {
+          this.closeProductDetailModal();
+          this.buyNow(product.id);
+        };
+        document.getElementById('detailModalWishlistBtn').onclick = () => {
+          this.toggleWishlist(product.id);
+        };
+
+        // Render Reviews
+        this.renderDetailModalReviews(product);
+
+        document.getElementById('productDetailModal').classList.remove('hidden');
+        lucide.createIcons();
+      }
+
+      closeProductDetailModal() {
+        document.getElementById('productDetailModal').classList.add('hidden');
+      }
+
+      renderDetailModalReviews(product) {
+        const list = document.getElementById('detailModalReviewsList');
+        if (!product.reviews || product.reviews.length === 0) {
+          list.innerHTML = `<p class="text-xs text-slate-400 italic">No customer reviews yet. Be the first to review!</p>`;
+          return;
+        }
+
+        list.innerHTML = product.reviews.map(r => `
+          <div class="p-2.5 rounded-lg bg-white border border-slate-100 text-xs">
+            <div class="flex items-center justify-between mb-1">
+              <span class="font-bold text-slate-800">${r.user}</span>
+              <div class="flex text-amber-400">
+                ${Array(r.rating).fill(0).map(() => '<i data-lucide="star" class="w-3 h-3 fill-current"></i>').join('')}
+              </div>
+            </div>
+            <p class="text-slate-600 text-[11px]">${r.comment}</p>
+          </div>
+        `).join('');
+        lucide.createIcons();
+      }
+
+      setNewReviewRating(rating) {
+        this.currentSelectedReviewRating = rating;
+        const selector = document.getElementById('newReviewRatingSelector');
+        selector.innerHTML = Array(5).fill(0).map((_, i) => 
+          `<i data-lucide="star" class="w-4 h-4 ${i < rating ? 'fill-current' : 'text-slate-300'}" onclick="app.setNewReviewRating(${i + 1})"></i>`
+        ).join('');
+        lucide.createIcons();
+      }
+
+      submitProductReview() {
+        const comment = document.getElementById('newReviewComment').value.trim();
+        if (!comment) {
+          this.showToast('Please type a review before submitting.', 'error');
+          return;
+        }
+
+        const product = this.products.find(p => p.id === this.activeProductModalId);
+        if (!product) return;
+
+        if (!product.reviews) product.reviews = [];
+        product.reviews.unshift({
+          user: this.currentUser.name,
+          rating: this.currentSelectedReviewRating,
+          comment: comment
+        });
+        product.reviewsCount = (product.reviewsCount || 0) + 1;
+        
+        this.saveToStorage('drx_products', this.products);
+        document.getElementById('newReviewComment').value = '';
+        this.renderDetailModalReviews(product);
+        this.showToast('Thank you! Your verified review has been published.');
+      }
+
+      showPrescriptionModal() {
+        document.getElementById('rxUploadModal').classList.remove('hidden');
+      }
+
+      closePrescriptionModal() {
+        document.getElementById('rxUploadModal').classList.add('hidden');
+      }
+
+      handleRxFileUploaded(input) {
+        if (input.files && input.files[0]) {
+          document.getElementById('rxUploadStatus').classList.remove('hidden');
+          this.showToast(`Uploaded: ${input.files[0].name}. Under pharmacist review.`);
+          setTimeout(() => {
+            this.closePrescriptionModal();
+          }, 1500);
+        }
+      }
+
+      renderWishlistView(container) {
+        const wishlistedProducts = this.products.filter(p => this.wishlist.includes(p.id));
+
+        container.innerHTML = `
+          <div class="mb-6 flex items-center justify-between">
+            <div>
+              <h2 class="text-xl font-bold text-slate-900">Your Health Wishlist</h2>
+              <p class="text-xs text-slate-500">Keep track of your recurring medicines and favorite wellness items.</p>
+            </div>
+            <button onclick="app.navigate('home')" class="text-xs text-brand-600 font-bold hover:underline">
+              ← Return to Shop
+            </button>
+          </div>
+
+          ${wishlistedProducts.length === 0 ? `
+            <div class="py-16 text-center bg-white rounded-2xl border border-slate-200 p-8">
+              <div class="w-14 h-14 rounded-full bg-rose-50 text-rose-400 flex items-center justify-center mx-auto mb-3">
+                <i data-lucide="heart" class="w-7 h-7"></i>
+              </div>
+              <h3 class="text-sm font-bold text-slate-800">Your Wishlist is Empty</h3>
+              <p class="text-xs text-slate-500 mt-1">Tap the heart icon on any product to save it for quick reordering.</p>
+              <button onclick="app.navigate('home')" class="mt-4 px-4 py-2 bg-brand-600 text-white rounded-xl text-xs font-semibold hover:bg-brand-700 transition">
+                Start Exploring
+              </button>
+            </div>
+          ` : `
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              ${wishlistedProducts.map(p => `
+                <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-col justify-between">
+                  <div>
+                    <div class="relative bg-slate-50 p-3 rounded-xl aspect-square flex items-center justify-center mb-3">
+                      <img src="${p.image}" class="max-h-full object-contain">
+                      <button onclick="app.toggleWishlist('${p.id}')" class="absolute top-2 right-2 text-rose-500 hover:scale-110 transition p-1">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                      </button>
+                    </div>
+                    <span class="text-[10px] font-bold text-brand-600 uppercase tracking-wider">${p.category}</span>
+                    <h4 class="font-bold text-slate-900 text-xs line-clamp-2 mt-0.5">${p.title}</h4>
+                    <div class="text-sm font-black text-slate-900 mt-1">₹${p.price}</div>
+                  </div>
+                  <button onclick="app.addToCart('${p.id}')" class="mt-4 w-full py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm">
+                    <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i> Move to Cart
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+          `}
+        `;
+      }
+
+      renderOrdersView(container) {
+        container.innerHTML = `
+          <div class="mb-6 flex items-center justify-between">
+            <div>
+              <h2 class="text-xl font-bold text-slate-900">Your Orders & Live Tracking</h2>
+              <p class="text-xs text-slate-500">Real-time status of shipments dispatched across India.</p>
+            </div>
+            <button onclick="app.navigate('home')" class="text-xs text-brand-600 font-bold hover:underline">
+              ← Continue Shopping
+            </button>
+          </div>
+
+          ${this.orders.length === 0 ? `
+            <div class="py-16 text-center bg-white rounded-2xl border border-slate-200 p-8">
+              <div class="w-14 h-14 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+                <i data-lucide="package-open" class="w-7 h-7"></i>
+              </div>
+              <h3 class="text-sm font-bold text-slate-800">No Past Orders Found</h3>
+              <p class="text-xs text-slate-500 mt-1">All your online medicine and healthcare orders will appear here.</p>
+              <button onclick="app.navigate('home')" class="mt-4 px-4 py-2 bg-brand-600 text-white rounded-xl text-xs font-semibold hover:bg-brand-700 transition">
+                Order Medicines Now
+              </button>
+            </div>
+          ` : `
+            <div class="space-y-6">
+              ${this.orders.map(order => `
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                  <!-- Order Header -->
+                  <div class="flex flex-wrap items-center justify-between border-b pb-4 gap-2 text-xs">
+                    <div>
+                      <span class="font-bold text-slate-900 text-sm">Order ID: #${order.id}</span>
+                      <p class="text-slate-500">Placed on ${order.date} · Paid via ${order.paymentMethod}</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                      <span class="px-3 py-1 rounded-full text-xs font-bold ${
+                        order.status === 'Delivered' ? 'bg-emerald-100 text-emerald-700' :
+                        order.status === 'Out for Delivery' ? 'bg-sky-100 text-sky-700' : 'bg-amber-100 text-amber-700'
+                      }">
+                        ● ${order.status}
+                      </span>
+                      <span class="font-extrabold text-base text-slate-900">₹${order.total}</span>
+                    </div>
+                  </div>
+
+                  <!-- Stepper Track Bar -->
+                  <div class="py-6 px-2">
+                    <div class="relative flex items-center justify-between">
+                      <div class="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-slate-200 w-full z-0"></div>
+                      <div class="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-brand-500 z-0 transition-all duration-500" style="width: ${
+                        order.status === 'Delivered' ? '100%' : (order.status === 'Out for Delivery' ? '70%' : '35%')
+                      }"></div>
+
+                      <!-- Steps -->
+                      <div class="relative z-10 flex flex-col items-center">
+                        <div class="w-7 h-7 rounded-full bg-brand-600 text-white flex items-center justify-center text-xs font-bold shadow-md">✓</div>
+                        <span class="text-[11px] font-bold text-slate-700 mt-2">Verified</span>
+                      </div>
+                      <div class="relative z-10 flex flex-col items-center">
+                        <div class="w-7 h-7 rounded-full ${order.status !== 'Pending' ? 'bg-brand-600 text-white' : 'bg-slate-300 text-slate-600'} flex items-center justify-center text-xs font-bold shadow-md">
+                          <i data-lucide="box" class="w-3.5 h-3.5"></i>
+                        </div>
+                        <span class="text-[11px] font-bold text-slate-700 mt-2">Dispensed</span>
+                      </div>
+                      <div class="relative z-10 flex flex-col items-center">
+                        <div class="w-7 h-7 rounded-full ${order.status === 'Out for Delivery' || order.status === 'Delivered' ? 'bg-brand-600 text-white' : 'bg-slate-300 text-slate-600'} flex items-center justify-center text-xs font-bold shadow-md">
+                          <i data-lucide="truck" class="w-3.5 h-3.5"></i>
+                        </div>
+                        <span class="text-[11px] font-bold text-slate-700 mt-2">On the Way</span>
+                      </div>
+                      <div class="relative z-10 flex flex-col items-center">
+                        <div class="w-7 h-7 rounded-full ${order.status === 'Delivered' ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-400'} flex items-center justify-center text-xs font-bold shadow-md">
+                          <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                        </div>
+                        <span class="text-[11px] font-bold text-slate-700 mt-2">Delivered</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Order Items -->
+                  <div class="bg-slate-50 p-4 rounded-xl text-xs space-y-2">
+                    <p class="font-bold text-slate-700">Prescription & Products:</p>
+                    ${order.items.map(item => `
+                      <div class="flex justify-between items-center text-slate-600">
+                        <span>• ${item.title} <strong class="text-slate-900">× ${item.quantity}</strong></span>
+                        <span class="font-semibold text-slate-900">₹${item.price * item.quantity}</span>
+                      </div>
+                    `).join('')}
+                    <div class="pt-2 border-t border-slate-200 text-slate-500 text-[11px]">
+                      <strong>Delivering to:</strong> ${order.address}
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          `}
+        `;
+      }
+
+      renderDashboardView(container) {
+        container.innerHTML = `
+          <div class="mb-6">
+            <h2 class="text-xl font-bold text-slate-900">Patient & Customer Dashboard</h2>
+            <p class="text-xs text-slate-500">Manage saved prescriptions, profile settings, and delivery addresses.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Left Info Card -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-center">
+              <div class="w-20 h-20 rounded-full bg-teal-100 text-brand-700 text-2xl font-black flex items-center justify-center mx-auto mb-3 shadow-inner">
+                ${this.currentUser.name.split(' ').map(n=>n[0]).join('')}
+              </div>
+              <h3 class="font-bold text-slate-900 text-base">${this.currentUser.name}</h3>
+              <p class="text-xs text-slate-500">${this.currentUser.email}</p>
+              <p class="text-xs text-slate-500 font-mono mt-0.5">${this.currentUser.phone}</p>
+              
+              <div class="mt-4 pt-4 border-t border-slate-100 text-left text-xs space-y-2.5">
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Total Lifetime Orders:</span>
+                  <span class="font-bold text-slate-800">${this.orders.length}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Saved in Wishlist:</span>
+                  <span class="font-bold text-slate-800">${this.wishlist.length} items</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Prescription Status:</span>
+                  <span class="font-bold text-emerald-600">Verified Profile</span>
+                </div>
+              </div>
+
+              <button onclick="app.switchUser()" class="mt-5 w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition">
+                Switch Active User Profile
+              </button>
+            </div>
+
+            <!-- Right: Quick Tabs for Active Orders & Addresses -->
+            <div class="md:col-span-2 space-y-5">
+              <!-- Active Orders Card -->
+              <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                  <h4 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                    <i data-lucide="package" class="w-4 h-4 text-brand-600"></i> Recent Active Deliveries
+                  </h4>
+                  <button onclick="app.navigate('orders')" class="text-xs text-brand-600 font-bold hover:underline">View All</button>
+                </div>
+                ${this.orders.slice(0, 2).map(o => `
+                  <div class="p-3 bg-slate-50 rounded-xl mb-2 flex items-center justify-between text-xs">
+                    <div>
+                      <p class="font-bold text-slate-800">Order #${o.id}</p>
+                      <p class="text-slate-500 text-[11px]">${o.items.length} product(s) · ₹${o.total}</p>
+                    </div>
+                    <button onclick="app.navigate('orders')" class="px-3 py-1 bg-white border border-slate-200 hover:border-brand-500 text-brand-700 font-semibold rounded-lg shadow-xs">
+                      Track
+                    </button>
+                  </div>
+                `).join('')}
+              </div>
+
+              <!-- Saved Addresses Card -->
+              <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <h4 class="font-bold text-slate-900 text-sm mb-3 flex items-center gap-2">
+                  <i data-lucide="map-pin" class="w-4 h-4 text-brand-600"></i> Default Delivery Addresses
+                </h4>
+                <div class="p-3 border-2 border-brand-500/40 bg-brand-50/20 rounded-xl text-xs space-y-1">
+                  <div class="flex justify-between items-center">
+                    <span class="font-bold text-slate-900">Home Address (Primary)</span>
+                    <span class="text-[10px] bg-brand-600 text-white px-2 py-0.5 rounded font-bold">Default</span>
+                  </div>
+                  <p class="text-slate-600">Flat 402, Green Meadows, MG Road, Bengaluru, Karnataka - 560001</p>
+                  <p class="text-slate-500 text-[11px]">Recipient: Dr. John Doe (+91 98765 43210)</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      renderAdminDashboard(container) {
+        const totalRevenue = this.orders.reduce((acc, o) => acc + o.total, 0);
+        const totalItemsInInventory = this.products.reduce((acc, p) => acc + p.stock, 0);
+
+        container.innerHTML = `
+          <!-- Admin Header Bar -->
+          <div class="bg-slate-900 text-white p-6 rounded-3xl mb-8 shadow-xl">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="bg-emerald-500/20 text-emerald-400 text-xs px-2.5 py-0.5 rounded-full font-bold border border-emerald-500/30">System Live</span>
+                  <h2 class="text-2xl font-black">DRx Admin Control Center</h2>
+                </div>
+                <p class="text-xs text-slate-400 mt-1">Manage pharmacy catalog, inspect real orders, and update fulfillment status.</p>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="app.showAddProductModal()" class="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs font-bold transition shadow flex items-center gap-1.5">
+                  <i data-lucide="plus-circle" class="w-4 h-4"></i> Add New Product
+                </button>
+                <button onclick="app.toggleAdminMode()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition">
+                  Close Admin
+                </button>
+              </div>
+            </div>
+
+            <!-- Stats Metric Cards -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t border-slate-800 text-xs">
+              <div class="bg-slate-800/60 p-3.5 rounded-xl border border-slate-700/50">
+                <p class="text-slate-400">Total Sales (INR)</p>
+                <p class="text-xl font-black text-emerald-400 mt-1">₹${totalRevenue.toLocaleString('en-IN')}</p>
+              </div>
+              <div class="bg-slate-800/60 p-3.5 rounded-xl border border-slate-700/50">
+                <p class="text-slate-400">Total Orders</p>
+                <p class="text-xl font-black text-sky-400 mt-1">${this.orders.length}</p>
+              </div>
+              <div class="bg-slate-800/60 p-3.5 rounded-xl border border-slate-700/50">
+                <p class="text-slate-400">Products Listed</p>
+                <p class="text-xl font-black text-amber-400 mt-1">${this.products.length}</p>
+              </div>
+              <div class="bg-slate-800/60 p-3.5 rounded-xl border border-slate-700/50">
+                <p class="text-slate-400">Units in Stock</p>
+                <p class="text-xl font-black text-purple-400 mt-1">${totalItemsInInventory}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Product Form (Collapsible) -->
+          <div id="adminAddProductForm" class="hidden bg-white p-6 rounded-2xl border border-slate-200 mb-8 shadow-sm">
+            <h3 class="text-base font-bold text-slate-900 mb-3">Add Medicine / Device to Catalog</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+              <div>
+                <label class="font-medium text-slate-700 block mb-1">Product Title</label>
+                <input type="text" id="admTitle" placeholder="e.g. Omega-3 Triple Strength 1000mg" class="w-full p-2 border rounded-lg focus:border-brand-500 outline-none">
+              </div>
+              <div>
+                <label class="font-medium text-slate-700 block mb-1">Category</label>
+                <select id="admCategory" class="w-full p-2 border rounded-lg focus:border-brand-500 outline-none bg-white">
+                  <option value="Vitamins & Nutrition">Vitamins & Nutrition</option>
+                  <option value="Healthcare Devices">Healthcare Devices</option>
+                  <option value="Ayurveda & Herbal">Ayurveda & Herbal</option>
+                  <option value="Personal Care">Personal Care</option>
+                  <option value="First Aid & Medicines">First Aid & Medicines</option>
+                  <option value="Fitness & Diet">Fitness & Diet</option>
+                </select>
+              </div>
+              <div>
+                <label class="font-medium text-slate-700 block mb-1">Selling Price (₹)</label>
+                <input type="number" id="admPrice" placeholder="499" class="w-full p-2 border rounded-lg focus:border-brand-500 outline-none">
+              </div>
+              <div>
+                <label class="font-medium text-slate-700 block mb-1">Original MRP (₹)</label>
+                <input type="number" id="admOriginalPrice" placeholder="799" class="w-full p-2 border rounded-lg focus:border-brand-500 outline-none">
+              </div>
+              <div>
+                <label class="font-medium text-slate-700 block mb-1">Units in Stock</label>
+                <input type="number" id="admStock" placeholder="50" class="w-full p-2 border rounded-lg focus:border-brand-500 outline-none">
+              </div>
+              <div>
+                <label class="font-medium text-slate-700 block mb-1">Image URL</label>
+                <input type="url" id="admImage" placeholder="https://..." class="w-full p-2 border rounded-lg focus:border-brand-500 outline-none">
+              </div>
+            </div>
+            <div class="mt-3">
+              <label class="font-medium text-slate-700 text-xs block mb-1">Description & Dosage</label>
+              <textarea id="admDesc" rows="2" placeholder="Describe clinical usage, key ingredients, and packaging..." class="w-full text-xs p-2 border rounded-lg focus:border-brand-500 outline-none"></textarea>
+            </div>
+            <div class="mt-3 flex items-center justify-between">
+              <label class="text-xs font-semibold flex items-center gap-2 text-slate-700">
+                <input type="checkbox" id="admRequiresRx" class="rounded text-brand-600 focus:ring-brand-500">
+                <span>Requires Doctor Prescription (Schedule H/X Drug)</span>
+              </label>
+              <div class="flex gap-2">
+                <button onclick="document.getElementById('adminAddProductForm').classList.add('hidden')" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">Cancel</button>
+                <button onclick="app.saveNewProductAdmin()" class="px-5 py-1.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-lg shadow-sm">Save to Store</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Orders Management Table -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 mb-8 shadow-sm">
+            <h3 class="font-bold text-slate-900 text-sm mb-3">Live Order Fulfillment Queue</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="border-b text-slate-400 font-medium">
+                    <th class="py-2.5">Order ID</th>
+                    <th class="py-2.5">Date</th>
+                    <th class="py-2.5">Items</th>
+                    <th class="py-2.5">Amount</th>
+                    <th class="py-2.5">Payment</th>
+                    <th class="py-2.5">Current Status</th>
+                    <th class="py-2.5 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  ${this.orders.map(o => `
+                    <tr>
+                      <td class="py-3 font-mono font-bold text-slate-900">${o.id}</td>
+                      <td class="py-3 text-slate-500">${o.date}</td>
+                      <td class="py-3 text-slate-700 max-w-[180px] truncate" title="${o.items.map(i=>i.title).join(', ')}">
+                        ${o.items.map(i=>i.title).join(', ')}
+                      </td>
+                      <td class="py-3 font-bold text-slate-900">₹${o.total}</td>
+                      <td class="py-3 text-slate-600">${o.paymentMethod}</td>
+                      <td class="py-3">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                          o.status === 'Delivered' ? 'bg-emerald-100 text-emerald-700' :
+                          o.status === 'Out for Delivery' ? 'bg-sky-100 text-sky-700' : 'bg-amber-100 text-amber-700'
+                        }">
+                          ${o.status}
+                        </span>
+                      </td>
+                      <td class="py-3 text-right">
+                        <select onchange="app.updateOrderStatusAdmin('${o.id}', this.value)" class="text-xs bg-slate-50 border rounded-lg p-1 font-medium text-slate-700">
+                          <option value="Confirmed & Packed" ${o.status==='Confirmed & Packed'?'selected':''}>Packed</option>
+                          <option value="Out for Delivery" ${o.status==='Out for Delivery'?'selected':''}>Out for Delivery</option>
+                          <option value="Delivered" ${o.status==='Delivered'?'selected':''}>Delivered</option>
+                        </select>
+                      </td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Product Inventory Table -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+            <h3 class="font-bold text-slate-900 text-sm mb-3">Inventory Stock Levels & Quick Price Adjust</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="border-b text-slate-400 font-medium">
+                    <th class="py-2.5">Product</th>
+                    <th class="py-2.5">Category</th>
+                    <th class="py-2.5">Price</th>
+                    <th class="py-2.5">Stock</th>
+                    <th class="py-2.5">Rx Required</th>
+                    <th class="py-2.5 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  ${this.products.map(p => `
+                    <tr>
+                      <td class="py-3 flex items-center gap-2">
+                        <img src="${p.image}" class="w-8 h-8 rounded object-contain bg-slate-50 p-0.5">
+                        <span class="font-bold text-slate-900 max-w-[200px] truncate">${p.title}</span>
+                      </td>
+                      <td class="py-3 text-slate-500">${p.category}</td>
+                      <td class="py-3 font-bold text-slate-800">₹${p.price}</td>
+                      <td class="py-3">
+                        <span class="px-2 py-0.5 rounded font-bold ${p.stock < 15 ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
+                          ${p.stock} left
+                        </span>
+                      </td>
+                      <td class="py-3">${p.requiresRx ? '<span class="text-rose-600 font-bold">Yes</span>' : '<span class="text-slate-400">No</span>'}</td>
+                      <td class="py-3 text-right space-x-1">
+                        <button onclick="app.quickAddStock('${p.id}', 10)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded font-semibold">+10 Stock</button>
+                        <button onclick="app.deleteProductAdmin('${p.id}')" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded font-semibold">Delete</button>
+                      </td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      }
+
+      showAddProductModal() {
+        const form = document.getElementById('adminAddProductForm');
+        form.classList.toggle('hidden');
+        form.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      saveNewProductAdmin() {
+        const title = document.getElementById('admTitle').value.trim();
+        const category = document.getElementById('admCategory').value;
+        const price = parseFloat(document.getElementById('admPrice').value);
+        const originalPrice = parseFloat(document.getElementById('admOriginalPrice').value) || (price + 200);
+        const stock = parseInt(document.getElementById('admStock').value) || 20;
+        let image = document.getElementById('admImage').value.trim();
+        const description = document.getElementById('admDesc').value.trim() || 'Genuine verified health product from certified manufacturer.';
+        const requiresRx = document.getElementById('admRequiresRx').checked;
+
+        if (!title || isNaN(price)) {
+          this.showToast('Please provide at least Title and Selling Price', 'error');
+          return;
+        }
+
+        if (!image) {
+          image = 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80';
+        }
+
+        const newProd = {
+          id: 'drx-' + (100 + this.products.length + 1),
+          title,
+          category,
+          price,
+          originalPrice,
+          stock,
+          rating: 4.8,
+          reviewsCount: 1,
+          requiresRx,
+          image,
+          description,
+          usage: 'Use as instructed on the packaging or by physician.',
+          reviews: []
+        };
+
+        this.products.unshift(newProd);
+        this.saveToStorage('drx_products', this.products);
+        this.showToast(`Product '${title}' added to DRx store!`);
+        this.renderAdminDashboard(document.getElementById('appContent'));
+      }
+
+      quickAddStock(productId, count) {
+        const prod = this.products.find(p => p.id === productId);
+        if (prod) {
+          prod.stock += count;
+          this.saveToStorage('drx_products', this.products);
+          this.showToast(`Added ${count} units to ${prod.title}`);
+          this.renderAdminDashboard(document.getElementById('appContent'));
+        }
+      }
+
+      deleteProductAdmin(productId) {
+        this.products = this.products.filter(p => p.id !== productId);
+        this.saveToStorage('drx_products', this.products);
+        this.showToast('Product removed from database', 'info');
+        this.renderAdminDashboard(document.getElementById('appContent'));
+      }
+
+      updateOrderStatusAdmin(orderId, newStatus) {
+        const order = this.orders.find(o => o.id === orderId);
+        if (order) {
+          order.status = newStatus;
+          this.saveToStorage('drx_orders', this.orders);
+          this.showToast(`Order #${orderId} marked as ${newStatus}`);
+        }
+      }
+    }
+
+    let app;
+    window.addEventListener('DOMContentLoaded', () => {
+      app = new DRxApp();
+    });
+  </script>
+</body>
+</html>

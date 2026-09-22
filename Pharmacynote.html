@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explore Resources</title>
+<style>
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f6f8fb;
+        color: #13294b;
+    }
+
+    .resources {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 45px 24px 70px;
+    }
+
+    .eyebrow {
+        text-align: center;
+        color: #008b8b;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: .4px;
+        margin-bottom: 8px;
+    }
+
+    h1 {
+        text-align: center;
+        margin: 0 0 26px;
+        font-size: 32px;
+        font-weight: 800;
+        color: #10284b;
+    }
+
+    .filters {
+        display: flex;
+        justify-content: center;
+        gap: 9px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+    }
+
+    .filter {
+        border: 1px solid #d9dee7;
+        background: #fff;
+        color: #10284b;
+        padding: 10px 17px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .filter.active,
+    .filter:hover {
+        background: #008b8b;
+        color: #fff;
+        border-color: #008b8b;
+    }
+
+    .folder-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 22px;
+    }
+
+    .folder {
+        background: #fff;
+        border: 1px solid #e0e4ea;
+        border-radius: 17px;
+        padding: 27px 22px;
+        min-height: 245px;
+        box-shadow: 0 2px 5px rgba(0,0,0,.04);
+        transition: .2s ease;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .folder:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(20,40,70,.10);
+        border-color: #cbd5df;
+    }
+
+    .folder-icon {
+        width: 42px;
+        height: 38px;
+        margin-bottom: 22px;
+        position: relative;
+    }
+
+    .folder-icon::before {
+        content: "";
+        position: absolute;
+        left: 2px;
+        top: 8px;
+        width: 34px;
+        height: 25px;
+        border-radius: 3px;
+        background: #ffd447;
+        border: 1px solid #e4b900;
+    }
+
+    .folder-icon::after {
+        content: "";
+        position: absolute;
+        left: 5px;
+        top: 3px;
+        width: 17px;
+        height: 10px;
+        border-radius: 3px 3px 0 0;
+        background: #f4c400;
+    }
+
+    .folder h2 {
+        margin: 0 0 10px;
+        font-size: 18px;
+        color: #10284b;
+    }
+
+    .folder p {
+        margin: 0;
+        color: #31506f;
+        font-size: 14px;
+        line-height: 1.65;
+        min-height: 48px;
+    }
+
+    .open {
+        display: inline-block;
+        margin-top: 20px;
+        color: #008b8b;
+        font-size: 14px;
+        font-weight: 800;
+    }
+
+    @media (max-width: 800px) {
+        .folder-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 520px) {
+        .resources { padding: 30px 16px; }
+        h1 { font-size: 27px; }
+        .folder-grid { grid-template-columns: 1fr; }
+    }
+</style>
+</head>
+
+<body>
+<section class="resources">
+    <div class="eyebrow">STORE CATEGORIES</div>
+    <h1>Explore Resources</h1>
+
+    <div class="filters">
+        <button class="filter active" data-filter="all">All</button>
+        <button class="filter" data-filter="learning">Bechlor</button>
+        <button class="filter" data-filter="research">Masters</button>
+        <button class="filter" data-filter="health">Health</button>
+    </div>
+
+    <div class="folder-grid">
+
+        <!-- Folder 1 -->
+        <a class="folder" data-category="learning" href="Pharmacynote.html">
+            <div class="folder-icon"></div>
+            <h2>B.Pharm</h2>
+            <p>Easy-to-use academic notes, PDFs, lectures and learning resources.</p>
+            <span class="open">Open Folder →</span>
+        </a>
+
+        <!-- Folder 2 -->
+        <a class="folder" data-category="research" href="research-papers.html">
+            <div class="folder-icon"></div>
+            <h2>D.Pharm</h2>
+            <p>Research articles, thesis resources, journals and useful references.</p>
+            <span class="open">Open Folder →</span>
+        </a>
+
+        <!-- Folder 3 -->
+        <a class="folder" data-category="health" href="health-resources.html">
+            <div class="folder-icon"></div>
+            <h2>M.Pharm</h2>
+            <p>Pharmacy, medicine, healthcare information and educational resources.</p>
+            <span class="open">Open Folder →</span>
+        </a>
+
+         <!-- Folder 4 -->
+        <a class="folder" data-category="health" href="health-resources.html">
+            <div class="folder-icon"></div>
+            <h2>others</h2>
+            <p>Pharmacy, medicine, healthcare information and educational resources.</p>
+            <span class="open">Open Folder →</span>
+        </a>
+
+    </div>
+</section>
+
+<script>
+    const filters = document.querySelectorAll(".filter");
+    const folders = document.querySelectorAll(".folder");
+
+    filters.forEach(button => {
+        button.addEventListener("click", () => {
+            filters.forEach(b => b.classList.remove("active"));
+            button.classList.add("active");
+
+            const selected = button.dataset.filter;
+
+            folders.forEach(folder => {
+                folder.style.display =
+                    selected === "all" || folder.dataset.category === selected
+                    ? "block"
+                    : "none";
+            });
+        });
+    });
+</script>
+</body>
+</html>
