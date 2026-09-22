@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DRx Health & Learning Store | DRx Deepak Jatav</title>
+<meta name="description" content="DRx Health & Learning Store by DRx Deepak Jatav">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.hero{background:linear-gradient(135deg,#0f766e,#115e59,#164e63)}
+.card{transition:.2s}.card:hover{transform:translateY(-3px)}
+</style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+<div class="bg-teal-800 text-white text-xs"><div class="max-w-6xl mx-auto px-4 py-2 flex justify-between"><span>DRx Health & Learning Store</span><span>Personal Store / Demo</span></div></div>
+
+<header class="bg-white border-b sticky top-0 z-40">
+<div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+<a href="index.html" class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-xl bg-teal-700 text-white flex items-center justify-center font-extrabold">DRx</div>
+<div><div class="font-extrabold text-lg">DRx Health & Learning</div><div class="text-xs text-slate-500">by DRx Deepak Jatav</div></div>
+</a>
+<a href="index.html" class="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 font-semibold text-sm">← Home</a>
+</div>
+</header>
+
+<section class="hero text-white">
+<div class="max-w-6xl mx-auto px-4 py-16 md:py-20">
+<span class="inline-block px-3 py-1 rounded-full bg-white/15 text-sm">Health • Learning • Research • Digital Resources</span>
+<h1 class="text-4xl md:text-6xl font-extrabold mt-5">DRx Health & Learning Store</h1>
+<p class="mt-5 max-w-2xl text-white/85 text-lg leading-8">A simple place for health-focused resources, study material, digital products and educational content.</p>
+<div class="mt-7 flex flex-wrap gap-3">
+<a href="#products" class="px-5 py-3 rounded-xl bg-white text-teal-800 font-bold">Explore Store</a>
+<a href="mailto:drxdeepakjatav@yahoo.com?subject=DRx%20Store%20Enquiry" class="px-5 py-3 rounded-xl border border-white/40 font-bold">Contact / Order Enquiry</a>
+</div>
+</div>
+</section>
+
+<section id="products" class="max-w-6xl mx-auto px-4 py-12">
+<div class="mb-7"><p class="text-teal-700 font-bold text-sm uppercase">Store Categories</p><h2 class="text-3xl font-extrabold mt-1">Explore Resources</h2></div>
+<div id="filters" class="flex flex-wrap gap-2 mb-7"></div>
+<div id="grid" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5"></div>
+</section>
+
+<section class="bg-white border-y">
+<div class="max-w-6xl mx-auto px-4 py-12 grid md:grid-cols-3 gap-6">
+<div class="p-6 rounded-2xl bg-slate-50 border"><h3 class="font-bold text-lg">📚 Study Material</h3><p class="text-sm text-slate-600 mt-2">Educational notes, guides and learning resources.</p></div>
+<div class="p-6 rounded-2xl bg-slate-50 border"><h3 class="font-bold text-lg">🔬 Research Resources</h3><p class="text-sm text-slate-600 mt-2">Medical writing, research-support and academic resources.</p></div>
+<div class="p-6 rounded-2xl bg-slate-50 border"><h3 class="font-bold text-lg">❤️ Health Resources</h3><p class="text-sm text-slate-600 mt-2">Health education and selected wellness resources.</p></div>
+</div>
+</section>
+
+<section class="max-w-6xl mx-auto px-4 py-12">
+<div class="rounded-3xl bg-slate-900 text-white p-8 flex flex-col md:flex-row justify-between gap-6 items-start md:items-center">
+<div><p class="text-teal-300 font-bold">Need something specific?</p><h2 class="text-2xl font-extrabold mt-1">Contact DRx Deepak Jatav</h2><p class="text-slate-300 mt-2">For store, digital products, research or learning enquiries.</p></div>
+<div class="flex gap-3"><a href="mailto:drxdeepakjatav@yahoo.com?subject=DRx%20Store%20Enquiry" class="px-5 py-3 bg-white text-slate-900 rounded-xl font-bold">Email Me</a><a href="tel:+917223969949" class="px-5 py-3 border border-white/30 rounded-xl font-bold">Call Me</a></div>
+</div>
+</section>
+
+<footer class="bg-slate-950 text-slate-400"><div class="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-3 text-sm"><span>© 2026 DRx Deepak Jatav</span><span>Health • Knowledge • Business • Education • Research</span></div></footer>
+
+<script>
+    
+const products=[
+["learning","📚","Study Material","Easy-to-use academic notes and learning resources."],
+["learning","🎓","Learning Guides","Practical guides for students and self-learning."],
+["research","📄","Medical Writing Resources","Templates, guides and resources for medical writing."],
+["research","🔬","Research Resources","Academic and research-support material."],
+["health","❤️","Health Education","Educational health and wellness resources."],
+["health","🩺","Healthcare Resources","Selected healthcare information and tools."],
+["digital","⬇️","Digital Products","Digital files, guides and downloadable resources."],
+["digital","💻","DRx Digital Learning","Digital learning products and future courses."]
+];
+const cats=["all","learning","research","health","digital"];
+const labels={all:"All",learning:"Learning",research:"Research",health:"Health",digital:"Digital"};
+const filters=document.getElementById("filters"),grid=document.getElementById("grid");
+function render(cat="all"){
+ grid.innerHTML=products.filter(p=>cat==="all"||p[0]===cat).map(p=>`
+ <article class="card bg-white border rounded-2xl p-5 shadow-sm">
+ <div class="text-3xl">${p[1]}</div><h3 class="font-extrabold text-lg mt-4">${p[2]}</h3>
+ <p class="text-sm text-slate-600 mt-2 min-h-[48px]">${p[3]}</p>
+ <a href="mailto:drxdeepakjatav@yahoo.com?subject=${encodeURIComponent("DRx Store - "+p[2])}" class="mt-5 inline-block text-teal-700 font-bold text-sm">Enquire →</a>
+ </article>`).join("");
+}
+cats.forEach(c=>{const b=document.createElement("button");b.textContent=labels[c];b.className="filter px-3 py-2 rounded-lg bg-white border text-sm font-semibold";if(c==="all")b.className+=" bg-teal-700 text-white";b.onclick=()=>{document.querySelectorAll(".filter").forEach(x=>x.classList.remove("bg-teal-700","text-white"));b.classList.add("bg-teal-700","text-white");render(c)};filters.appendChild(b)});
+render();
+</script>
+</body>
+</html>
