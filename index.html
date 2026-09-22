@@ -1,572 +1,434 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DRx Deepak Jatav | M.Pharm | Medical Writer | Researcher</title>
-  
-  <style>
-    /* 1. Global Reset */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #f1f5f9;
-      color: #334155;
-      line-height: 1.6;
-    }
+    <title>DRx Learning Hub | Deepak Jatav</title>
 
-    /* 2. Top Dark Hero Section */
-    .hero-header {
-      background-color: #0d1527;
-      color: #ffffff;
-      text-align: center;
-      padding: 60px 20px 75px 20px;
-    }
+    <meta name="description"
+          content="DRx Learning Hub by Deepak Jatav - Pharmacy, Biology, Study Materials, MCQs, Courses and Educational Videos.">
 
-    .profile-avatar {
-      width: 110px;
-      height: 110px;
-      border-radius: 50%;
-      border: 3px solid #38bdf8;
-      margin: 0 auto 16px auto;
-      background-color: #1e293b;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .profile-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .hero-header h1 {
-      font-size: 28px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      margin-bottom: 6px;
-    }
-
-    .hero-header .subtitle {
-      color: #38bdf8;
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
-
-    .hero-header .bio {
-      max-width: 650px;
-      margin: 0 auto 24px auto;
-      font-size: 13.5px;
-      color: #94a3b8;
-    }
-
-    .hero-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-    }
-
-    .btn-action {
-      padding: 9px 22px;
-      border-radius: 50px;
-      font-size: 13px;
-      font-weight: 600;
-      text-decoration: none;
-      color: #ffffff;
-      transition: opacity 0.2s;
-    }
-
-    .btn-action:hover {
-      opacity: 0.9;
-    }
-
-    .btn-youtube { background-color: #ef4444; }
-    .btn-instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }\n    .btn-linkedin { background-color: #0a66c2; }
-
-    /* 3. Main Container */
-    .container {
-      max-width: 1140px;
-      margin: -35px auto 40px auto;
-      padding: 0 20px;
-    }
-
-    /* Common Card Styling */
-    .card {
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 22px;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
-    }
-
-    .card-title {
-      font-size: 17px;
-      font-weight: 700;
-      color: #0f172a;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 16px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #f8fafc;
-    }
-
-    .card-desc {
-      font-size: 14px;
-      color: #475569;
-      line-height: 1.65;
-    }
-
-    /* 2-Column Grid (Left & Right) */
-    .main-grid {
-      display: grid;
-      grid-template-columns: 1.35fr 1fr;
-      gap: 24px;
-      align-items: start;
-    }
-
-    /* Courses List */
-    .course-item {
-      border-left: 3px solid #0284c7;
-      padding-left: 14px;
-      margin-top: 16px;
-    }
-
-    .course-item h4 {
-      font-size: 15px;
-      color: #0f172a;
-      font-weight: 600;
-    }
-
-    .course-item p {
-      font-size: 13px;
-      color: #64748b;
-      margin-top: 3px;
-    }
-
-    /* Photo Gallery (3x2 Grid Under Courses) */
-    .gallery-container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-
-    .gallery-thumb {
-      aspect-ratio: 1 / 1;
-      border-radius: 8px;
-      overflow: hidden;
-      background-color: #e2e8f0;
-    }
-
-    .gallery-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.3s ease;
-    }
-
-    .gallery-thumb:hover img {
-      transform: scale(1.06);
-    }
-
-    /* Skills Tags */
-    .skills-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .skill-tag {
-      background-color: #e0f2fe;
-      color: #0284c7;
-      padding: 6px 14px;
-      border-radius: 30px;
-      font-size: 12.5px;
-      font-weight: 600;
-    }
-
-   /* Dono videos ko card ke andar ek ke niche ek rakhne ke liye */
-.video-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 16px; /* Dono video ke beech barabar space */
-  width: 100%;
-}
-
-/* Har video ka box */
-.video-box {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: #000;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.video-box iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
-    /* Contact Form (Full Width) */
-    .contact-full-width {
-      margin-top: 6px;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      margin-bottom: 14px;
-    }
-
-    .form-group {
-      margin-bottom: 14px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      color: #475569;
-      margin-bottom: 6px;
-    }
-
-    .form-group input,
-    .form-group textarea {
-      width: 100%;
-      padding: 11px 14px;
-      border: 1px solid #cbd5e1;
-      border-radius: 7px;
-      font-size: 13.5px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .form-group input:focus,
-    .form-group textarea:focus {
-      border-color: #0284c7;
-    }
-
-    .btn-submit {
-      width: 100%;
-      background-color: #0284c7;
-      color: #ffffff;
-      border: none;
-      padding: 12px;
-      border-radius: 7px;
-      font-size: 14.5px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    .btn-submit:hover {
-      background-color: #0369a1;
-    }
-
-    /* 4. Copyright Footer */
-    .site-footer {
-      text-align: center;
-      padding: 25px 15px;
-      margin-top: 15px;
-      border-top: 1px solid #e2e8f0;
-    }
-
-    .site-footer p {
-      font-size: 13.5px;
-      color: #64748b;
-      margin: 4px 0;
-      font-weight: 500;
-    }
-
-    .site-footer .footer-subtext {
-      font-size: 12px;
-      color: #94a3b8;
-    }
-
-    /* Mobile / Tablet Responsive */
-    @media (max-width: 860px) {
-      .main-grid,
-      .form-row {
-        grid-template-columns: 1fr;
-      }
-      .container {
-        margin-top: 20px;
-      }
-    }
-
-    .folder-card {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      color: inherit;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 12px;
-      margin-top: 12px;
-      background: #f8fafc;
-      transition: transform 0.2s ease, border-color 0.2s ease;
-    }
-    .folder-card:hover {
-      transform: translateY(-2px);
-      border-color: #38bdf8;
-    }
-    .folder-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 8px;
-      background: #e0f2fe;
-      color: #0284c7;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      flex: 0 0 auto;
-    }
-    .folder-details { flex: 1; }
-    .folder-details h4 { font-size: 14px; color: #0f172a; }
-    .folder-details p { font-size: 12px; color: #64748b; margin-top: 2px; }
-    .folder-arrow { color: #0284c7; font-size: 20px; }
-
-  </style>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-  <!-- 1. TOP HEADER -->
-  <header class="hero-header">
-    <div class="profile-avatar">
-      <img src="image/profile.png" alt="Deepak Jatav">
+<!-- ================= HEADER ================= -->
+
+<header class="header">
+
+    <div class="container navbar">
+
+        <a href="index.html" class="logo">
+            <span class="logo-main">DRx</span>
+            <span class="logo-text">Learning Hub</span>
+        </a>
+
+        <button class="menu-btn" id="menuBtn">
+            ☰
+        </button>
+
+        <nav id="navMenu">
+
+            <a href="index.html" class="active">Home</a>
+            <a href="courses.html">Courses</a>
+            <a href="videos.html">Videos</a>
+            <a href="notes.html">Notes</a>
+            <a href="tests.html">Tests</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+
+        </nav>
+
     </div>
-    <h1>DRx Deepak Jatav</h1>
-    <div class="subtitle">M.Pharm (Pharmaceutics) | Medical Writer | Researcher | Educator | Content Creator | YouTuber</div>
-    <p class="bio">Building at the intersection of Health, Knowledge, Business and Technology. My goal is to create useful content, practical ideas and meaningful solutions that help people learn, grow and become self-dependent.</p>
-    <div class="hero-buttons">
-      <a href="https://www.youtube.com/@drxdeepakjatav" target="_blank" rel="noopener noreferrer" class="btn-action btn-youtube">YouTube</a>
-      <a href="https://www.instagram.com/drxdeepakjatav/" target="_blank" rel="noopener noreferrer" class="btn-action btn-instagram">Instagram</a>
-       <a href="https://www.x.com/drxdeepakjatav/" target="_blank" rel="noopener noreferrer" class="btn-action btn-instagram">X</a>
-      <a href="https://www.linkedin.com/drxdeepakjatav/" target="_blank" rel="noopener noreferrer" class="btn-action btn-instagram">LinkedIn</a>
-      <a href="https://www.instagram.com/drxlearninghub/" target="_blank" rel="noopener noreferrer" class="btn-action btn-instagram">DRx Learning Hub</a>
-       
-    </div>
-  </header>
 
-  <!-- 2. MAIN BODY CONTAINER -->
-  <main class="container">
+</header>
 
-    <!-- 2-COLUMN MAIN SECTION -->
-    <div class="main-grid">
 
-      <!-- LEFT COLUMN -->
-      <div>
-        <!-- My Profile -->
-        <div class="card">
-          <h3 class="card-title">👤 My Profile</h3>
-          <p class="card-desc">
-            I am <strong>Deepak Jatav</strong>, an M.Pharm professional specializing in Pharmaceutics, with interests in healthcare, medical writing, research, education, content creation and health-focused business. Through my work, I aim to connect health, knowledge and entrepreneurship in practical and meaningful ways.
-          </p>
-        </div>
+<!-- ================= HERO ================= -->
 
-        <!-- My Mission -->
-        <div class="card">
-          <h3 class="card-title">🎯 My Mission</h3>
-          <p class="card-desc">
-            My mission is to connect <strong>Health and Business</strong> to create practical solutions and ideas that help people live healthier, become self-dependent and build meaningful opportunities for themselves.
-            I want to encourage people to learn new skills, explore health-focused opportunities, build sustainable businesses and use their knowledge to make a positive difference in the lives of others.
-          </p>
-        </div>
+<section class="hero">
 
-        <!-- Education -->
-        <div class="card">
-          <h3 class="card-title">🎓 Education</h3>
-          <div class="course-item">
-            <h4>M.Pharm (Pharmaceutics)</h4>
-            <p>Sam Global University</p>
-          </div>
-        </div>
+    <div class="container hero-content">
 
-        <!-- My Work & Store -->
-        <div class="card">
-          <h3 class="card-title">💼 My Work</h3>
-          <div class="course-item">
-            <h4>Medical Writing</h4>
-            <p>Medical, pharmaceutical and academic content focused on clear and useful communication.</p>
-          </div>
-          <div class="course-item">
-            <h4>Content Creation &amp; YouTube</h4>
-            <p>Creating informative digital content around health, pharmacy, education, research and business.</p>
-          </div>
-          <div class="course-item">
-            <h4>Research &amp; Education</h4>
-            <p>Academic research, educational resources and knowledge-sharing initiatives.</p>
-          </div>
-        </div>
+        <div class="hero-text">
 
-        <div class="card">
-          <h3 class="card-title">🛒 DRx Health &amp; Learning Store</h3>
-          <p class="card-desc">
-            A future-focused space for pharmacy and health products, digital products, study material and educational resources.
-          </p>
-          <a href="drx_store_healthcare_wellness_e_commerce.html" class="folder-card">
-            <div class="folder-icon">🛍️</div>
-            <div class="folder-details">
-              <h4>My Store</h4>
-              <p>Products and resources will be added here.</p>
+            <span class="badge">
+                🎓 Learn • Understand • Grow
+            </span>
+
+            <h1>
+                Welcome to
+                <span>DRx Learning Hub</span>
+            </h1>
+
+            <p class="hero-subtitle">
+                Your learning platform for Pharmacy, Biology,
+                Science, Competitive Exams and Educational Content.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="courses.html" class="btn primary-btn">
+                    Explore Courses
+                </a>
+
+                <a href="videos.html" class="btn secondary-btn">
+                    Watch Videos
+                </a>
+
             </div>
-            <span class="folder-arrow">&rarr;</span>
-          </a>
+
         </div>
 
-        <!-- Photo Gallery (Courses Ke Niche) -->
-        <div class="card">
-          <h3 class="card-title">📸 Photo Gallery</h3>
-          <div class="gallery-container">
-            <div class="gallery-thumb"><img src="https://res.cloudinary.com/zuvg7yxn/image/upload/v1789984951/deepak_Jatav.jpg" alt="Photo 1"></div>
-            <div class="gallery-thumb"><img src="https://res.cloudinary.com/zuvg7yxn/image/upload/v1789984552/1702571762056.jpg" alt="Photo 2"></div>
-            <div class="gallery-thumb"><img src="https://res.cloudinary.com/zuvg7yxn/image/upload/v1789984553/1694955864398.jpg" alt="Photo 3"></div>
-            <div class="gallery-thumb"><img src="https://res.cloudinary.com/zuvg7yxn/image/upload/v1789984555/deepak.png" alt="Photo 4"></div>
-            <div class="gallery-thumb"><img src="https://res.cloudinary.com/zuvg7yxn/image/upload/v1789980877/deepak4.png" alt="Photo 5"></div>
-            <div class="gallery-thumb"><img src="https://res.cloudinary.com/zuvg7yxn/image/upload/v1789980876/deepak6.png" alt="Photo 6"></div>
-            <div class="gallery-thumb"><img src="https://res.cloudinary.com/zuvg7yxn/image/upload/v1789980875/deepak8.png" alt="photo 7"></div>
-            <div class="gallery-thumb"><img src="https://res.cloudinary.com/zuvg7yxn/image/upload/v1789984547/1692807277204.jpg" alt="photo 8"></div>
-            <div class="gallery-thumb"><img src="https://res.cloudinary.com/zuvg7yxn/image/upload/v1789984550/1728302956603.jpg" alt="photo 9"></div>
-          </div>
-        </div>
-      </div>
 
-      <!-- RIGHT COLUMN -->
-      <div>
-        <!-- Articles -->
-       <!-- Articles Section with Sub-folders -->
-<div class="card">
-  <h3 class="card-title">📁 Articles &amp; Study Material</h3>
-  <p class="card-desc">Apna topic chunein aur notes padhein:</p>
+        <div class="hero-card">
 
-  <div class="article-folders-list">
-    
-    <!-- Folder 1 -->
-    <a href="Pharmacynote.html" class="folder-card">
-      <div class="folder-icon">📂</div>
-      <div class="folder-details">
-        <h4>Pharmacy Notes</h4>
-        <p>Pharmacology, Pharmaceutics &amp; syllabus notes</p>
-      </div>
-      <span class="folder-arrow">&rarr;</span>
-    </a>
-
-    <!-- Folder 2 -->
-    <a href="Gpat.html" class="folder-card">
-      <div class="folder-icon">📂</div>
-      <div class="folder-details">
-        <h4>GPAT &amp; Exam Preparation</h4>
-        <p>Important questions, paper pattern &amp; tips</p>
-      </div>
-      <span class="folder-arrow">&rarr;</span>
-    </a>
-
-    <!-- Folder 3 -->
-    <a href="article.html" class="folder-card">
-      <div class="folder-icon">📂</div>
-      <div class="folder-details">
-        <h4>Article</h4>
-        <p>Research Pepar, Thesis &amp; AI Article</p>
-      </div>
-      <span class="folder-arrow">&rarr;</span>
-    </a>
-
-  </div>
-</div>
-
-        <!-- YouTube / Videos -->
-        <div class="card">
-          <h3 class="card-title">🎥 YouTube / Videos</h3>
-          <div class="video-stack">
-            <div class="video-box">
-              <iframe
-               width="560" height="315" src="https://www.youtube.com/embed/yAB2JTG2LPo?si=koT5CrBQGH_KT95n" 
-              title="YouTube video player" 
-              frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-               eferrerpolicy="strict-origin-when-cross-origin" 
-              allowfullscreen>
-              </iframe>
+            <div class="profile-circle">
+                <img src="image/profile.png"
+                     alt="Deepak Jatav"
+                     onerror="this.style.display='none'">
             </div>
-          </div>
+
+            <h3>Deepak Jatav</h3>
+
+            <p>
+                M.Pharm – Pharmaceutics
+            </p>
+
+            <div class="hero-stat">
+
+                <div>
+                    <strong>DRx</strong>
+                    <small>Learning</small>
+                </div>
+
+                <div>
+                    <strong>📚</strong>
+                    <small>Education</small>
+                </div>
+
+                <div>
+                    <strong>🎥</strong>
+                    <small>YouTube</small>
+                </div>
+
+            </div>
+
         </div>
-      </div>
 
     </div>
 
-    <!-- SOCIAL PROFILES -->
-    <div class="card">
-      <h3 class="card-title">🌐 Social Profiles</h3>
-      <div class="article-folders-list">
-        <a href="https://www.linkedin.com/in/drxdeepakjatav" target="_blank" rel="noopener noreferrer" class="folder-card">
-          <div class="folder-icon">in</div>
-          <div class="folder-details"><h4>LinkedIn</h4><p>drxdeepakjatav</p></div>
-          <span class="folder-arrow">&rarr;</span>
-        </a>
-        <a href="https://www.instagram.com/drxdeepakjatav/" target="_blank" rel="noopener noreferrer" class="folder-card">
-          <div class="folder-icon">◎</div>
-          <div class="folder-details"><h4>Instagram</h4><p>@drxdeepakjatav</p></div>
-          <span class="folder-arrow">&rarr;</span>
-        </a>
-        <a href="https://www.youtube.com/@drxdeepakjatav" target="_blank" rel="noopener noreferrer" class="folder-card">
-          <div class="folder-icon">▶</div>
-          <div class="folder-details"><h4>YouTube</h4><p>@drxdeepakjatav</p></div>
-          <span class="folder-arrow">&rarr;</span>
-        </a>
-        <a href="https://github.com/drxdeepakjatav" target="_blank" rel="noopener noreferrer" class="folder-card">
-          <div class="folder-icon">⌘</div>
-          <div class="folder-details"><h4>GitHub</h4><p>drxdeepakjatav</p></div>
-          <span class="folder-arrow">&rarr;</span>
-        </a>
-        <a href="https://x.com/drxdeepakjatav" target="_blank" rel="noopener noreferrer" class="folder-card">
-          <div class="folder-icon">𝕏</div>
-          <div class="folder-details"><h4>X</h4><p>@drxdeepakjatav</p></div>
-          <span class="folder-arrow">&rarr;</span>
-        </a>
-      </div>
+</section>
+
+
+<!-- ================= FEATURES ================= -->
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span>LEARNING PLATFORM</span>
+
+            <h2>
+                Learn Everything in One Place
+            </h2>
+
+            <p>
+                Explore educational content designed for
+                pharmacy and science learners.
+            </p>
+
+        </div>
+
+
+        <div class="feature-grid">
+
+            <div class="feature-card">
+
+                <div class="feature-icon">📚</div>
+
+                <h3>Courses</h3>
+
+                <p>
+                    Structured learning content for
+                    pharmacy, biology and science.
+                </p>
+
+                <a href="courses.html">
+                    Explore →
+                </a>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">🎥</div>
+
+                <h3>Video Lectures</h3>
+
+                <p>
+                    Watch educational videos from
+                    the DRx Learning Hub YouTube channel.
+                </p>
+
+                <a href="videos.html">
+                    Watch →
+                </a>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">📝</div>
+
+                <h3>Study Notes</h3>
+
+                <p>
+                    Access useful notes, diagrams,
+                    summaries and study resources.
+                </p>
+
+                <a href="studynote.html">
+                    Study →
+                </a>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">🧠</div>
+
+                <h3>Online Tests</h3>
+
+                <p>
+                    Practice MCQs and test your
+                    knowledge.
+                </p>
+
+                <a href="tests.html">
+                    Practice →
+                </a>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <!-- CONTACT ME -->
-    <div class="card contact-full-width">
-      <h3 class="card-title">✉️ Contact Me</h3>
-      <p class="card-desc">
-        For professional, research, medical writing, educational or collaboration enquiries, get in touch.
-      </p>
-      <div class="hero-buttons" style="margin-top:18px;">
-        <a href="mailto:drxdeepakjatav@yahoo.com" class="btn-action btn-linkedin">Email Me</a>
-        <a href="tel:+917223969949" class="btn-action btn-youtube">Call Me</a>
-      </div>
-      <p class="card-desc" style="margin-top:16px;">
-        <strong>Email:</strong> drxdeepakjatav@yahoo.com &nbsp; | &nbsp;
-        <strong>Mobile:</strong> +91 72239 69949
-      </p>
+</section>
+
+
+<!-- ================= LATEST YOUTUBE ================= -->
+
+<section class="section youtube-section">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span>YOUTUBE</span>
+
+            <h2>Latest Videos</h2>
+
+            <p>
+                Latest educational videos from
+                DRx Learning Hub.
+            </p>
+
+        </div>
+
+
+        <div id="youtube-videos" class="video-grid">
+
+            <div class="loading">
+                Loading latest videos...
+            </div>
+
+        </div>
+
+
+        <div class="center">
+
+            <a href="videos.html" class="btn primary-btn">
+                View All Videos
+            </a>
+
+        </div>
+
     </div>
 
-    <!-- 3. COPYRIGHT FOOTER -->
-    <footer class="site-footer">
-      <p>&copy; 2026 DRx Deepak Jatav. All Rights Reserved.</p>
-      <p class="footer-subtext">Health • Knowledge • Business • Education • Research</p>
-    </footer>
+</section>
 
-  </main>
+
+<!-- ================= ABOUT ================= -->
+
+<section class="section about-preview">
+
+    <div class="container about-grid">
+
+        <div>
+
+            <span class="section-label">
+                ABOUT DRx LEARNING HUB
+            </span>
+
+            <h2>
+                Education Made Simple
+            </h2>
+
+            <p>
+                DRx Learning Hub is an educational platform
+                created by Deepak Jatav to provide simple,
+                useful and exam-oriented learning content.
+            </p>
+
+            <p>
+                The platform focuses on Pharmacy, Biology,
+                Science, MCQs, study notes and educational
+                videos.
+            </p>
+
+            <a href="about.html" class="btn primary-btn">
+                Know More
+            </a>
+
+        </div>
+
+
+        <div class="about-box">
+
+            <h3>
+                What You Can Learn
+            </h3>
+
+            <ul>
+
+                <li>✔ Pharmacy</li>
+                <li>✔ Pharmaceutics</li>
+                <li>✔ Pharmacology</li>
+                <li>✔ Biology</li>
+                <li>✔ General Science</li>
+                <li>✔ MCQs & Exams</li>
+                <li>✔ Study Skills</li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CTA ================= -->
+
+<section class="cta">
+
+    <div class="container">
+
+        <h2>
+            Start Learning Today
+        </h2>
+
+        <p>
+            Subscribe to DRx Learning Hub and continue
+            your learning journey.
+        </p>
+
+        <a
+            href="https://www.youtube.com/@drxdeepakjatav"
+            target="_blank"
+            class="btn youtube-btn">
+
+            ▶ Subscribe on YouTube
+
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    <div class="container footer-grid">
+
+        <div>
+
+            <h3>
+                DRx Learning Hub
+            </h3>
+
+            <p>
+                Learn • Understand • Grow
+            </p>
+
+            <p>
+                By Deepak Jatav
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <h4>Quick Links</h4>
+
+            <a href="index.html">Home</a>
+            <a href="courses.html">Courses</a>
+            <a href="videos.html">Videos</a>
+            <a href="notes.html">Notes</a>
+            <a href="tests.html">Tests</a>
+
+        </div>
+
+
+        <div>
+
+            <h4>Connect</h4>
+
+            <a href="https://www.youtube.com/@drxdeepakjatav"
+               target="_blank">
+                YouTube
+            </a>
+
+            <a href="https://www.instagram.com/drxlearninghub/"
+               target="_blank">
+                Instagram
+            </a>
+
+            <a href="https://x.com/drxdeepakjatav"
+               target="_blank">
+                X / Twitter
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="copyright">
+
+        © <span id="year"></span>
+        DRx Learning Hub | Deepak Jatav.
+        All Rights Reserved.
+
+    </div>
+
+</footer>
+
+
+<script src="main.js"></script>
+<script src=youtube.js"></script>
 
 </body>
 </html>
