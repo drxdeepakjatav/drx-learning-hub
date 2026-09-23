@@ -489,16 +489,14 @@
           password
         );
 
-      } catch (error) {
+} catch (error) {
+    console.error("Firebase Login Error:", error);
 
-        console.error(error);
+    message.style.color = "#dc2626";
 
-        message.style.color = "#dc2626";
-
-        message.textContent =
-          "Login failed. Email or password is incorrect.";
-
-      }
+    message.textContent =
+        "Firebase Error: " + error.code + " - " + error.message;
+}
 
     });
 
