@@ -10,7 +10,7 @@
 
 const API_KEY = "YOUR_YOUTUBE_API_KEY";
 
-const CHANNEL_ID = "YOUR_CHANNEL_ID";
+const CHANNEL_ID = "UC9eyA1MFu5se42_ZRasHOMg";
 
 
 // Number of videos
@@ -39,7 +39,7 @@ async function loadLatestVideos() {
 
     if (
         API_KEY === "YOUR_YOUTUBE_API_KEY" ||
-        CHANNEL_ID === "YOUR_CHANNEL_ID"
+        CHANNEL_ID === "UC9eyA1MFu5se42_ZRasHOMg"
     ) {
 
         container.innerHTML = `
@@ -182,13 +182,25 @@ async function loadLatestVideos() {
         });
 
 
-    } catch (error) {
+   } catch (error) {
 
-        console.error(
-            "YouTube Error:",
-            error
-        );
+    console.error("YouTube Error:", error);
 
+    container.innerHTML = `
+        <div class="loading">
+            <p>YouTube API Error:</p>
+            <pre>${error.message}</pre>
+
+            <a
+                href="https://www.youtube.com/@drxdeepakjatav"
+                target="_blank"
+                class="btn primary-btn"
+            >
+                Visit YouTube Channel
+            </a>
+        </div>
+    `;
+}
 
         container.innerHTML = `
 
@@ -212,7 +224,6 @@ async function loadLatestVideos() {
 
     }
 
-}
 
 
 // Start
