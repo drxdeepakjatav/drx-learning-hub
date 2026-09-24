@@ -415,14 +415,14 @@
     }
     from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
 
-    import {
-      getFirestore,
-      doc,
-      getDoc,
-      collection,
-      getDocs
-    }
-    from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+import {
+  initializeFirestore,
+  doc,
+  getDoc,
+  collection,
+  getDocs
+} 
+from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
 
     /* FIREBASE CONFIG */
@@ -444,7 +444,7 @@ const firebaseConfig = {
 
     const auth = getAuth(app);
 
-    const db = getFirestore(app);
+   const db = initializeFirestore(app, {}, "default");
 
 
     /* LOGIN */
