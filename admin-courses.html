@@ -303,7 +303,13 @@ await setPersistence(auth, browserLocalPersistence);
 onAuthStateChanged(auth, async (user) => {
 
     if (!user) {
-        window.location.href = "admin.html";
+        document.body.innerHTML = `
+            <div style="padding:40px;text-align:center;font-family:Arial">
+                <h2>Admin Login Required</h2>
+                <p>Please login from Admin Dashboard first.</p>
+                <a href="admin.html">Go to Admin Login</a>
+            </div>
+        `;
         return;
     }
 
