@@ -406,13 +406,13 @@
     import { initializeApp }
       from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
 
-    import {
-      getAuth,
-      signInWithEmailAndPassword,
-      onAuthStateChanged,
-      signOut
-    }
-    from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+  browserLocalPersistence
+} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
 
 import {
   initializeFirestore,
@@ -466,7 +466,7 @@ const firebaseConfig = {
 
       message.textContent = "Logging in...";
 
-     try {
+try {
 
   await setPersistence(auth, browserLocalPersistence);
 

@@ -246,9 +246,8 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
 
 import {
-  getAuth,
+  initializeAuth,
   onAuthStateChanged,
-  setPersistence,
   browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
 
@@ -279,16 +278,15 @@ const firebaseConfig = {
 /* Firebase */
 const app = initializeApp(firebaseConfig);
 
-const auth = getAuth(app);
-
-setPersistence(auth, browserLocalPersistence);
+const auth = initializeAuth(app, {
+  persistence: browserLocalPersistence
+});
 
 const db = initializeFirestore(
   app,
   {},
   "default"
 );
-
 
 /* Elements */
 
