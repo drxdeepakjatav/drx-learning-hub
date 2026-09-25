@@ -280,14 +280,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const auth = initializeAuth(app, {
-  persistence: browserLocalPersistence
+    persistence: browserLocalPersistence
 });
 
-const db = initializeFirestore(
-  app,
-  {},
-  "default"
-);
+const db = initializeFirestore(app, {}, "default");
 
 /* Elements */
 
@@ -302,13 +298,23 @@ onAuthStateChanged(auth, async (user) => {
     console.log("Courses page user:", user);
 
     if (!user) {
-        alert("Firebase Auth user nahi mila. Pehle admin.html se login karein.");
+        document.body.innerHTML = `
+            <div style="
+                padding:40px;
+                text-align:center;
+                font-family:Arial;
+            ">
+                <h2>Admin Login Required</h2>
+                <p>Admin session nahi mili.</p>
+                <a href="admin.html">Go to Admin Login</a>
+            </div>
+        `;
         return;
     }
 
     console.log("Logged in UID:", user.uid);
-
     loadCourses();
+
 });
 
 /* Add Course */
