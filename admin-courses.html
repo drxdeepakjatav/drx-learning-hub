@@ -1,145 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Courses Management | DRx Admin</title>
-
-<style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-    font-family:Arial,sans-serif;
-}
-
-body{
-    background:#f3f6fa;
-    color:#172033;
-}
-
-.header{
-    background:#111827;
-    color:white;
-    padding:18px 30px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.header h2{
-    color:#60a5fa;
-}
-
-.header a{
-    color:white;
-    text-decoration:none;
-}
-
-.container{
-    max-width:1100px;
-    margin:30px auto;
-    padding:0 20px;
-}
-
-.card{
-    background:white;
-    padding:25px;
-    border-radius:15px;
-    box-shadow:0 5px 20px rgba(0,0,0,.06);
-    margin-bottom:25px;
-}
-
-h1{
-    margin-bottom:20px;
-}
-
-.form-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
-}
-
-input, select, textarea{
-    width:100%;
-    padding:12px;
-    border:1px solid #d1d5db;
-    border-radius:8px;
-    font-size:15px;
-}
-
-textarea{
-    min-height:100px;
-    resize:vertical;
-}
-
-.full{
-    grid-column:1 / -1;
-}
-
-button{
-    border:none;
-    padding:12px 20px;
-    border-radius:8px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.add-btn{
-    background:#2563eb;
-    color:white;
-}
-
-.delete-btn{
-    background:#dc2626;
-    color:white;
-    padding:8px 14px;
-}
-
-.course{
-    border:1px solid #e5e7eb;
-    padding:18px;
-    border-radius:12px;
-    margin-top:15px;
-}
-
-.course h3{
-    margin-bottom:8px;
-}
-
-.badge{
-    display:inline-block;
-    background:#eff6ff;
-    color:#2563eb;
-    padding:5px 10px;
-    border-radius:20px;
-    font-size:13px;
-    margin-bottom:10px;
-}
-
-.course p{
-    margin:6px 0;
-    color:#4b5563;
-}
-
-#message{
-    margin-top:15px;
-    font-weight:bold;
-}
-
-@media(max-width:700px){
-    .form-grid{
-        grid-template-columns:1fr;
-    }
-
-    .full{
-        grid-column:auto;
-    }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses Management | DRx Admin</title>
+    <link rel="stylesheet" href="admin-courses.css">
 </head>
-
 <body>
 
 <header class="header">
@@ -153,21 +19,15 @@ button{
         <h1>📚 Courses Management</h1>
 
         <form id="courseForm">
-
             <div class="form-grid">
 
                 <div>
-                    <label>Course Name</label>
-                    <input
-                        type="text"
-                        id="courseName"
-                        placeholder="Example: B.Pharm"
-                        required
-                    >
+                    <label for="courseName">Course Name</label>
+                    <input type="text" id="courseName" placeholder="Example: B.Pharm" required>
                 </div>
 
                 <div>
-                    <label>Category</label>
+                    <label for="category">Category</label>
                     <select id="category" required>
                         <option value="">Select Category</option>
                         <option value="10TH">10TH</option>
@@ -179,304 +39,42 @@ button{
                 </div>
 
                 <div>
-                    <label>Semester</label>
-                    <input
-                        type="text"
-                        id="semester"
-                        placeholder="Example: Semester 1"
-                    >
+                    <label for="semester">Semester</label>
+                    <input type="text" id="semester" placeholder="Example: Semester 1">
                 </div>
 
                 <div>
-                    <label>Course Code</label>
-                    <input
-                        type="text"
-                        id="courseCode"
-                        placeholder="Example: BP101T"
-                    >
+                    <label for="courseCode">Course Code</label>
+                    <input type="text" id="courseCode" placeholder="Example: BP101T">
                 </div>
 
                 <div class="full">
-                    <label>Description</label>
-                    <textarea
-                        id="description"
-                        placeholder="Course description..."
-                    ></textarea>
+                    <label for="description">Description</label>
+                    <textarea id="description" placeholder="Course description..."></textarea>
                 </div>
 
                 <div class="full">
-                    <label>Course Page / Link</label>
-                    <input
-                        type="text"
-                        id="courseLink"
-                        placeholder="Example: bpharm.html"
-                    >
+                    <label for="courseLink">Course Page / Link</label>
+                    <input type="text" id="courseLink" placeholder="Example: bpharm.html">
                 </div>
 
                 <div class="full">
-                    <button class="add-btn" type="submit">
-                        ➕ Add Course
-                    </button>
+                    <button class="add-btn" type="submit" id="addCourseBtn">➕ Add Course</button>
                 </div>
 
             </div>
-
         </form>
 
         <div id="message"></div>
     </div>
 
-
     <div class="card">
         <h1>📋 Existing Courses</h1>
-
-        <div id="courseList">
-            Loading courses...
-        </div>
-
+        <div id="courseList">Checking admin login...</div>
     </div>
 
 </div>
 
-
-<script type="module">
-
-import {
-    initializeApp
-} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-
-
-import {
-  initializeAuth,
-  onAuthStateChanged,
-  browserLocalPersistence
-} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-
-import {
-    initializeFirestore,
-    collection,
-    addDoc,
-    getDocs,
-    deleteDoc,
-    doc,
-    serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
-
-
-/* Firebase Configuration */
-
-const firebaseConfig = {
-    apiKey: "AIzaSyC-Dcvx06CGJbiqCCXlteLG3IqY3C3x8OE",
-    authDomain: "drx-learning-hub.firebaseapp.com",
-    projectId: "drx-learning-hub",
-    storageBucket: "drx-learning-hub.firebasestorage.app",
-    messagingSenderId: "562733337038",
-    appId: "1:562733337038:web:2db977c4b545cb1a5f839f",
-    measurementId: "G-52EGNHBYF6"
-};
-
-
-/* Firebase */
-const app = initializeApp(firebaseConfig);
-
-const auth = initializeAuth(app, {
-    persistence: browserLocalPersistence
-});
-
-const db = initializeFirestore(app, {}, "default");
-
-/* Elements */
-
-const courseForm = document.getElementById("courseForm");
-const courseList = document.getElementById("courseList");
-const message = document.getElementById("message");
-
-/* Check Login */
-
-onAuthStateChanged(auth, async (user) => {
-
-    console.log("Courses page user:", user);
-
-    if (!user) {
-        document.body.innerHTML = `
-            <div style="
-                padding:40px;
-                text-align:center;
-                font-family:Arial;
-            ">
-                <h2>Admin Login Required</h2>
-                <p>Admin session nahi mili.</p>
-                <a href="admin.html">Go to Admin Login</a>
-            </div>
-        `;
-        return;
-    }
-
-    console.log("Logged in UID:", user.uid);
-    loadCourses();
-
-});
-
-/* Add Course */
-
-courseForm.addEventListener("submit", async (e) => {
-
-    e.preventDefault();
-
-    message.style.color = "#2563eb";
-    message.textContent = "Saving course...";
-
-    try {
-
-        console.log("AUTH USER:", auth.currentUser);
-        console.log("AUTH UID:", auth.currentUser?.uid);
-
-        await addDoc(
-            collection(db, "courses"),
-            {
-                name: document.getElementById("courseName").value.trim(),
-                category: document.getElementById("category").value,
-                semester: document.getElementById("semester").value.trim(),
-                code: document.getElementById("courseCode").value.trim(),
-                description: document.getElementById("description").value.trim(),
-                link: document.getElementById("courseLink").value.trim(),
-                createdAt: serverTimestamp()
-            }
-        );
-
-        message.style.color = "#16a34a";
-        message.textContent = "✅ Course added successfully!";
-
-        courseForm.reset();
-
-        loadCourses();
-
-    } catch (error) {
-
-        console.error("Course Error:", error);
-
-        message.style.color = "#dc2626";
-
-        message.textContent =
-            "Error: " + error.code + " - " + error.message;
-
-    }
-
-});
-
-
-/* Load Courses */
-
-async function loadCourses() {
-
-    courseList.innerHTML = "Loading courses...";
-
-    try {
-
-        const snapshot =
-            await getDocs(collection(db, "courses"));
-
-        if (snapshot.empty) {
-
-            courseList.innerHTML =
-                "<p>No courses added yet.</p>";
-
-            return;
-        }
-
-        courseList.innerHTML = "";
-
-        snapshot.forEach((courseDoc) => {
-
-            const course = courseDoc.data();
-
-            const div = document.createElement("div");
-
-            div.className = "course";
-
-            div.innerHTML = `
-                <span class="badge">
-                    ${course.category || "Course"}
-                </span>
-
-                <h3>
-                    ${course.name || "Untitled Course"}
-                </h3>
-
-                <p>
-                    <strong>Code:</strong>
-                    ${course.code || "-"}
-                </p>
-
-                <p>
-                    <strong>Semester:</strong>
-                    ${course.semester || "-"}
-                </p>
-
-                <p>
-                    ${course.description || ""}
-                </p>
-
-                <button
-                    class="delete-btn"
-                    data-id="${courseDoc.id}">
-                    🗑 Delete
-                </button>
-            `;
-
-            courseList.appendChild(div);
-
-        });
-
-
-        document
-            .querySelectorAll(".delete-btn")
-            .forEach(button => {
-
-                button.addEventListener("click", async () => {
-
-                    const id = button.dataset.id;
-
-                    if (!confirm("Delete this course?")) {
-                        return;
-                    }
-
-                    try {
-
-                        await deleteDoc(
-                            doc(db, "courses", id)
-                        );
-
-                        loadCourses();
-
-                    } catch (error) {
-
-                        console.error(error);
-
-                        alert(
-                            "Delete failed: " +
-                            error.message
-                        );
-
-                    }
-
-                });
-
-            });
-
-
-    } catch (error) {
-
-        console.error("Load Courses Error:", error);
-
-        courseList.innerHTML =
-            "<p style='color:red'>Failed to load courses.</p>";
-
-    }
-
-}
-
-</script>
-
+<script type="module" src="admin-courses.js"></script>
 </body>
 </html>
