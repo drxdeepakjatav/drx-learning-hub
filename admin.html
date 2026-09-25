@@ -407,7 +407,7 @@
       from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
 
 import {
-  getAuth,
+  initializeAuth,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
@@ -437,14 +437,15 @@ const firebaseConfig = {
   measurementId: "G-52EGNHBYF6"
 };
 
-    /* INITIALIZE */
+/* INITIALIZE */
 
-    const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-    const auth = getAuth(app);
+const auth = initializeAuth(app, {
+  persistence: browserLocalPersistence
+});
 
-   const db = initializeFirestore(app, {}, "default");
-
+const db = initializeFirestore(app, {}, "default");
 
     /* LOGIN */
 
@@ -467,8 +468,6 @@ const firebaseConfig = {
       message.textContent = "Logging in...";
 
 try {
-
-  await setPersistence(auth, browserLocalPersistence);
 
   await signInWithEmailAndPassword(
     auth,

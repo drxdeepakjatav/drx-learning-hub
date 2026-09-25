@@ -299,19 +299,16 @@ const message = document.getElementById("message");
 
 onAuthStateChanged(auth, async (user) => {
 
+    console.log("Courses page user:", user);
+
     if (!user) {
-        document.body.innerHTML = `
-            <div style="padding:40px;text-align:center;font-family:Arial">
-                <h2>Admin Login Required</h2>
-                <p>Please login from Admin Dashboard first.</p>
-                <a href="admin.html">Go to Admin Login</a>
-            </div>
-        `;
+        alert("Firebase Auth user nahi mila. Pehle admin.html se login karein.");
         return;
     }
 
-    loadCourses();
+    console.log("Logged in UID:", user.uid);
 
+    loadCourses();
 });
 
 /* Add Course */
