@@ -322,6 +322,9 @@ courseForm.addEventListener("submit", async (e) => {
 
     try {
 
+        console.log("AUTH USER:", auth.currentUser);
+        console.log("AUTH UID:", auth.currentUser?.uid);
+
         await addDoc(
             collection(db, "courses"),
             {
