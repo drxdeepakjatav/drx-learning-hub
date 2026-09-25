@@ -245,6 +245,7 @@ import {
     initializeApp
 } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
 
+
 import {
   initializeAuth,
   onAuthStateChanged,
@@ -293,8 +294,6 @@ const db = initializeFirestore(
 const courseForm = document.getElementById("courseForm");
 const courseList = document.getElementById("courseList");
 const message = document.getElementById("message");
-
-await setPersistence(auth, browserLocalPersistence);
 
 /* Check Login */
 
