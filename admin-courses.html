@@ -296,6 +296,7 @@ const courseForm = document.getElementById("courseForm");
 const courseList = document.getElementById("courseList");
 const message = document.getElementById("message");
 
+await setPersistence(auth, browserLocalPersistence);
 
 /* Check Login */
 
@@ -309,7 +310,6 @@ onAuthStateChanged(auth, async (user) => {
     loadCourses();
 
 });
-
 
 /* Add Course */
 

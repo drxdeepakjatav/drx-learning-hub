@@ -466,13 +466,15 @@ const firebaseConfig = {
 
       message.textContent = "Logging in...";
 
-      try {
+     try {
 
-        await signInWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
+  await setPersistence(auth, browserLocalPersistence);
+
+  await signInWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
 
 } catch (error) {
     console.error("Firebase Login Error:", error);
