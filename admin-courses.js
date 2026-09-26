@@ -3,8 +3,9 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
 
 import {
-    getAuth,
-    onAuthStateChanged
+    initializeAuth,
+    onAuthStateChanged,
+    browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
 
 import {
@@ -29,7 +30,11 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+
+const auth = initializeAuth(app, {
+    persistence: browserLocalPersistence
+});
+
 const db = initializeFirestore(app, {}, "default");
 
 const courseForm = document.getElementById("courseForm");
