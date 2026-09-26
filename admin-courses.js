@@ -20,7 +20,7 @@ import {
 
 /* Firebase Configuration */
 const firebaseConfig = {
-    apiKey: "AIzaSyC-dcvx06CGJbiqCCXlteLG3IqY3C3x8OE",
+    apiKey: "AIzaSyC-Dcvx06CGJbiqCCXlteLG3IqY3C3x8OE",
     authDomain: "drx-learning-hub.firebaseapp.com",
     projectId: "drx-learning-hub",
     storageBucket: "drx-learning-hub.firebasestorage.app",
