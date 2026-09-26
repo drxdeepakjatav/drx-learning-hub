@@ -47,6 +47,8 @@ onAuthStateChanged(auth, async (user) => {
     console.log("Courses page user:", user);
 
     if (!user) {
+        console.log("No Firebase user found on Courses page.");
+
         courseList.innerHTML = `
             <div class="login-box">
                 <h2>Admin Login Required</h2>
