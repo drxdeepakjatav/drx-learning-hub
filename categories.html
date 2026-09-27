@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Courses | DRx Learning Hub</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-top: 35px;
+        }
+
+        .category-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .category-card:hover {
+            transform: translateY(-6px);
+        }
+
+        .category-icon {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+        .category-card h3 {
+            margin-bottom: 10px;
+        }
+
+        .category-card p {
+            margin-bottom: 20px;
+        }
+
+        .category-card a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="container navbar">
+
+        <a href="index.html" class="logo">
+            <span class="logo-main">DRx</span>
+            <span class="logo-text">Learning Hub</span>
+        </a>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="categories.html" class="active">Courses</a>
+            <a href="video.html">Videos</a>
+            <a href="notes.html">Notes</a>
+            <a href="tests.html">Tests</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+
+    </div>
+
+</header>
+
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span>LEARNING PROGRAMS</span>
+
+            <h2>Explore Courses</h2>
+
+            <p>
+                Choose your education category and explore available programs.
+            </p>
+
+        </div>
+
+
+        <div class="category-grid">
+
+            <!-- Pharmacy -->
+            <div class="category-card">
+
+                <div class="category-icon">💊</div>
+
+                <h3>Pharmacy</h3>
+
+                <p>
+                    D.Pharm, B.Pharm, M.Pharm and Pharm.D
+                </p>
+
+                <a href="programs.html?category=pharmacy">
+                    Explore Pharmacy →
+                </a>
+
+            </div>
+
+
+            <!-- Nursing -->
+            <div class="category-card">
+
+                <div class="category-icon">🩺</div>
+
+                <h3>Nursing</h3>
+
+                <p>
+                    ANM, GNM, B.Sc Nursing and M.Sc Nursing
+                </p>
+
+                <a href="programs.html?category=nursing">
+                    Explore Nursing →
+                </a>
+
+            </div>
+
+
+            <!-- B.Sc -->
+            <div class="category-card">
+
+                <div class="category-icon">🔬</div>
+
+                <h3>B.Sc</h3>
+
+                <p>
+                    Biology, Chemistry, Physics and more
+                </p>
+
+                <a href="programs.html?category=bsc">
+                    Explore B.Sc →
+                </a>
+
+            </div>
+
+
+            <!-- Paramedical -->
+            <div class="category-card">
+
+                <div class="category-icon">🧪</div>
+
+                <h3>Paramedical</h3>
+
+                <p>
+                    BMLT, DMLT, BPT, MMLT and more
+                </p>
+
+                <a href="programs.html?category=paramedical">
+                    Explore Paramedical →
+                </a>
+
+            </div>
+
+
+<!-- School -->
+<div class="category-card">
+
+    <div class="category-icon">🏫</div>
+
+    <h3>School</h3>
+
+    <p>
+        10th & 12th Classes
+    </p>
+
+    <a href="programs.html?category=school">
+        Explore School →
+    </a>
+
+</div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer class="footer">
+
+    <div class="copyright">
+
+        © <span id="year"></span>
+        DRx Learning Hub | Deepak Jatav
+
+    </div>
+
+</footer>
+
+
+<script src="main.js"></script>
+
+</body>
+</html>

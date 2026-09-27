@@ -1,0 +1,397 @@
+/* =========================================
+   DRx Learning Hub
+   B.Pharm Universal Test System
+   Common CSS
+   ========================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #172033;
+    line-height: 1.6;
+}
+
+/* ===============================
+   HEADER
+   =============================== */
+
+.test-header {
+    background: linear-gradient(135deg, #172033, #2563eb);
+    color: #ffffff;
+    padding: 28px 20px;
+}
+
+.header-content {
+    max-width: 1100px;
+    margin: auto;
+}
+
+.test-header h1 {
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.test-header p {
+    font-size: 15px;
+    opacity: 0.9;
+}
+
+/* ===============================
+   MAIN CONTAINER
+   =============================== */
+
+.test-container {
+    max-width: 950px;
+    margin: 35px auto;
+    padding: 0 20px;
+}
+
+/* ===============================
+   TEST TITLE
+   =============================== */
+
+.page-title {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    margin-bottom: 25px;
+    border: 1px solid #e4e7ec;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.05);
+}
+
+.page-title h2 {
+    font-size: 28px;
+    margin-bottom: 7px;
+}
+
+.page-title p {
+    color: #667085;
+}
+
+/* ===============================
+   STUDENT INFORMATION
+   =============================== */
+
+.student-box {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    border: 1px solid #e4e7ec;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.05);
+}
+
+.student-box h3 {
+    margin-bottom: 15px;
+}
+
+.student-box label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+.student-box input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+}
+
+.student-box input:focus {
+    border-color: #2563eb;
+}
+
+/* ===============================
+   QUESTION CARD
+   =============================== */
+
+.question {
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #e4e7ec;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.05);
+}
+
+.question h3 {
+    font-size: 18px;
+    margin-bottom: 18px;
+    color: #172033;
+}
+
+/* ===============================
+   OPTIONS
+   =============================== */
+
+.question label {
+    display: block;
+    background: #f8fafc;
+    border: 1px solid #e4e7ec;
+    border-radius: 9px;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.question label:hover {
+    background: #eef4ff;
+    border-color: #2563eb;
+}
+
+.question input[type="radio"] {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+/* ===============================
+   BUTTONS
+   =============================== */
+
+.test-btn {
+    display: inline-block;
+    border: none;
+    text-decoration: none;
+    background: #2563eb;
+    color: #ffffff;
+    padding: 12px 22px;
+    border-radius: 9px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 5px;
+    transition: 0.2s;
+}
+
+.test-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+.reset-btn {
+    background: #667085;
+}
+
+.reset-btn:hover {
+    background: #475467;
+}
+
+/* ===============================
+   RESULT
+   =============================== */
+
+#result {
+    margin-top: 30px;
+}
+
+.result-box {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    border: 1px solid #e4e7ec;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+}
+
+.result-box h2 {
+    margin-bottom: 15px;
+}
+
+.result-box p {
+    font-size: 17px;
+    margin: 7px 0;
+}
+
+/* ===============================
+   PASS / FAIL
+   =============================== */
+
+.pass {
+    color: #15803d;
+    font-weight: 700;
+}
+
+.fail {
+    color: #dc2626;
+    font-weight: 700;
+}
+
+/* ===============================
+   ANSWER REVIEW
+   =============================== */
+
+.answer-review {
+    text-align: left;
+    margin-top: 25px;
+}
+
+.answer-review h3 {
+    margin-bottom: 15px;
+}
+
+.review-item {
+    padding: 14px;
+    border-radius: 9px;
+    margin-bottom: 10px;
+    border: 1px solid #e4e7ec;
+}
+
+.correct-answer {
+    background: #f0fdf4;
+    border-color: #86efac;
+}
+
+.wrong-answer {
+    background: #fef2f2;
+    border-color: #fca5a5;
+}
+
+/* ===============================
+   CERTIFICATE
+   =============================== */
+
+.certificate {
+    background: #ffffff;
+    border: 8px double #172033;
+    padding: 45px 30px;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.certificate h1 {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.certificate h2 {
+    font-size: 25px;
+    margin: 15px 0;
+}
+
+.certificate p {
+    margin: 8px 0;
+}
+
+.certificate-id {
+    margin-top: 20px;
+    font-size: 13px;
+    color: #667085;
+}
+
+.certificate-date {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* ===============================
+   CERTIFICATE BUTTON
+   =============================== */
+
+.certificate-btn {
+    margin-top: 20px;
+}
+
+/* ===============================
+   BACK BUTTON
+   =============================== */
+
+.back-btn {
+    display: inline-block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #2563eb;
+    font-weight: 600;
+}
+
+/* ===============================
+   MOBILE
+   =============================== */
+
+@media (max-width: 700px) {
+
+    .test-header {
+        padding: 22px 15px;
+    }
+
+    .test-header h1 {
+        font-size: 23px;
+    }
+
+    .test-container {
+        margin-top: 20px;
+        padding: 0 12px;
+    }
+
+    .page-title h2 {
+        font-size: 23px;
+    }
+
+    .question {
+        padding: 18px;
+    }
+
+    .question h3 {
+        font-size: 16px;
+    }
+
+    .test-btn {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    .certificate {
+        padding: 30px 15px;
+    }
+
+    .certificate h1 {
+        font-size: 25px;
+    }
+
+    .certificate h2 {
+        font-size: 21px;
+    }
+}
+
+/* ===============================
+   PRINT / SAVE PDF
+   =============================== */
+
+@media print {
+
+    body {
+        background: #ffffff;
+    }
+
+    .test-header,
+    .page-title,
+    .student-box,
+    .question,
+    .test-btn,
+    .back-btn {
+        display: none !important;
+    }
+
+    .test-container {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .certificate {
+        display: block !important;
+        margin: 0;
+        min-height: 650px;
+        page-break-inside: avoid;
+    }
+}

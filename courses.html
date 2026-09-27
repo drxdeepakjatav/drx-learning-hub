@@ -54,72 +54,11 @@ simple and structured lessons.
 </div>
 
 
-<div class="feature-grid">
+<div class="feature-grid" id="courseList">
 
-<div class="feature-card">
-
-<div class="feature-icon">💊</div>
-
-<h3>Pharmaceutics</h3>
-
-<p>
-Dosage forms, formulations,
-manufacturing and pharmaceutical technology.
-</p>
-
-<a href="#">Coming Soon →</a>
-
-</div>
-
-
-<div class="feature-card">
-
-<div class="feature-icon">🧬</div>
-
-<h3>Biology</h3>
-
-<p>
-Important biology concepts,
-diagrams and exam-oriented topics.
-</p>
-
-<a href="#">Coming Soon →</a>
-
-</div>
-
-
-<div class="feature-card">
-
-<div class="feature-icon">🔬</div>
-
-<h3>Pharmaceutical Sciences</h3>
-
-<p>
-Learn important concepts from
-different pharmacy subjects.
-</p>
-
-<a href="#">Coming Soon →</a>
-
-</div>
-
-
-<div class="feature-card">
-
-<div class="feature-icon">📝</div>
-
-<h3>Exam Preparation</h3>
-
-<p>
-MCQs, revision material and
-important examination topics.
-</p>
-
-<a href="#">Coming Soon →</a>
-
-</div>
-
-</div>
+    <p style="text-align:center; width:100%;">
+        Loading courses...
+    </p>
 
 </div>
 
@@ -137,7 +76,98 @@ DRx Learning Hub | Deepak Jatav
 
 </footer>
 
+<script type="module">
+import { initializeApp } 
+from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
 
+import {
+    initializeFirestore,
+    collection,
+    getDocs
+} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+
+const firebaseConfig = {
+    apiKey: "AIzaSyC-dcvx06CGJbiqCCXlteLG3IqY3C3x8OE",
+    authDomain: "drx-learning-hub.firebaseapp.com",
+    projectId: "drx-learning-hub",
+    storageBucket: "drx-learning-hub.firebasestorage.app",
+    messagingSenderId: "562733337038",
+    appId: "1:562733337038:web:2db977c4b545cb1a5f839f",
+    measurementId: "G-52EGNHBYF6"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = initializeFirestore(app, {}, "default");
+
+const courseList = document.getElementById("courseList");
+
+
+async function loadCourses() {
+
+    try {
+
+        const snapshot = await getDocs(collection(db, "courses"));
+
+        courseList.innerHTML = "";
+
+        if (snapshot.empty) {
+
+            courseList.innerHTML = `
+                <p style="text-align:center; width:100%;">
+                    No courses available yet.
+                </p>
+            `;
+
+            return;
+        }
+
+
+        snapshot.forEach((doc) => {
+
+            const course = doc.data();
+
+            const card = document.createElement("div");
+
+            card.className = "feature-card";
+
+            card.innerHTML = `
+                <div class="feature-icon">📚</div>
+
+                <h3>${course.name || "Course"}</h3>
+
+                <p>
+                    ${course.description || "Learn this course with DRx Learning Hub."}
+                </p>
+
+                ${
+                    course.link
+                    ? `<a href="${course.link}">Open Course →</a>`
+                    : `<a href="#">Coming Soon →</a>`
+                }
+            `;
+
+            courseList.appendChild(card);
+
+        });
+
+    } catch (error) {
+
+        console.error("Course loading error:", error);
+
+        courseList.innerHTML = `
+            <p style="text-align:center; width:100%;">
+                Unable to load courses.
+            </p>
+        `;
+    }
+}
+
+
+loadCourses();
+
+</script>
 <script src="main.js"></script>
 
 </body>

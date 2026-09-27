@@ -1,0 +1,2083 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BP101T Unit 1 Test | DRx Learning Hub</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #222;
+            line-height: 1.6;
+        }
+
+        /* HEADER */
+
+        header {
+            background: #173b7a;
+            color: white;
+            text-align: center;
+            padding: 28px 20px;
+        }
+
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            font-size: 15px;
+        }
+
+        /* MAIN */
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 18px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: #173b7a;
+            font-weight: bold;
+        }
+
+        /* STUDENT NAME */
+
+        .student-box {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+        }
+
+        .student-box h2 {
+            color: #173b7a;
+            margin-bottom: 12px;
+        }
+
+        .student-box label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 7px;
+        }
+
+        .student-box input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 16px;
+        }
+
+        /* TEST INFO */
+
+        .test-info {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+        }
+
+        .test-info h2 {
+            color: #173b7a;
+            margin-bottom: 10px;
+        }
+
+        .test-info p {
+            margin: 5px 0;
+        }
+
+        /* QUESTIONS */
+
+        .question {
+            background: white;
+            padding: 22px;
+            margin-bottom: 18px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        .question h3 {
+            color: #173b7a;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .option {
+            display: block;
+            background: #f7f9fc;
+            padding: 11px 14px;
+            margin: 9px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid #e1e5eb;
+        }
+
+        .option:hover {
+            background: #eef3fb;
+        }
+
+        .option input {
+            margin-right: 10px;
+        }
+
+        /* SUBMIT */
+
+        .submit-area {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        #submitBtn,
+        #restartBtn,
+        #certificateBtn {
+            border: none;
+            padding: 13px 28px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #submitBtn {
+            background: #173b7a;
+            color: white;
+        }
+
+        #restartBtn {
+            background: #555;
+            color: white;
+            margin-top: 15px;
+        }
+
+        #certificateBtn {
+            background: #198754;
+            color: white;
+            margin-top: 15px;
+        }
+
+        #submitBtn:hover,
+        #restartBtn:hover,
+        #certificateBtn:hover {
+            opacity: 0.9;
+        }
+
+        /* RESULT */
+
+        #result {
+            display: none;
+            background: white;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        #result h2 {
+            color: #173b7a;
+            margin-bottom: 10px;
+        }
+
+        #score {
+            font-size: 25px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        #percentage {
+            font-size: 19px;
+            margin-bottom: 10px;
+        }
+
+        #passStatus {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 12px 0;
+        }
+
+        /* ANSWER REVIEW */
+
+        .answer-review {
+            display: none;
+            background: white;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .answer-review h2 {
+            color: #173b7a;
+            margin-bottom: 18px;
+        }
+
+        .review-item {
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            background: #f7f9fc;
+        }
+
+        .correct {
+            border-left: 5px solid #198754;
+        }
+
+        .wrong {
+            border-left: 5px solid #dc3545;
+        }
+
+        .review-item p {
+            margin: 5px 0;
+        }
+
+        /* CERTIFICATE */
+
+        #certificateSection {
+            display: none;
+            background: white;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        #certificateSection h2 {
+            color: #198754;
+            margin-bottom: 10px;
+        }
+
+        .certificate {
+            width: 100%;
+            max-width: 850px;
+            min-height: 560px;
+            margin: 25px auto;
+            padding: 45px 35px;
+            border: 12px double #173b7a;
+            background: #fffdf5;
+            text-align: center;
+            position: relative;
+        }
+
+        .certificate::before {
+            content: "";
+            position: absolute;
+            inset: 12px;
+            border: 2px solid #173b7a;
+            pointer-events: none;
+        }
+
+        .certificate-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .certificate-brand {
+            font-size: 28px;
+            font-weight: bold;
+            color: #173b7a;
+            margin-bottom: 10px;
+        }
+
+        .certificate-title {
+            font-family: Georgia, serif;
+            font-size: 38px;
+            color: #173b7a;
+            margin: 15px 0;
+            letter-spacing: 2px;
+        }
+
+        .certificate-subtitle {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .certificate-name {
+            font-family: Georgia, serif;
+            font-size: 34px;
+            font-weight: bold;
+            color: #111;
+            margin: 15px 0;
+            border-bottom: 2px solid #173b7a;
+            display: inline-block;
+            padding: 0 25px 5px;
+        }
+
+        .certificate-text {
+            font-size: 17px;
+            margin: 15px auto;
+            max-width: 700px;
+        }
+
+        .certificate-course {
+            font-size: 20px;
+            font-weight: bold;
+            color: #173b7a;
+            margin: 15px 0;
+        }
+
+        .certificate-details {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 35px;
+            gap: 20px;
+        }
+
+        .certificate-detail {
+            min-width: 150px;
+        }
+
+        .certificate-detail strong {
+            display: block;
+            font-size: 16px;
+            color: #173b7a;
+        }
+
+        .certificate-detail span {
+            display: block;
+            margin-top: 5px;
+            font-size: 15px;
+        }
+
+        .certificate-footer {
+            margin-top: 35px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .certificate-id {
+            margin-top: 15px;
+            font-size: 13px;
+            color: #777;
+        }
+
+        .certificate-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* FOOTER */
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+
+            header h1 {
+                font-size: 23px;
+            }
+
+            .question h3 {
+                font-size: 16px;
+            }
+
+            .container {
+                padding: 0 12px;
+            }
+
+            .certificate {
+                min-height: auto;
+                padding: 35px 15px;
+                border-width: 8px;
+            }
+
+            .certificate-title {
+                font-size: 28px;
+            }
+
+            .certificate-name {
+                font-size: 25px;
+            }
+
+            .certificate-course {
+                font-size: 17px;
+            }
+
+            .certificate-details {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+
+        /* PRINT CERTIFICATE */
+
+        @media print {
+
+            body {
+                background: white;
+            }
+
+            body * {
+                visibility: hidden;
+            }
+
+            #certificateSection,
+            #certificateSection * {
+                visibility: visible;
+            }
+
+            #certificateSection {
+                display: block !important;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                box-shadow: none;
+            }
+
+            .certificate {
+                max-width: 100%;
+                width: 100%;
+                min-height: 650px;
+                margin: 0;
+            }
+
+            .certificate-buttons,
+            #certificateSection > h2,
+            #certificateSection > p {
+                display: none !important;
+            }
+
+            @page {
+                size: A4 landscape;
+                margin: 0;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>📝 BP101T Unit 1 Test</h1>
+
+    <p>
+        Introduction to Python Programming
+    </p>
+
+</header>
+
+
+<div class="container">
+
+
+    <a href="tests.html" class="back-btn">
+        ← Back to BP101T Tests
+    </a>
+
+
+    <!-- STUDENT NAME -->
+
+    <div class="student-box">
+
+        <h2>👤 Student Information</h2>
+
+        <label for="studentName">
+            Enter Your Full Name
+        </label>
+
+        <input
+            type="text"
+            id="studentName"
+            placeholder="Enter your full name"
+            autocomplete="name"
+        >
+
+    </div>
+
+
+    <!-- TEST INFORMATION -->
+
+    <div class="test-info">
+
+        <h2>
+            Unit 1: Introduction to Python Programming
+        </h2>
+
+        <p>
+            <strong>Total Questions:</strong>
+            20
+        </p>
+
+        <p>
+            <strong>Total Marks:</strong>
+            20
+        </p>
+
+        <p>
+            <strong>Marks per Question:</strong>
+            1
+        </p>
+
+        <p>
+            <strong>Passing Percentage:</strong>
+            60%
+        </p>
+
+        <p>
+            <strong>Instructions:</strong>
+            Select one answer for every question and click Submit Test.
+        </p>
+
+    </div>
+
+
+    <!-- QUIZ -->
+
+    <form id="quizForm">
+
+
+        <!-- Q1 -->
+
+        <div class="question">
+
+            <h3>
+                1. Which of the following is included in Unit 1 of BP101T?
+            </h3>
+
+            <label class="option">
+                <input type="radio" name="q1" value="a">
+                A. Installing Python and an IDE
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q1" value="b">
+                B. Machine learning algorithms
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q1" value="c">
+                C. Pharmacokinetic modelling
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q1" value="d">
+                D. Regression analysis
+            </label>
+
+        </div>
+
+
+        <!-- Q2 -->
+
+        <div class="question">
+
+            <h3>
+                2. Which of the following is mentioned as an IDE in the BP101T syllabus?
+            </h3>
+
+            <label class="option">
+                <input type="radio" name="q2" value="a">
+                A. Jupyter Notebook
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q2" value="b">
+                B. PowerPoint
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q2" value="c">
+                C. Photoshop
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q2" value="d">
+                D. Excel only
+            </label>
+
+        </div>
+
+
+        <!-- Q3 -->
+
+        <div class="question">
+
+            <h3>
+                3. Which of the following is listed as a Python data type in Unit 1?
+            </h3>
+
+            <label class="option">
+                <input type="radio" name="q3" value="a">
+                A. Integer
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q3" value="b">
+                B. Matrix
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q3" value="c">
+                C. Dataset
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q3" value="d">
+                D. Table
+            </label>
+
+        </div>
+
+
+        <!-- Q4 -->
+
+        <div class="question">
+
+            <h3>
+                4. Which of the following is also listed as a Python data type in Unit 1?
+            </h3>
+
+            <label class="option">
+                <input type="radio" name="q4" value="a">
+                A. Boolean
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q4" value="b">
+                B. Database
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q4" value="c">
+                C. Spreadsheet
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q4" value="d">
+                D. Record
+            </label>
+
+        </div>
+
+
+        <!-- Q5 -->
+
+        <div class="question">
+
+            <h3>
+                5. What does Unit 1 include along with variables and data types?
+            </h3>
+
+            <label class="option">
+                <input type="radio" name="q5" value="a">
+                A. Type casting
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q5" value="b">
+                B. Clustering
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q5" value="c">
+                C. Classification
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q5" value="d">
+                D. Regression
+            </label>
+
+        </div>
+
+
+        <!-- Q6 -->
+
+        <div class="question">
+
+            <h3>
+                6. Which operators are specifically mentioned in Unit 1?
+            </h3>
+
+            <label class="option">
+                <input type="radio" name="q6" value="a">
+                A. Arithmetic, comparison and logical
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q6" value="b">
+                B. Regression and classification
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q6" value="c">
+                C. Clinical and biological
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q6" value="d">
+                D. Statistical and graphical
+            </label>
+
+        </div>
+
+
+        <!-- Q7 -->
+
+        <div class="question">
+
+            <h3>
+                7. Which of the following is included in Unit 1?
+            </h3>
+
+            <label class="option">
+                <input type="radio" name="q7" value="a">
+                A. Input and output operations
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q7" value="b">
+                B. Random forest
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q7" value="c">
+                C. K-means clustering
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q7" value="d">
+                D. ROC-AUC
+            </label>
+
+        </div>
+
+
+        <!-- Q8 -->
+
+        <div class="question">
+
+            <h3>
+                8. Basic ______ operations and manipulation techniques are included in Unit 1.
+            </h3>
+
+            <label class="option">
+                <input type="radio" name="q8" value="a">
+                A. String
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q8" value="b">
+                B. Regression
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q8" value="c">
+                C. Clustering
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q8" value="d">
+                D. Classification
+            </label>
+
+        </div>
+
+
+        <!-- Q9 -->
+
+        <div class="question">
+
+            <h3>
+                9. Unit 1 introduces which two broad categories of Python libraries?
+            </h3>
+
+            <label class="option">
+                <input type="radio" name="q9" value="a">
+                A. Standard and third-party libraries
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q9" value="b">
+                B. Clinical and laboratory libraries
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q9" value="c">
+                C. Hardware and software libraries
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q9" value="d">
+                D. Medical and biological libraries
+            </label>
+
+        </div>
+
+
+        <!-- Q10 -->
+
+        <div class="question">
+
+            <h3>
+                10. What does the syllabus include regarding Python libraries?
+            </h3>
+
+            <label class="option">
+                <input type="radio" name="q10" value="a">
+                A. Installing and uninstalling libraries
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q10" value="b">
+                B. Designing library buildings
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q10" value="c">
+                C. Publishing library books
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q10" value="d">
+                D. Library management
+            </label>
+
+        </div>
+
+
+        <!-- Q11 -->
+
+        <div class="question">
+
+            <h3>
+                11. Which of the following is NOT listed as a data type in the Unit 1 syllabus?
+            </h3>
+
+            <label class="option">
+                <input type="radio" name="q11" value="a">
+                A. Integer
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q11" value="b">
+                B. Float
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q11" value="c">
+                C. String
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q11" value="d">
+                D. Database
+            </label>
+
+        </div>
+
+
+        <!-- Q12 -->
+
+        <div class="question">
+
+            <h3>
+                12. Which IDE is explicitly mentioned in the BP101T syllabus?
+            </h3>
+
+            <label class="option">
+                <input type="radio" name="q12" value="a">
+                A. VS Code
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q12" value="b">
+                B. Power BI
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q12" value="c">
+                C. Adobe Illustrator
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q12" value="d">
+                D. Microsoft Word
+            </label>
+
+        </div>
+
+
+        <!-- Q13 -->
+
+        <div class="question">
+
+            <h3>
+                13. Unit 1 discusses the advantages of IDEs over what?
+            </h3>
+
+            <label class="option">
+                <input type="radio" name="q13" value="a">
+                A. Text editors
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q13" value="b">
+                B. Databases
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q13" value="c">
+                C. Spreadsheets
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q13" value="d">
+                D. Web browsers
+            </label>
+
+        </div>
+
+
+        <!-- Q14 -->
+
+        <div class="question">
+
+            <h3>
+                14. Which type of operation is included under basic operators?
+            </h3>
+
+            <label class="option">
+                <input type="radio" name="q14" value="a">
+                A. Comparison
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q14" value="b">
+                B. Clustering
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q14" value="c">
+                C. Visualization
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q14" value="d">
+                D. Aggregation
+            </label>
+
+        </div>
+
+
+        <!-- Q15 -->
+
+        <div class="question">
+
+            <h3>
+                15. Which of the following is included in the Unit 1 syllabus?
+            </h3>
+
+            <label class="option">
+                <input type="radio" name="q15" value="a">
+                A. Strings
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q15" value="b">
+                B. Decision trees
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q15" value="c">
+                C. Logistic regression
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q15" value="d">
+                D. K-nearest neighbors
+            </label>
+
+        </div>
+
+
+        <!-- Q16 -->
+
+        <div class="question">
+
+            <h3>
+                16. Which pair correctly represents data types listed in Unit 1?
+            </h3>
+
+            <label class="option">
+                <input type="radio" name="q16" value="a">
+                A. Float and Boolean
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q16" value="b">
+                B. Dataset and table
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q16" value="c">
+                C. Chart and graph
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q16" value="d">
+                D. Clinical and biological
+            </label>
+
+        </div>
+
+
+        <!-- Q17 -->
+
+        <div class="question">
+
+            <h3>
+                17. Type casting is included in Unit 1 along with which topic?
+            </h3>
+
+            <label class="option">
+                <input type="radio" name="q17" value="a">
+                A. Basic operators
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q17" value="b">
+                B. Machine learning
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q17" value="c">
+                C. Data visualization
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q17" value="d">
+                D. Statistical distributions
+            </label>
+
+        </div>
+
+
+        <!-- Q18 -->
+
+        <div class="question">
+
+            <h3>
+                18. Which of the following is specifically included in Unit 1?
+            </h3>
+
+            <label class="option">
+                <input type="radio" name="q18" value="a">
+                A. Logical operators
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q18" value="b">
+                B. Confusion matrix
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q18" value="c">
+                C. ROC curve
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q18" value="d">
+                D. K-means
+            </label>
+
+        </div>
+
+
+        <!-- Q19 -->
+
+        <div class="question">
+
+            <h3>
+                19. How many hours are allocated to Unit 1 according to the syllabus?
+            </h3>
+
+            <label class="option">
+                <input type="radio" name="q19" value="a">
+                A. 3 hours
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q19" value="b">
+                B. 4 hours
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q19" value="c">
+                C. 6 hours
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q19" value="d">
+                D. 8 hours
+            </label>
+
+        </div>
+
+
+        <!-- Q20 -->
+
+        <div class="question">
+
+            <h3>
+                20. What is the title of Unit 1 in BP101T?
+            </h3>
+
+            <label class="option">
+                <input type="radio" name="q20" value="a">
+                A. Introduction to Python programming
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q20" value="b">
+                B. Data Handling with Pandas
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q20" value="c">
+                C. Data Visualization with Matplotlib
+            </label>
+
+            <label class="option">
+                <input type="radio" name="q20" value="d">
+                D. Control Structures & Functions
+            </label>
+
+        </div>
+
+
+        <div class="submit-area">
+
+            <button
+                type="button"
+                id="submitBtn"
+                onclick="submitTest()"
+            >
+                Submit Test
+            </button>
+
+        </div>
+
+    </form>
+
+
+    <!-- RESULT -->
+
+    <div id="result">
+
+        <h2>🎉 Test Result</h2>
+
+        <div id="score"></div>
+
+        <div id="percentage"></div>
+
+        <div id="passStatus"></div>
+
+        <p id="message"></p>
+
+        <button
+            id="certificateBtn"
+            onclick="generateCertificate()"
+            style="display:none;"
+        >
+            🏆 Generate Certificate
+        </button>
+
+        <br>
+
+        <button
+            id="restartBtn"
+            onclick="restartTest()"
+        >
+            🔄 Restart Test
+        </button>
+
+    </div>
+
+
+    <!-- ANSWER REVIEW -->
+
+    <div
+        id="answerReview"
+        class="answer-review"
+    >
+
+        <h2>📋 Answer Review</h2>
+
+        <div id="reviewContent"></div>
+
+    </div>
+
+
+    <!-- CERTIFICATE -->
+
+    <div id="certificateSection">
+
+        <h2>🏆 Certificate Generated</h2>
+
+        <p>
+            Congratulations! You have successfully completed Unit 1.
+        </p>
+
+
+        <div
+            id="certificate"
+            class="certificate"
+        >
+
+            <div class="certificate-content">
+
+                <div class="certificate-brand">
+                    DRx Learning Hub
+                </div>
+
+
+                <div class="certificate-title">
+                    CERTIFICATE
+                </div>
+
+
+                <div class="certificate-subtitle">
+                    OF COMPLETION
+                </div>
+
+
+                <p class="certificate-text">
+                    This certificate is proudly presented to
+                </p>
+
+
+                <div
+                    id="certificateName"
+                    class="certificate-name"
+                >
+                    Student Name
+                </div>
+
+
+                <p class="certificate-text">
+                    for successfully completing
+                </p>
+
+
+                <div class="certificate-course">
+                    BP101T – Basics of Python Programming
+                    for Pharmaceutical Sciences
+                </div>
+
+
+                <p class="certificate-text">
+                    Unit 1: Introduction to Python Programming
+                </p>
+
+
+                <div class="certificate-details">
+
+                    <div class="certificate-detail">
+
+                        <strong>
+                            Score
+                        </strong>
+
+                        <span id="certificateScore">
+                            -
+                        </span>
+
+                    </div>
+
+
+                    <div class="certificate-detail">
+
+                        <strong>
+                            Percentage
+                        </strong>
+
+                        <span id="certificatePercentage">
+                            -
+                        </span>
+
+                    </div>
+
+
+                    <div class="certificate-detail">
+
+                        <strong>
+                            Date
+                        </strong>
+
+                        <span id="certificateDate">
+                            -
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="certificate-footer">
+
+                    DRx Learning Hub<br>
+
+                    Educational Learning & Assessment Platform
+
+                    <div
+                        class="certificate-id"
+                        id="certificateId"
+                    >
+                        Certificate ID: -
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="certificate-buttons">
+
+            <button
+                id="printCertificateBtn"
+                onclick="printCertificate()"
+                style="
+                    background:#173b7a;
+                    color:white;
+                    border:none;
+                    padding:13px 28px;
+                    border-radius:8px;
+                    font-size:16px;
+                    font-weight:bold;
+                    cursor:pointer;
+                "
+            >
+                📥 Download / Save as PDF
+            </button>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<footer>
+
+    © DRx Learning Hub | BP101T Unit 1 Test
+
+</footer>
+
+
+
+<script>
+
+
+/* ==========================================
+   CORRECT ANSWERS
+========================================== */
+
+const correctAnswers = {
+
+    q1: "a",
+    q2: "a",
+    q3: "a",
+    q4: "a",
+    q5: "a",
+    q6: "a",
+    q7: "a",
+    q8: "a",
+    q9: "a",
+    q10: "a",
+    q11: "d",
+    q12: "a",
+    q13: "a",
+    q14: "a",
+    q15: "a",
+    q16: "a",
+    q17: "a",
+    q18: "a",
+    q19: "c",
+    q20: "a"
+
+};
+
+
+/* ==========================================
+   QUESTION TEXT
+========================================== */
+
+const questionTexts = {
+
+    q1: "Which of the following is included in Unit 1 of BP101T?",
+
+    q2: "Which of the following is mentioned as an IDE in the BP101T syllabus?",
+
+    q3: "Which of the following is listed as a Python data type in Unit 1?",
+
+    q4: "Which of the following is also listed as a Python data type in Unit 1?",
+
+    q5: "What does Unit 1 include along with variables and data types?",
+
+    q6: "Which operators are specifically mentioned in Unit 1?",
+
+    q7: "Which of the following is included in Unit 1?",
+
+    q8: "Basic string operations and manipulation techniques are included in Unit 1.",
+
+    q9: "Unit 1 introduces which two broad categories of Python libraries?",
+
+    q10: "What does the syllabus include regarding Python libraries?",
+
+    q11: "Which of the following is NOT listed as a data type in the Unit 1 syllabus?",
+
+    q12: "Which IDE is explicitly mentioned in the BP101T syllabus?",
+
+    q13: "Unit 1 discusses the advantages of IDEs over what?",
+
+    q14: "Which type of operation is included under basic operators?",
+
+    q15: "Which of the following is included in the Unit 1 syllabus?",
+
+    q16: "Which pair correctly represents data types listed in Unit 1?",
+
+    q17: "Type casting is included in Unit 1 along with which topic?",
+
+    q18: "Which of the following is specifically included in Unit 1?",
+
+    q19: "How many hours are allocated to Unit 1 according to the syllabus?",
+
+    q20: "What is the title of Unit 1 in BP101T?"
+
+};
+
+
+/* ==========================================
+   OPTION TEXT
+========================================== */
+
+const optionTexts = {
+
+    q1: {
+        a: "Installing Python and an IDE",
+        b: "Machine learning algorithms",
+        c: "Pharmacokinetic modelling",
+        d: "Regression analysis"
+    },
+
+    q2: {
+        a: "Jupyter Notebook",
+        b: "PowerPoint",
+        c: "Photoshop",
+        d: "Excel only"
+    },
+
+    q3: {
+        a: "Integer",
+        b: "Matrix",
+        c: "Dataset",
+        d: "Table"
+    },
+
+    q4: {
+        a: "Boolean",
+        b: "Database",
+        c: "Spreadsheet",
+        d: "Record"
+    },
+
+    q5: {
+        a: "Type casting",
+        b: "Clustering",
+        c: "Classification",
+        d: "Regression"
+    },
+
+    q6: {
+        a: "Arithmetic, comparison and logical",
+        b: "Regression and classification",
+        c: "Clinical and biological",
+        d: "Statistical and graphical"
+    },
+
+    q7: {
+        a: "Input and output operations",
+        b: "Random forest",
+        c: "K-means clustering",
+        d: "ROC-AUC"
+    },
+
+    q8: {
+        a: "String",
+        b: "Regression",
+        c: "Clustering",
+        d: "Classification"
+    },
+
+    q9: {
+        a: "Standard and third-party libraries",
+        b: "Clinical and laboratory libraries",
+        c: "Hardware and software libraries",
+        d: "Medical and biological libraries"
+    },
+
+    q10: {
+        a: "Installing and uninstalling libraries",
+        b: "Designing library buildings",
+        c: "Publishing library books",
+        d: "Library management"
+    },
+
+    q11: {
+        a: "Integer",
+        b: "Float",
+        c: "String",
+        d: "Database"
+    },
+
+    q12: {
+        a: "VS Code",
+        b: "Power BI",
+        c: "Adobe Illustrator",
+        d: "Microsoft Word"
+    },
+
+    q13: {
+        a: "Text editors",
+        b: "Databases",
+        c: "Spreadsheets",
+        d: "Web browsers"
+    },
+
+    q14: {
+        a: "Comparison",
+        b: "Clustering",
+        c: "Visualization",
+        d: "Aggregation"
+    },
+
+    q15: {
+        a: "Strings",
+        b: "Decision trees",
+        c: "Logistic regression",
+        d: "K-nearest neighbors"
+    },
+
+    q16: {
+        a: "Float and Boolean",
+        b: "Dataset and table",
+        c: "Chart and graph",
+        d: "Clinical and biological"
+    },
+
+    q17: {
+        a: "Basic operators",
+        b: "Machine learning",
+        c: "Data visualization",
+        d: "Statistical distributions"
+    },
+
+    q18: {
+        a: "Logical operators",
+        b: "Confusion matrix",
+        c: "ROC curve",
+        d: "K-means"
+    },
+
+    q19: {
+        a: "3 hours",
+        b: "4 hours",
+        c: "6 hours",
+        d: "8 hours"
+    },
+
+    q20: {
+        a: "Introduction to Python programming",
+        b: "Data Handling with Pandas",
+        c: "Data Visualization with Matplotlib",
+        d: "Control Structures & Functions"
+    }
+
+};
+
+
+/* ==========================================
+   SUBMIT TEST
+========================================== */
+
+function submitTest() {
+
+    const studentName =
+        document.getElementById("studentName").value.trim();
+
+
+    /* NAME CHECK */
+
+    if (studentName === "") {
+
+        alert(
+            "Please enter your full name before starting the test."
+        );
+
+        document.getElementById("studentName").focus();
+
+        return;
+    }
+
+
+    let score = 0;
+
+    let answered = 0;
+
+
+    /* CHECK QUESTIONS */
+
+    for (let i = 1; i <= 20; i++) {
+
+        const selected =
+            document.querySelector(
+                'input[name="q' + i + '"]:checked'
+            );
+
+
+        if (selected) {
+
+            answered++;
+
+
+            if (
+                selected.value ===
+                correctAnswers["q" + i]
+            ) {
+
+                score++;
+
+            }
+
+        }
+
+    }
+
+
+    /* ALL QUESTIONS REQUIRED */
+
+    if (answered < 20) {
+
+        alert(
+            "Please answer all 20 questions before submitting the test."
+        );
+
+        return;
+    }
+
+
+    /* CALCULATE */
+
+    const percentage =
+        (score / 20) * 100;
+
+
+    /* SHOW RESULT */
+
+    document.getElementById("result").style.display =
+        "block";
+
+
+    document.getElementById("score").innerHTML =
+        "Score: " + score + " / 20";
+
+
+    document.getElementById("percentage").innerHTML =
+        "Percentage: " + percentage + "%";
+
+
+    const passStatus =
+        document.getElementById("passStatus");
+
+
+    const message =
+        document.getElementById("message");
+
+
+    const certificateButton =
+        document.getElementById("certificateBtn");
+
+
+    /* PASS / FAIL */
+
+    if (percentage >= 60) {
+
+        passStatus.innerHTML =
+            "✅ PASSED";
+
+        passStatus.style.color =
+            "#198754";
+
+
+        message.innerHTML =
+            "Congratulations! You have passed the Unit 1 test. 🎉";
+
+
+        certificateButton.style.display =
+            "inline-block";
+
+    }
+
+    else {
+
+        passStatus.innerHTML =
+            "❌ NOT PASSED";
+
+        passStatus.style.color =
+            "#dc3545";
+
+
+        message.innerHTML =
+            "You need at least 60% to pass. Please revise Unit 1 and try again. 📚";
+
+
+        certificateButton.style.display =
+            "none";
+
+    }
+
+
+    /* ANSWERS */
+
+    showAnswerReview();
+
+
+    /* SCROLL */
+
+    document.getElementById("result")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+}
+
+
+/* ==========================================
+   ANSWER REVIEW
+========================================== */
+
+function showAnswerReview() {
+
+    const reviewBox =
+        document.getElementById("answerReview");
+
+
+    const reviewContent =
+        document.getElementById("reviewContent");
+
+
+    reviewContent.innerHTML = "";
+
+
+    for (let i = 1; i <= 20; i++) {
+
+        const selected =
+            document.querySelector(
+                'input[name="q' + i + '"]:checked'
+            );
+
+
+        const correct =
+            correctAnswers["q" + i];
+
+
+        const userAnswer =
+            selected
+                ? selected.value
+                : null;
+
+
+        const isCorrect =
+            userAnswer === correct;
+
+
+        const item =
+            document.createElement("div");
+
+
+        item.className =
+            "review-item " +
+            (isCorrect ? "correct" : "wrong");
+
+
+        const userText =
+            userAnswer
+                ? optionTexts["q" + i][userAnswer]
+                : "Not answered";
+
+
+        const correctText =
+            optionTexts["q" + i][correct];
+
+
+        item.innerHTML = `
+
+            <p>
+                <strong>
+                    Q${i}. ${questionTexts["q" + i]}
+                </strong>
+            </p>
+
+            <p>
+                Your Answer:
+                <strong>
+                    ${userText}
+                </strong>
+            </p>
+
+            <p>
+                Correct Answer:
+                <strong>
+                    ${correctText}
+                </strong>
+            </p>
+
+            <p>
+                ${isCorrect
+                    ? "✅ Correct"
+                    : "❌ Incorrect"
+                }
+            </p>
+
+        `;
+
+
+        reviewContent.appendChild(item);
+
+    }
+
+
+    reviewBox.style.display =
+        "block";
+
+}
+
+
+/* ==========================================
+   GENERATE CERTIFICATE
+========================================== */
+
+function generateCertificate() {
+
+    const studentName =
+        document.getElementById("studentName")
+            .value.trim();
+
+
+    if (studentName === "") {
+
+        alert(
+            "Student name is required."
+        );
+
+        return;
+    }
+
+
+    /* GET SCORE */
+
+    let score = 0;
+
+
+    for (let i = 1; i <= 20; i++) {
+
+        const selected =
+            document.querySelector(
+                'input[name="q' + i + '"]:checked'
+            );
+
+
+        if (
+            selected &&
+            selected.value ===
+            correctAnswers["q" + i]
+        ) {
+
+            score++;
+
+        }
+
+    }
+
+
+    const percentage =
+        (score / 20) * 100;
+
+
+    /* PASS CHECK */
+
+    if (percentage < 60) {
+
+        alert(
+            "Certificate is available only after passing the test with 60% or above."
+        );
+
+        return;
+    }
+
+
+    /* DATE */
+
+    const today =
+        new Date();
+
+
+    const formattedDate =
+        today.toLocaleDateString(
+            "en-IN",
+            {
+                day: "2-digit",
+                month: "long",
+                year: "numeric"
+            }
+        );
+
+
+    /* CERTIFICATE ID */
+
+    const certificateId =
+        "DRX-BP101T-U1-" +
+        today.getFullYear() +
+        "-" +
+        Math.floor(
+            100000 + Math.random() * 900000
+        );
+
+
+    /* INSERT DATA */
+
+    document.getElementById(
+        "certificateName"
+    ).textContent = studentName;
+
+
+    document.getElementById(
+        "certificateScore"
+    ).textContent =
+        score + " / 20";
+
+
+    document.getElementById(
+        "certificatePercentage"
+    ).textContent =
+        percentage + "%";
+
+
+    document.getElementById(
+        "certificateDate"
+    ).textContent =
+        formattedDate;
+
+
+    document.getElementById(
+        "certificateId"
+    ).textContent =
+        "Certificate ID: " +
+        certificateId;
+
+
+    /* SHOW CERTIFICATE */
+
+    document.getElementById(
+        "certificateSection"
+    ).style.display = "block";
+
+
+    /* SCROLL */
+
+    document.getElementById(
+        "certificateSection"
+    ).scrollIntoView({
+        behavior: "smooth"
+    });
+
+}
+
+
+/* ==========================================
+   PRINT / SAVE AS PDF
+========================================== */
+
+function printCertificate() {
+
+    window.print();
+
+}
+
+
+/* ==========================================
+   RESTART TEST
+========================================== */
+
+function restartTest() {
+
+    document.getElementById(
+        "quizForm"
+    ).reset();
+
+
+    document.getElementById(
+        "result"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "answerReview"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "certificateSection"
+    ).style.display = "none";
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+</script>
+
+
+</body>
+
+</html>

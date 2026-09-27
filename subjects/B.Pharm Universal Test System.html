@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>B.Pharm Universal Test System — DRx Learning Hub</title>
+ <link rel="stylesheet" href="test-style.css">
+<style>
+:root{
+  --green:#1f4e8c;
+  --green-d:#163a6b;
+  --gold:#4f83cc;
+  --gold-l:#dbeafe;
+
+  --ink:#172033;
+  --paper:#f4f7fb;
+  --card:#ffffff;
+  --line:#dbe3ef;
+
+  --danger:#b42318;
+  --ok:#1f4e8c;
+}
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#f1f5f9;
+    --paper:#111827;
+    --card:#1f2937;
+    --line:#374151;
+  }
+}
+
+:root[data-theme="dark"]{
+  --ink:#f1f5f9;
+  --paper:#111827;
+  --card:#1f2937;
+  --line:#374151;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-padding-top:env(safe-area-inset-top,0px);
+}
+
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+
+  font-family:
+    "Noto Sans Devanagari",
+    "Segoe UI",
+    system-ui,
+    sans-serif;
+
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+
+  min-height:100%;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+header{
+  background:linear-gradient(
+    135deg,
+    var(--green),
+    var(--green-d)
+  );
+
+  color:#ffffff;
+
+  padding:22px 20px 26px;
+
+  position:relative;
+  overflow:hidden;
+
+  box-shadow:
+    0 3px 12px rgba(20,55,100,.18);
+}
+
+header::after{
+  content:"";
+
+  position:absolute;
+
+  right:-40px;
+  top:-40px;
+
+  width:160px;
+  height:160px;
+
+  border:10px solid rgba(255,255,255,.18);
+
+  border-radius:50%;
+
+  opacity:.8;
+}
+
+header h1{
+  margin:0 0 4px;
+
+  font-size:1.3rem;
+
+  color:#ffffff;
+}
+
+header p{
+  margin:0;
+
+  color:#dbeafe;
+
+  font-size:.88rem;
+}
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+main{
+  max-width:720px;
+
+  margin:0 auto;
+
+  padding:20px 16px 60px;
+}
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.card{
+  background:#ffffff;
+  color:#172033;
+
+  border:1px solid #dbe3ef;
+  border-radius:12px;
+
+  padding:18px;
+  margin-bottom:16px;
+
+  box-shadow:0 4px 15px rgba(15,40,80,.06);
+}
+
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+
+label{
+  display:block;
+
+  font-size:.82rem;
+
+  margin:10px 0 4px;
+
+  opacity:.75;
+
+  color:var(--ink);
+}
+
+
+/* =========================================================
+   INPUT / SELECT / BUTTON
+   ========================================================= */
+
+select,
+input,
+button{
+  width:100%;
+
+  padding:11px 12px;
+
+  font-size:1rem;
+
+  border-radius:8px;
+
+  border:1px solid var(--line);
+
+  background:var(--paper);
+
+  color:var(--ink);
+
+  font-family:inherit;
+
+  outline:none;
+
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease,
+    background .2s ease;
+}
+
+select:focus,
+input:focus{
+  border-color:#3b82f6;
+
+  box-shadow:
+    0 0 0 3px rgba(59,130,246,.12);
+}
+
+select:disabled{
+  opacity:.45;
+}
+
+
+/* =========================================================
+   PRIMARY BUTTON
+   ========================================================= */
+
+.btn-primary{
+  background:var(--green);
+
+  color:#ffffff;
+
+  border:none;
+
+  font-weight:600;
+
+  margin-top:14px;
+
+  cursor:pointer;
+
+  box-shadow:
+    0 3px 8px rgba(31,78,140,.16);
+}
+
+.btn-primary:disabled{
+  background:#94a3b8;
+
+  cursor:not-allowed;
+
+  box-shadow:none;
+}
+
+.btn-primary:not(:disabled):hover{
+  background:#173f73;
+
+  transform:translateY(-1px);
+
+  box-shadow:
+    0 5px 12px rgba(31,78,140,.22);
+}
+
+
+/* =========================================================
+   SECONDARY BUTTON
+   ========================================================= */
+
+.btn-secondary{
+  background:transparent;
+
+  border:1px solid var(--green);
+
+  color:var(--green);
+
+  font-weight:600;
+
+  cursor:pointer;
+
+  margin-top:10px;
+}
+
+.btn-secondary:hover{
+  background:#eff6ff;
+
+  border-color:#173f73;
+
+  color:#173f73;
+}
+
+
+/* =========================================================
+   HIDDEN AREAS
+   ========================================================= */
+
+#quizArea,
+#resultArea,
+#certArea,
+#testInfoArea{
+  display:none;
+}
+
+
+/* =========================================================
+   BACK LINK
+   ========================================================= */
+
+.backlink{
+  display:inline-block;
+
+  margin:0 0 12px;
+
+  color:var(--green);
+
+  text-decoration:none;
+
+  font-size:.88rem;
+
+  font-weight:600;
+}
+
+.backlink:hover{
+  text-decoration:underline;
+
+  color:#173f73;
+}
+
+
+/* =========================================================
+   TEST INFORMATION HEADER
+   ========================================================= */
+
+.infoHeader{
+  background:
+    linear-gradient(
+      135deg,
+      var(--green),
+      var(--green-d)
+    );
+
+  color:#ffffff;
+
+  border-radius:12px;
+
+  padding:22px 18px;
+
+  text-align:center;
+
+  margin-bottom:16px;
+
+  box-shadow:
+    0 5px 16px rgba(20,55,100,.12);
+}
+
+.infoHeader h2{
+  margin:6px 0 2px;
+
+  font-size:1.2rem;
+
+  color:#ffffff;
+}
+
+.infoHeader p{
+  margin:0;
+
+  color:#dbeafe;
+
+  font-size:.88rem;
+}
+
+.infoIcon{
+  font-size:1.6rem;
+}
+
+
+/* =========================================================
+   SUB HEAD
+   ========================================================= */
+
+.subhead{
+  margin:0 0 12px;
+
+  font-size:1.02rem;
+
+  color:var(--green);
+}
+
+
+/* =========================================================
+   INFO TABLE
+   ========================================================= */
+
+.infoTable{
+  width:100%;
+
+  border-collapse:collapse;
+
+  margin-bottom:14px;
+}
+
+.infoTable td{
+  padding:7px 0;
+
+  border-bottom:1px solid var(--line);
+
+  font-size:.92rem;
+}
+
+.infoTable td:first-child{
+  opacity:.7;
+}
+
+.infoTable td:last-child{
+  text-align:right;
+
+  font-weight:600;
+
+  color:var(--green);
+}
+
+
+/* =========================================================
+   INSTRUCTIONS
+   ========================================================= */
+
+.instrLine{
+  font-size:.88rem;
+
+  opacity:.85;
+
+  margin:0 0 14px;
+
+  line-height:1.6;
+}
+
+
+/* =========================================================
+   PROGRESS
+   ========================================================= */
+
+.progress{
+  font-size:.8rem;
+
+  opacity:.65;
+
+  margin-bottom:6px;
+
+  color:var(--green);
+}
+
+
+/* =========================================================
+   QUESTION
+   ========================================================= */
+
+.qtext{
+  font-size:1.05rem;
+  font-weight:600;
+
+  margin:4px 0 14px;
+  line-height:1.5;
+
+  color:#172033;
+}
+
+
+/* =========================================================
+   OPTIONS
+   ========================================================= */
+
+.opt{
+  display:block;
+  width:100%;
+  text-align:left;
+
+  padding:12px 14px;
+  margin-bottom:9px;
+
+  border:1px solid #d5dfec;
+  border-radius:8px;
+
+  background:#ffffff;
+  color:#172033;
+
+  cursor:pointer;
+
+  font-size:.96rem;
+  line-height:1.4;
+
+  transition:
+    border-color .2s ease,
+    background .2s ease,
+    transform .15s ease;
+}
+
+.opt:hover{
+  background:#eff6ff;
+  border-color:#3b82f6;
+}
+
+.opt.correct{
+  border-color:#2563eb;
+  background:#dbeafe;
+  color:#173f73;
+}
+
+.opt.wrong{
+  border-color:#dc2626;
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.opt:disabled{
+  cursor:default;
+}
+
+/* =========================================================
+   EXPLANATION
+   ========================================================= */
+
+.explain{
+  font-size:.86rem;
+  color:#334155;
+
+  margin-top:8px;
+  padding:10px;
+
+  border-left:3px solid #2563eb;
+
+  background:#eff6ff;
+  border-radius:4px;
+}
+
+
+/* =========================================================
+   SCORE
+   ========================================================= */
+
+.scoreBig{
+  font-size:2.4rem;
+
+  font-weight:700;
+
+  color:var(--green);
+
+  margin:2px 0;
+}
+
+
+/* =========================================================
+   PASS / FAIL
+   ========================================================= */
+
+.verdict{
+  display:inline-block;
+
+  padding:4px 12px;
+
+  border-radius:20px;
+
+  font-weight:700;
+
+  font-size:.85rem;
+
+  margin-bottom:8px;
+}
+
+.verdict.pass{
+  background:#eff6ff;
+
+  color:#1f4e8c;
+
+  border:1px solid #bfdbfe;
+}
+
+.verdict.fail{
+  background:#fef2f2;
+
+  color:var(--danger);
+
+  border:1px solid #fecaca;
+}
+
+
+/* =========================================================
+   ANSWER REVIEW
+   ========================================================= */
+
+.reviewRow{
+  padding:10px 0;
+
+  border-bottom:1px solid var(--line);
+
+  font-size:.9rem;
+}
+
+.reviewRow b{
+  display:block;
+
+  margin-bottom:3px;
+}
+
+.tag-ok{
+  color:#1f4e8c;
+}
+
+.tag-bad{
+  color:var(--danger);
+}
+
+
+/* =========================================================
+   EMPTY MESSAGE
+   ========================================================= */
+
+.empty{
+  font-size:.9rem;
+
+  opacity:.7;
+
+  text-align:center;
+
+  padding:10px 0;
+
+  color:#64748b;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+footer{
+  text-align:center;
+
+  font-size:.75rem;
+
+  opacity:.55;
+
+  padding:20px;
+
+  color:var(--ink);
+}
+
+
+/* =========================================================
+   CERTIFICATE
+   ========================================================= */
+
+/* =========================================================
+   CERTIFICATE - FORCE LIGHT PROFESSIONAL DESIGN
+   ========================================================= */
+
+#certificate{
+  background:#ffffff !important;
+  color:#172033 !important;
+
+  border:10px solid #1f4e8c !important;
+
+  box-shadow:0 8px 25px rgba(15,40,80,.08);
+}
+
+#certificate::before{
+  border:1px solid #93c5fd !important;
+}
+
+#certificate .certSub{
+  color:#1f4e8c !important;
+  opacity:1 !important;
+}
+
+#certificate .certTitle{
+  color:#1f4e8c !important;
+}
+
+#certificate .certBody{
+  color:#344054 !important;
+  opacity:1 !important;
+}
+
+#certificate .certName{
+  color:#172033 !important;
+
+  border-bottom:2px solid #2563eb !important;
+}
+
+#certificate .certMeta{
+  color:#475467 !important;
+  opacity:1 !important;
+}
+
+#certificate .certMeta span{
+  color:#475467 !important;
+}
+
+
+/* Certificate card outside */
+#certArea{
+  background:#ffffff !important;
+  color:#172033 !important;
+}
+/* =========================================================
+   CERTIFICATE - FINAL PROFESSIONAL LAYOUT
+   ========================================================= */
+
+#certificate{
+    background:#ffffff !important;
+    color:#172033 !important;
+
+    border:10px solid #1f4e8c !important;
+    border-radius:6px !important;
+
+    padding:34px 24px !important;
+
+    text-align:center !important;
+
+    position:relative !important;
+
+    box-shadow:
+        0 8px 25px rgba(15,40,80,.08) !important;
+
+    min-height:420px;
+}
+
+#certificate::before{
+    content:"";
+
+    position:absolute;
+
+    inset:8px;
+
+    border:1px solid #93c5fd !important;
+
+    border-radius:2px;
+
+    pointer-events:none;
+}
+
+
+/* Certificate heading */
+
+#certificate .certSub{
+    color:#1f4e8c !important;
+
+    font-size:.85rem !important;
+
+    letter-spacing:1px !important;
+
+    opacity:1 !important;
+
+    margin-bottom:18px !important;
+}
+
+#certificate .certTitle{
+    color:#1f4e8c !important;
+
+    font-size:1.5rem !important;
+
+    font-weight:700 !important;
+
+    margin:6px 0 2px !important;
+}
+
+
+/* Certificate main text */
+
+#certificate .certBody{
+    color:#344054 !important;
+
+    font-size:.95rem !important;
+
+    line-height:1.8 !important;
+
+    margin:18px 0 !important;
+
+    opacity:1 !important;
+}
+
+
+/* Student name */
+
+#certificate .certName{
+    color:#172033 !important;
+
+    font-size:1.6rem !important;
+
+    font-weight:700 !important;
+
+    margin:18px 0 6px !important;
+
+    padding:0 15px 6px !important;
+
+    border-bottom:2px solid #2563eb !important;
+
+    display:inline-block !important;
+}
+
+
+/* Bottom information */
+
+#certificate .certMeta{
+    display:flex !important;
+
+    justify-content:space-between !important;
+
+    align-items:center !important;
+
+    gap:10px !important;
+
+    margin-top:30px !important;
+
+    padding:0 8px !important;
+
+    color:#475467 !important;
+
+    font-size:.78rem !important;
+
+    opacity:1 !important;
+
+    flex-wrap:wrap !important;
+}
+
+#certificate .certMeta span{
+    color:#475467 !important;
+
+    opacity:1 !important;
+}
+
+
+/* Certificate outer area */
+
+#certArea{
+    background:#ffffff !important;
+
+    color:#172033 !important;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media(max-width:600px){
+
+  header{
+    padding:20px 15px 23px;
+  }
+
+  header h1{
+    font-size:1.15rem;
+  }
+
+  header p{
+    font-size:.82rem;
+  }
+
+  main{
+    padding:16px 12px 45px;
+  }
+
+  .card{
+    padding:16px;
+  }
+
+  .infoHeader{
+    padding:20px 14px;
+  }
+
+  .qtext{
+    font-size:1rem;
+  }
+
+  .opt{
+    padding:12px;
+  }
+
+  .certName{
+    font-size:1.35rem;
+  }
+
+}
+
+
+/* =========================================================
+   PRINT / PDF
+   ========================================================= */
+
+@media print{
+
+  body *{
+    visibility:hidden;
+  }
+
+  #certificate,
+  #certificate *{
+    visibility:visible;
+  }
+
+  #certificate{
+    position:absolute;
+
+    top:0;
+    left:0;
+
+    width:100%;
+
+    border-width:12px;
+
+    box-shadow:none;
+  }
+
+  header,
+  footer,
+  .btn-secondary,
+  .btn-primary{
+    display:none !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>B.Pharm Universal Test System</h1>
+  <p>DRx Learning Hub · PCI NEP 2020 · Semester 1–8</p>
+</header>
+
+<main>
+  <div class="card" id="selectorCard">
+    <label for="semSel">Semester चुनें</label>
+    <select id="semSel"></select>
+
+    <label for="subSel">Subject चुनें</label>
+    <select id="subSel" disabled></select>
+
+    <label for="unitSel">Unit चुनें</label>
+    <select id="unitSel" disabled></select>
+
+    <div id="emptyMsg" class="empty" style="display:none;"></div>
+
+    <button class="btn-primary" id="startBtn" disabled>Test देखें</button>
+  </div>
+
+  <div id="testInfoArea">
+    <a href="#" id="backToSelector" class="backlink">← Back to <span id="backSubCode"></span> Tests</a>
+    <div class="infoHeader">
+      <div class="infoIcon">📄</div>
+      <h2 id="infoTitle"></h2>
+      <p id="infoSubtitle"></p>
+    </div>
+    <div class="card">
+      <h3 class="subhead">👤 Student Information</h3>
+      <label for="nameInput">Enter Your Full Name</label>
+      <input type="text" id="nameInput" placeholder="Enter your full name">
+    </div>
+    <div class="card">
+      <h3 class="subhead" id="unitHeading"></h3>
+      <table class="infoTable">
+        <tr><td>Total Questions:</td><td id="infoTotalQ"></td></tr>
+        <tr><td>Total Marks:</td><td id="infoTotalM"></td></tr>
+        <tr><td>Marks per Question:</td><td>1</td></tr>
+        <tr><td>Passing Percentage:</td><td id="infoPassPct"></td></tr>
+      </table>
+      <p class="instrLine"><b>Instructions:</b> हर प्रश्न के लिए एक उत्तर चुनें और अंत में Submit करें।</p>
+      <button class="btn-primary" id="startBtn2" disabled>Test शुरू करें</button>
+    </div>
+  </div>
+
+  <div class="card" id="quizArea">
+    <div class="progress" id="progressLbl"></div>
+    <p class="qtext" id="qText"></p>
+    <div id="optsWrap"></div>
+    <div id="explainWrap"></div>
+    <button class="btn-primary" id="nextBtn" style="display:none;"></button>
+  </div>
+
+  <div class="card" id="resultArea">
+    <p style="margin:0 0 2px; opacity:.75; font-size:.85rem;" id="resultLoc"></p>
+    <div id="verdictWrap"></div>
+    <p class="scoreBig" id="scoreLine"></p>
+    <div id="reviewWrap" style="margin-top:14px;"></div>
+    <button class="btn-primary" id="certBtn" style="display:none;">Certificate देखें</button>
+    <button class="btn-secondary" id="retakeBtn">यही Unit दुबारा देना</button>
+    <button class="btn-secondary" id="backBtn">नया Test चुनें</button>
+  </div>
+
+  <div class="card" id="certArea">
+    <div id="certificate">
+      <div class="certSub">DRx LEARNING HUB · CERTIFICATE OF ACHIEVEMENT</div>
+      <div class="certTitle">प्रमाण पत्र</div>
+      <div class="certBody">प्रमाणित किया जाता है कि</div>
+      <div class="certName" id="certName"></div>
+      <div class="certBody" id="certLine"></div>
+      <div class="certMeta">
+        <span id="certId"></span>
+        <span id="certDate"></span>
+      </div>
+    </div>
+    <button class="btn-primary" id="printBtn">Print / PDF Save करें</button>
+    <button class="btn-secondary" id="certBackBtn">नया Test चुनें</button>
+  </div>
+</main>
+
+<footer>DRx Learning Hub — Dr. Deepak Jatav</footer>
+
+<script>
+/* ============================================================
+   TEST DATA — पूरे B.Pharm (PCI NEP 2020, Sem 1-8) के Theory
+   subjects यहाँ है। हर subject के अंदर 5 Units placeholder हैं।
+   Format:
+   testData["Semester 1"]["BP101T"] = {
+     name: "Full subject name",
+     units: { "Unit 1":[ {q,options,answer,explain}, ... ], "Unit 2":[...], ... }
+   }
+   नए questions जोड़ने के लिए सिर्फ संबंधित unit के array में
+   objects push करें — बाकी सब (dropdown, quiz, certificate) खुद adapt कर लेगा।
+   ============================================================ */
+function emptyUnits(n){ const u={}; for(let i=1;i<=n;i++) u["Unit "+i]=[]; return u; }
+
+const testData = {
+  "Semester 1": {
+    "BP101T": { name:"Basics of Python Programming for Pharmaceutical Sciences", units:{
+      "Unit 1":[
+        {q:"Python में variable घोषित करने के लिए किस keyword की आवश्यकता होती है?", options:["var","let","किसी keyword की आवश्यकता नहीं","dim"], answer:2, explain:"Python में सीधे assign करें, जैसे x = 10 — किसी keyword की जरूरत नहीं।"},
+        {q:"निम्न में से कौन-सा Python का valid data type नहीं है?", options:["int","float","char","bool"], answer:2, explain:"Python में अलग से 'char' नहीं होता — single character भी 'str' type का होता है।"},
+        {q:"Data Science में सबसे ज्यादा उपयोग होने वाला IDE कौन-सा है?", options:["Notepad","Jupyter Notebook","MS Word","Excel"], answer:1, explain:"Jupyter Notebook interactive cell-based execution देता है।"},
+        {q:"type() function का उपयोग किसलिए होता है?", options:["Loop चलाने के लिए","data type जानने के लिए","File खोलने के लिए","Error handle करने के लिए"], answer:1, explain:"type(x) किसी variable का data type return करता है।"},
+        {q:"int('25') + int('5') का output क्या होगा?", options:["255","30","Error","25 5"], answer:1, explain:"दोनों string को int में convert करके add किया गया — 25+5=30।"}
+      ],
+      "Unit 2":[
+        {q:"if-else statement किस लिए उपयोग होता है?", options:["Loop बनाने के लिए","Condition के आधार पर decision लेने के लिए","Function define करने के लिए","File पढ़ने के लिए"], answer:1, explain:"if-else condition true/false के आधार पर अलग code path चलाता है।"},
+        {q:"for loop में range(1,5) कितनी बार iterate करेगा?", options:["3 बार","4 बार","5 बार","1 बार"], answer:1, explain:"range(1,5) → 1,2,3,4 यानि 4 values।"}
+      ],
+      "Unit 3":[
+        {q:"Python में कौन-सा data structure immutable होता है?", options:["List","Tuple","Dictionary","Set"], answer:1, explain:"Tuple एक बार बनने के बाद बदला नहीं जा सकता — इसलिए यह immutable है।"},
+        {q:"NumPy array बनाने के लिए कौन-सा function उपयोग होता है?", options:["numpy.array()","python.list()","pandas.array()","math.array()"], answer:0, explain:"numpy.array() function किसी list/tuple को NumPy array में convert करता है।"},
+        {q:"CSV file पढ़ने का common तरीका क्या है?", options:["csv module या pandas.read_csv()","print() function","input() function","eval() function"], answer:0, explain:"csv module या pandas की read_csv() function CSV data पढ़ने के लिए उपयोग होती है।"}
+      ],
+      "Unit 4":[
+        {q:"Pandas में दो-dimensional data store करने वाली structure कौन-सी है?", options:["Series","DataFrame","Array","List"], answer:1, explain:"DataFrame rows और columns वाली two-dimensional structure है, जबकि Series one-dimensional होती है।"},
+        {q:"Dataset का quick summary देखने के लिए कौन-सा function उपयोग होता है?", options:["describe()","delete()","remove()","sort()"], answer:0, explain:"describe() function count, mean, min, max जैसी statistical summary देता है।"},
+        {q:"Missing values handle करने के लिए Pandas में क्या उपयोग होता है?", options:["dropna() / fillna()","print()","sum()","len()"], answer:0, explain:"dropna() missing rows हटाता है और fillna() उन्हें किसी value से भरता है।"}
+      ],
+      "Unit 5":[
+        {q:"Concentration-time curve जैसी data दिखाने के लिए कौन-सा chart उपयुक्त है?", options:["Line plot","Pie chart","कोई भी नहीं","Random dots"], answer:0, explain:"समय के साथ बदलते trend को दिखाने के लिए line plot सबसे उपयुक्त है।"},
+        {q:"Matplotlib में basic plot बनाने का function कौन-सा है?", options:["plt.plot()","plt.print()","plt.data()","plt.run()"], answer:0, explain:"plt.plot() function line/point graph बनाता है।"},
+        {q:"Graph की axes को label देने के लिए कौन-से functions उपयोग होते हैं?", options:["xlabel() / ylabel()","title() केवल","legend() केवल","show() केवल"], answer:0, explain:"xlabel() और ylabel() क्रमशः x और y axis को नाम देते हैं।"}
+      ]
+    }},
+    "BP102T": { name:"General Pharmacy", units:{
+      "Unit 1":[
+        {q:"Indian Pharmacopoeia (IP) किसके द्वारा प्रकाशित की जाती है?", options:["Indian Pharmacopoeia Commission","WHO","USFDA","PCI"], answer:0, explain:"IP, Indian Pharmacopoeia Commission (Ghaziabad) द्वारा प्रकाशित होती है।"},
+        {q:"Prescription में Latin terminology का उपयोग किसलिए होता है?", options:["Dose व dosage form की संक्षिप्त व मानकीकृत जानकारी देने के लिए","Patient को डराने के लिए","सिर्फ परंपरा के लिए","कोई उपयोग नहीं"], answer:0, explain:"Latin terms prescription में संक्षिप्त व सार्वभौमिक निर्देश देते हैं।"},
+        {q:"Community pharmacy में pharmacist की मुख्य भूमिका क्या है?", options:["दवा dispense करना व patient counseling","सिर्फ accounting","सिर्फ storage","कोई भूमिका नहीं"], answer:0, explain:"Community pharmacist dispensing के साथ-साथ patient counseling भी करता है।"}
+      ],
+      "Unit 2":[
+        {q:"Posology किस विषय से संबंधित है?", options:["Dose calculation","Packaging","Marketing","Storage"], answer:0, explain:"Posology age, body weight व body surface area के आधार पर dose calculation से संबंधित है।"},
+        {q:"Alligation method का उपयोग किसलिए होता है?", options:["दो अलग-अलग concentration के solutions मिलाकर desired concentration पाने के लिए","Tablet coating के लिए","Capsule size तय करने के लिए","कोई उपयोग नहीं"], answer:0, explain:"Alligation method dilute/concentrated solutions को मिलाकर वांछित strength पाने में मदद करता है।"},
+        {q:"Excipients का मुख्य कार्य क्या है?", options:["API को सही dosage form में formulate करने में मदद करना","खुद therapeutic effect देना","सिर्फ रंग बदलना","कोई कार्य नहीं"], answer:0, explain:"Excipients स्वयं दवा नहीं होते, वे formulation में सहायक भूमिका निभाते हैं।"}
+      ],
+      "Unit 3":[
+        {q:"Effervescent powder में कौन-सी reaction होती है?", options:["Acid-base reaction जो CO2 गैस बनाती है","Oxidation reaction","सिर्फ मिश्रण","कोई reaction नहीं"], answer:0, explain:"Acid-base reaction से CO2 गैस बनती है, जिससे powder effervescent बनता है।"},
+        {q:"Capsule के दो मुख्य प्रकार कौन-से हैं?", options:["Hard व Soft gelatin capsules","Big व Small capsules","Round व Square capsules","Red व Blue capsules"], answer:0, explain:"Capsules मुख्यतः Hard gelatin और Soft gelatin प्रकार के होते हैं।"},
+        {q:"Tablet का पाउडर की तुलना में क्या फायदा है?", options:["Accurate dosing व convenient handling","ज्यादा महंगा होना","ज्यादा बड़ा size","कोई फायदा नहीं"], answer:0, explain:"Tablet form में dose सटीक व handling आसान होती है।"}
+      ],
+      "Unit 4":[
+        {q:"Emulsion में कौन-से दो phase होते हैं?", options:["Oil व Water phase","Solid व Gas phase","सिर्फ Water","सिर्फ Oil"], answer:0, explain:"Emulsion oil-in-water या water-in-oil प्रकार का दो-phase system है।"},
+        {q:"Flocculated suspension की विशेषता क्या है?", options:["Particles loosely aggregated होते हैं व आसानी से redisperse होते हैं","Particles हमेशा जमे रहते हैं","कोई अंतर नहीं","Particles घुल जाते हैं"], answer:0, explain:"Flocculated particles हल्के clusters बनाते हैं जो shake करने पर आसानी से फैल जाते हैं।"},
+        {q:"Elixir किस प्रकार का dosage form है?", options:["Sweetened hydro-alcoholic (internal use) liquid","External use ointment","Solid tablet","Injection"], answer:0, explain:"Elixir एक clear, sweetened व flavoured hydro-alcoholic liquid है।"}
+      ],
+      "Unit 5":[
+        {q:"Suppository का मुख्य उपयोग क्या है?", options:["Rectal/vaginal route से drug देना","सिर्फ oral use","सिर्फ topical skin use","कोई उपयोग नहीं"], answer:0, explain:"Suppository rectal या vaginal route से दवा देने के लिए बनाई जाती है।"},
+        {q:"Ointment base का उदाहरण क्या है?", options:["Paraffin/Vaseline जैसी base","सिर्फ पानी","सिर्फ चीनी का syrup","सिर्फ alcohol"], answer:0, explain:"Paraffin, Vaseline जैसी greasy bases ointment के लिए common हैं।"},
+        {q:"Displacement value किससे संबंधित है?", options:["Suppository में base की मात्रा calculate करने से","Tablet compression से","Capsule filling से","कोई नहीं"], answer:0, explain:"Displacement value सही suppository base की मात्रा निकालने में मदद करती है।"}
+      ]
+    }},
+    "BP103T": { name:"Healthcare Psychology and Communication Skills", units:{
+      "Unit 1":[
+        {q:"Health psychology का मुख्य focus क्या है?", options:["बीमारी व स्वास्थ्य से जुड़े psychological factors","सिर्फ Economics","सिर्फ Biology","कोई नहीं"], answer:0, explain:"Health psychology बीमारी, recovery व स्वास्थ्य व्यवहार से जुड़े मानसिक पहलुओं का अध्ययन करती है।"},
+        {q:"Sensation व perception का clinical assessment में क्या role है?", options:["मरीज़ के लक्षण समझने में मदद करते हैं","कोई role नहीं","सिर्फ entertainment","सिर्फ research"], answer:0, explain:"सही sensation व perception मरीज़ के symptoms को सही आँकने में मदद करते हैं।"}
+      ],
+      "Unit 2":[
+        {q:"Somatization क्या है?", options:["Psychological distress का physical symptoms के रूप में प्रकट होना","एक बीमारी का नाम","एक दवा","कोई नहीं"], answer:0, explain:"Somatization में मानसिक तनाव शारीरिक लक्षणों (जैसे दर्द) के रूप में सामने आता है।"},
+        {q:"Resilience किस चीज़ को दर्शाता है?", options:["मुश्किल परिस्थिति से उबरने की क्षमता","हमेशा दुखी रहना","दवा लेना","कोई नहीं"], answer:0, explain:"Resilience तनाव व मुश्किल हालात से recover होने की क्षमता है।"}
+      ],
+      "Unit 3":[
+        {q:"Active listening में क्या शामिल है?", options:["ध्यान से सुनना व समझना","सिर्फ सुनना बिना react किए","बात काटना","कोई नहीं"], answer:0, explain:"Active listening में पूरा ध्यान देकर सुनना व समझना शामिल है, सिर्फ सुनना नहीं।"},
+        {q:"Telehealth communication क्या है?", options:["Technology (video/phone) के through healthcare communication","सिर्फ paper letter","सिर्फ face-to-face","कोई नहीं"], answer:0, explain:"Telehealth में दूर से technology के माध्यम से healthcare communication होता है।"}
+      ],
+      "Unit 4":[
+        {q:"Patient records लिखते समय किस बात का ध्यान रखना चाहिए?", options:["Accuracy व confidentiality","सिर्फ speed","सिर्फ handwriting style","कोई नहीं"], answer:0, explain:"Patient records सटीक व गोपनीय (confidential) होने चाहिए।"},
+        {q:"Difficult news देते समय कौन-सा approach सही है?", options:["Empathetic व clear communication","जल्दी-जल्दी बता देना","Ignore करना","कोई नहीं"], answer:0, explain:"संवेदनशील खबर empathy के साथ स्पष्ट रूप से देनी चाहिए।"}
+      ],
+      "Unit 5":[
+        {q:"Health Belief Model क्या explain करता है?", options:["लोग health-related व्यवहार क्यों अपनाते हैं","सिर्फ दवा का असर","सिर्फ cost","कोई नहीं"], answer:0, explain:"यह model बताता है कि लोग स्वास्थ्य संबंधी निर्णय क्यों व कैसे लेते हैं।"},
+        {q:"CBT का full form क्या है?", options:["Cognitive Behavioral Therapy","Clinical Bio Test","Chemical Body Treatment","कोई नहीं"], answer:0, explain:"CBT यानी Cognitive Behavioral Therapy — सोच व व्यवहार बदलने की technique।"}
+      ]
+    }},
+    "BP104T": { name:"Human Anatomy, Physiology and Pathophysiology I", units:{
+      "Unit 1":[
+        {q:"Homeostasis क्या दर्शाता है?", options:["Body के internal environment का स्थिर रहना","सिर्फ digestion","सिर्फ breathing","कोई नहीं"], answer:0, explain:"Homeostasis शरीर के internal environment को स्थिर बनाए रखने की प्रक्रिया है।"},
+        {q:"Cell injury का एक adaptive change कौन-सा है?", options:["Hypertrophy","Normal growth","Healthy division","कोई नहीं"], answer:0, explain:"Hypertrophy (cell size बढ़ना) cell injury के प्रति एक adaptive change है।"}
+      ],
+      "Unit 2":[
+        {q:"Osteoporosis किस system से संबंधित है?", options:["Skeletal system","Respiratory system","Digestive system","कोई नहीं"], answer:0, explain:"Osteoporosis हड्डियों (skeletal system) की density कम होने की बीमारी है।"},
+        {q:"Neuromuscular junction क्या है?", options:["Nerve व muscle के बीच connection point","सिर्फ bone joint","सिर्फ skin layer","कोई नहीं"], answer:0, explain:"यह वह स्थान है जहाँ nerve muscle को signal भेजता है।"}
+      ],
+      "Unit 3":[
+        {q:"Hemopoiesis क्या है?", options:["Blood cells का formation","सिर्फ digestion","सिर्फ breathing","कोई नहीं"], answer:0, explain:"Hemopoiesis में bone marrow में नई blood cells बनती हैं।"},
+        {q:"Thalassemia किस प्रकार का disorder है?", options:["Hereditary blood disorder","Skin disease","Bone disease","कोई नहीं"], answer:0, explain:"Thalassemia एक genetic/hereditary blood disorder है।"}
+      ],
+      "Unit 4":[
+        {q:"Glaucoma किस अंग से संबंधित है?", options:["Eye","Ear","Nose","Tongue"], answer:0, explain:"Glaucoma आँख (eye) से जुड़ा एक disorder है जो आँखों के दबाव से संबंधित है।"},
+        {q:"Parasympathetic nervous system का काम क्या है?", options:["Rest व digest response","Fight व flight response","सिर्फ movement","कोई नहीं"], answer:0, explain:"Parasympathetic system शरीर को आराम व पाचन की स्थिति में लाता है।"}
+      ],
+      "Unit 5":[
+        {q:"Cardiac cycle क्या दर्शाता है?", options:["Heart की एक धड़कन की पूरी sequence","सिर्फ blood pressure","सिर्फ pulse rate","कोई नहीं"], answer:0, explain:"Cardiac cycle में heart के contraction व relaxation की पूरी प्रक्रिया शामिल है।"},
+        {q:"Atherosclerosis किससे संबंधित है?", options:["Arteries में plaque जमना","Muscle weakness","Skin infection","कोई नहीं"], answer:0, explain:"Atherosclerosis में fat/cholesterol plaque धमनियों में जमता है।"}
+      ]
+    }},
+    "BP105T": { name:"Introduction to Pharmacognosy", units:{
+      "Unit 1":[
+        {q:"Pharmacognosy में drugs के source कौन-से होते हैं?", options:["Plants, animals, microbial, marine व mineral","सिर्फ synthetic chemicals","सिर्फ metals","कोई नहीं"], answer:0, explain:"Pharmacognosy प्राकृतिक स्रोतों (plant, animal, microbial, marine, mineral) से दवाओं का अध्ययन है।"},
+        {q:"Indian Pharmacopoeia किस देश की official pharmacopoeia है?", options:["भारत","USA","UK","Germany"], answer:0, explain:"Indian Pharmacopoeia (IP) भारत का official drug standard है।"}
+      ],
+      "Unit 2":[
+        {q:"GACP guidelines किससे संबंधित हैं?", options:["Medicinal plants की Good Agricultural and Collection Practices","सिर्फ Manufacturing","सिर्फ Marketing","कोई नहीं"], answer:0, explain:"GACP औषधीय पौधों की खेती व collection के मानक तय करता है।"},
+        {q:"Eco-pharmacognosy का उद्देश्य क्या है?", options:["Endangered medicinal plants का sustainable conservation","सिर्फ profit","सिर्फ export","कोई नहीं"], answer:0, explain:"यह दुर्लभ औषधीय पौधों (जैसे कुटकी, चिरायता) के संरक्षण पर केंद्रित है।"}
+      ],
+      "Unit 3":[
+        {q:"Ash value किसलिए test किया जाता है?", options:["Crude drug की quality/purity evaluate करने के लिए","स्वाद जानने के लिए","रंग जानने के लिए","कोई नहीं"], answer:0, explain:"Ash value crude drug में मौजूद inorganic impurities की मात्रा बताता है।"},
+        {q:"DNA barcoding का उपयोग कहाँ होता है?", options:["Crude drug की authentication में","सिर्फ cooking में","सिर्फ packaging में","कोई नहीं"], answer:0, explain:"DNA barcoding से crude drug की सही प्रजाति की पुष्टि होती है।"}
+      ],
+      "Unit 4":[
+        {q:"Alkaloids किस प्रकार का metabolite है?", options:["Secondary metabolite","Primary metabolite","सिर्फ mineral","सिर्फ vitamin"], answer:0, explain:"Alkaloids, glycosides व flavonoids जैसे compounds secondary metabolites कहलाते हैं।"},
+        {q:"AYUSH किसका प्रतिनिधित्व करता है?", options:["Ayurveda, Yoga, Unani, Siddha व Homeopathy","सिर्फ Allopathy","सिर्फ Yoga","कोई नहीं"], answer:0, explain:"AYUSH भारत की पारंपरिक चिकित्सा प्रणालियों का समूह है।"}
+      ],
+      "Unit 5":[
+        {q:"Ashwagandha को किस category में रखा जाता है?", options:["Adaptogen/Immunomodulator","Antidiabetic","Antimicrobial","कोई नहीं"], answer:0, explain:"Ashwagandha तनाव व प्रतिरक्षा प्रणाली को सहारा देने वाला adaptogen है।"},
+        {q:"Giloy का उपयोग किसलिए होता है?", options:["Antimicrobial/antiviral गुणों के लिए","सिर्फ सुगंध के लिए","सिर्फ रंग के लिए","कोई नहीं"], answer:0, explain:"Giloy की antimicrobial व immunomodulatory properties के लिए इसे उपयोग किया जाता है।"}
+      ]
+    }},
+    "BP106T": { name:"Pharmaceutical Inorganic and Analytical Chemistry", units:{
+      "Unit 1":[
+        {q:"Significant figures किससे संबंधित है?", options:["Measurement की accuracy/precision दर्शाने से","सिर्फ रंग से","सिर्फ गंध से","कोई नहीं"], answer:0, explain:"Significant figures किसी measurement की सटीकता दर्शाते हैं।"},
+        {q:"Limit test किसलिए किया जाता है?", options:["Pharmaceuticals में impurities की मात्रा check करने के लिए","स्वाद check करने के लिए","रंग check करने के लिए","कोई नहीं"], answer:0, explain:"Limit test chloride, sulphate, heavy metals जैसी impurities की सीमा जाँचता है।"}
+      ],
+      "Unit 2":[
+        {q:"Buffer solution का काम क्या है?", options:["pH को स्थिर रखना","रंग बदलना","सुगंध देना","कोई नहीं"], answer:0, explain:"Buffer solution acid/base मिलाने पर भी pH को लगभग स्थिर रखता है।"},
+        {q:"ORS (Oral Rehydration Salt) में मुख्यतः क्या होता है?", options:["Sodium, Potassium जैसे electrolytes","सिर्फ चीनी","सिर्फ पानी","कोई नहीं"], answer:0, explain:"ORS में electrolytes व glucose होते हैं जो dehydration में मदद करते हैं।"}
+      ],
+      "Unit 3":[
+        {q:"Non-aqueous titration कब उपयोग होती है?", options:["जब पानी में घुलनशील न होने वाले weak acid/base substances का estimation करना हो","सिर्फ strong acids के लिए","सिर्फ gases के लिए","कोई नहीं"], answer:0, explain:"गैर-जलीय solvents weak acidic/basic substances के titration में मदद करते हैं।"},
+        {q:"Complexometric titration में कौन-सा reagent common है?", options:["Disodium EDTA","Sodium chloride","Potassium iodide","कोई नहीं"], answer:0, explain:"EDTA metal ions के साथ complex बनाकर titration में उपयोग होता है।"}
+      ],
+      "Unit 4":[
+        {q:"Antacid का काम क्या है?", options:["Stomach acid को neutralize करना","Blood pressure कम करना","नींद लाना","कोई नहीं"], answer:0, explain:"Antacids पेट के अतिरिक्त acid को neutralize करते हैं।"},
+        {q:"Technetium-99m का उपयोग कहाँ होता है?", options:["Radiopharmaceuticals/diagnostic imaging में","सिर्फ paint में","सिर्फ batteries में","कोई नहीं"], answer:0, explain:"Technetium-99m एक widely-used diagnostic radioisotope है।"}
+      ],
+      "Unit 5":[
+        {q:"Ferrous sulphate का उपयोग किसलिए होता है?", options:["Haematinic (anemia उपचार) के रूप में","Antacid के रूप में","Antiseptic के रूप में","कोई नहीं"], answer:0, explain:"Ferrous sulphate iron-deficiency anemia में उपयोग होता है।"},
+        {q:"Sodium thiosulphate का उपयोग क्या है?", options:["Antidote (जैसे cyanide poisoning में)","Antacid","Expectorant","कोई नहीं"], answer:0, explain:"Sodium thiosulphate cyanide poisoning के इलाज में antidote के रूप में उपयोग होता है।"}
+      ]
+    }}
+  },
+  "Semester 2": {
+    "BP201T": { name:"Applied Biostatistics and Data Analytics for Pharmaceutical Sciences", units: emptyUnits(5) },
+    "BP202T": { name:"Biochemistry", units: emptyUnits(5) },
+    "BP203T": { name:"Human Anatomy, Physiology and Pathophysiology II", units: emptyUnits(5) },
+    "BP204T": { name:"Pharmaceutical Organic Chemistry", units: emptyUnits(5) },
+    "BP205T": { name:"Pharmacognosy and Phytochemistry", units: emptyUnits(5) },
+    "BP206T": { name:"Physical Pharmaceutics", units: emptyUnits(5) }
+  },
+  "Semester 3": {
+    "BP301T": { name:"Introduction to Machine Learning in Pharmaceutical Sciences", units: emptyUnits(5) },
+    "BP302T": { name:"Environmental Sciences", units: emptyUnits(5) },
+    "BP303T": { name:"Ethics and Universal Human Values", units: emptyUnits(5) },
+    "BP304T": { name:"General Pharmacology", units: emptyUnits(5) },
+    "BP305T": { name:"Heterocyclic Compounds and Stereochemistry", units: emptyUnits(5) },
+    "BP306T": { name:"Pharmaceutical Dosage Forms I", units: emptyUnits(5) },
+    "BP307T": { name:"Pharmaceutical Engineering", units: emptyUnits(5) },
+    "BP308T": { name:"Pharmaceutical Microbiology", units: emptyUnits(5) }
+  },
+  "Semester 4": {
+    "BP401T": { name:"Herbal Drug Technology", units: emptyUnits(5) },
+    "BP402T": { name:"Medicinal Chemistry", units: emptyUnits(5) },
+    "BP403T": { name:"Pharmaceutical Biotechnology", units: emptyUnits(5) },
+    "BP404T": { name:"Social Pharmacy and Public Health", units: emptyUnits(5) },
+    "BP405T": { name:"Systemic Pharmacology I", units: emptyUnits(5) }
+  },
+  "Semester 5": {
+    "BP501T": { name:"Biomedicinal Chemistry", units: emptyUnits(5) },
+    "BP502T": { name:"Industrial Pharmacognosy", units: emptyUnits(5) },
+    "BP503T": { name:"Innovation and Startup Ecosystem", units: emptyUnits(5) },
+    "BP504T": { name:"Pharmaceutical Dosage Form II", units: emptyUnits(5) },
+    "BP505T": { name:"Pharmaceutical Quality Assurance", units: emptyUnits(5) },
+    "BP506T": { name:"Systemic Pharmacology II", units: emptyUnits(5) }
+  },
+  "Semester 6": {
+    "BP601T": { name:"Advanced Pharmacognosy", units: emptyUnits(5) },
+    "BP602T": { name:"Biopharmaceutics and Pharmacokinetics", units: emptyUnits(5) },
+    "BP603T": { name:"Intellectual Property Rights", units: emptyUnits(5) },
+    "BP604T": { name:"AI Applications in Pharmaceutical Sciences", units: emptyUnits(5) },
+    "BP605T": { name:"Pharmaceutical Analysis", units: emptyUnits(5) },
+    "BP606T": { name:"Pharmaceutical Jurisprudence", units: emptyUnits(5) }
+  },
+  "Semester 7": {
+    "BP701T": { name:"Biostatistics and Research Methodology", units: emptyUnits(5) },
+    "BP702T": { name:"Cosmetics and Cosmeceuticals", units: emptyUnits(5) },
+    "BP703T": { name:"AI in Clinical Applications", units: emptyUnits(5) },
+    "BP704T": { name:"Modern Analytical Techniques", units: emptyUnits(5) },
+    "BP705T": { name:"Pharmacovigilance", units: emptyUnits(5) },
+    "BP706T": { name:"Pharmacy Practice", units: emptyUnits(5) },
+    "BP707T": { name:"Regulatory Affairs", units: emptyUnits(5) }
+  },
+  "Semester 8": {
+    "BP801T": { name:"Ethical Considerations and Translational Applications of AI in Pharmacy", units: emptyUnits(5) },
+    "BP802T": { name:"Clinical Pharmacotherapeutics", units: emptyUnits(5) },
+    "BP803T": { name:"Industrial Pharmacy and Facility Design", units: emptyUnits(5) },
+    "BP804T": { name:"Pharmaceutical Management", units: emptyUnits(5) },
+    "BP805T": { name:"Sterile Dosage Forms and Novel Drug Delivery System", units: emptyUnits(5) }
+  }
+};
+
+const PASS_PERCENT = 50;
+</script>
+
+<script>
+(function(){
+  const nameInput=document.getElementById('nameInput'),
+        semSel=document.getElementById('semSel'), subSel=document.getElementById('subSel'), unitSel=document.getElementById('unitSel'),
+        startBtn=document.getElementById('startBtn'), emptyMsg=document.getElementById('emptyMsg'),
+        selectorCard=document.getElementById('selectorCard'), quizArea=document.getElementById('quizArea'),
+        resultArea=document.getElementById('resultArea'), certArea=document.getElementById('certArea'),
+        testInfoArea=document.getElementById('testInfoArea'), backToSelector=document.getElementById('backToSelector'),
+        backSubCode=document.getElementById('backSubCode'), infoTitle=document.getElementById('infoTitle'), infoSubtitle=document.getElementById('infoSubtitle'),
+        unitHeading=document.getElementById('unitHeading'), infoTotalQ=document.getElementById('infoTotalQ'), infoTotalM=document.getElementById('infoTotalM'),
+        infoPassPct=document.getElementById('infoPassPct'), startBtn2=document.getElementById('startBtn2'),
+        progressLbl=document.getElementById('progressLbl'), qText=document.getElementById('qText'),
+        optsWrap=document.getElementById('optsWrap'), explainWrap=document.getElementById('explainWrap'), nextBtn=document.getElementById('nextBtn'),
+        resultLoc=document.getElementById('resultLoc'), verdictWrap=document.getElementById('verdictWrap'), scoreLine=document.getElementById('scoreLine'),
+        reviewWrap=document.getElementById('reviewWrap'), certBtn=document.getElementById('certBtn'), retakeBtn=document.getElementById('retakeBtn'), backBtn=document.getElementById('backBtn'),
+        certName=document.getElementById('certName'), certLine=document.getElementById('certLine'), certId=document.getElementById('certId'), certDate=document.getElementById('certDate'),
+        printBtn=document.getElementById('printBtn'), certBackBtn=document.getElementById('certBackBtn');
+
+  let state={sem:null,subCode:null,subName:null,unit:null,questions:[],idx:0,score:0,answers:[],studentName:""};
+
+  function fill(sel, items, placeholder){
+    sel.innerHTML='<option value="">'+placeholder+'</option>';
+    items.forEach(it=>{ const o=document.createElement('option'); o.value=it.value; o.textContent=it.label; sel.appendChild(o); });
+  }
+
+  fill(semSel, Object.keys(testData).map(s=>({value:s,label:s})), '-- Semester --');
+
+  function checkSelectEnabled(){
+    startBtn.disabled = !(semSel.value && subSel.value && unitSel.value && !startBtn.dataset.blocked);
+  }
+
+  semSel.addEventListener('change', ()=>{
+    subSel.disabled=true; unitSel.disabled=true; emptyMsg.style.display='none'; startBtn.dataset.blocked='';
+    subSel.innerHTML='<option value="">-- Subject --</option>'; unitSel.innerHTML='<option value="">-- Unit --</option>';
+    const sem=semSel.value; checkSelectEnabled(); if(!sem) return;
+    const subs=Object.keys(testData[sem]||{});
+    fill(subSel, subs.map(code=>({value:code,label:code+' — '+testData[sem][code].name})), '-- Subject --');
+    subSel.disabled=false;
+  });
+
+  subSel.addEventListener('change', ()=>{
+    unitSel.disabled=true; emptyMsg.style.display='none'; startBtn.dataset.blocked='';
+    unitSel.innerHTML='<option value="">-- Unit --</option>';
+    const sem=semSel.value, sub=subSel.value; checkSelectEnabled(); if(!sub) return;
+    const units=Object.keys(testData[sem][sub].units||{});
+    fill(unitSel, units.map(u=>({value:u,label:u})), '-- Unit --');
+    unitSel.disabled=false;
+  });
+
+  unitSel.addEventListener('change', ()=>{
+    emptyMsg.style.display='none'; startBtn.dataset.blocked='';
+    const sem=semSel.value, sub=subSel.value, unit=unitSel.value; if(!unit){checkSelectEnabled();return;}
+    const qs=testData[sem][sub].units[unit]||[];
+    if(qs.length===0){ emptyMsg.style.display='block'; emptyMsg.textContent='इस Unit के लिए अभी questions जोड़े नहीं गए — testData object में इस unit के array में entries add करें।'; startBtn.dataset.blocked='1'; }
+    checkSelectEnabled();
+  });
+
+  startBtn.addEventListener('click', ()=>{
+    state.sem=semSel.value; state.subCode=subSel.value; state.subName=testData[state.sem][state.subCode].name;
+    state.unit=unitSel.value;
+    state.questions=testData[state.sem][state.subCode].units[state.unit];
+    const total=state.questions.length;
+    backSubCode.textContent=state.subCode;
+    infoTitle.textContent=state.subCode+' '+state.unit+' Test';
+    infoSubtitle.textContent=state.subName;
+    unitHeading.textContent=state.unit+': '+state.subName;
+    infoTotalQ.textContent=total; infoTotalM.textContent=total; infoPassPct.textContent=PASS_PERCENT+'%';
+    nameInput.value=''; startBtn2.disabled=true;
+    selectorCard.style.display='none'; testInfoArea.style.display='block';
+  });
+
+  nameInput.addEventListener('input', ()=>{ startBtn2.disabled=!nameInput.value.trim(); });
+
+  backToSelector.addEventListener('click', (e)=>{
+    e.preventDefault(); testInfoArea.style.display='none'; selectorCard.style.display='block';
+  });
+
+  startBtn2.addEventListener('click', ()=>{
+    state.studentName=nameInput.value.trim();
+    state.idx=0; state.score=0; state.answers=[];
+    testInfoArea.style.display='none'; resultArea.style.display='none'; certArea.style.display='none';
+    quizArea.style.display='block';
+    renderQuestion();
+  });
+
+  function renderQuestion(){
+    const q=state.questions[state.idx];
+    progressLbl.textContent='प्रश्न '+(state.idx+1)+' / '+state.questions.length+'  ·  '+state.sem+' · '+state.subCode+' · '+state.unit;
+    qText.textContent=q.q;
+    optsWrap.innerHTML=''; explainWrap.innerHTML=''; nextBtn.style.display='none';
+    q.options.forEach((opt,i)=>{
+      const b=document.createElement('button'); b.className='opt'; b.textContent=opt;
+      b.addEventListener('click', ()=>selectOption(i)); optsWrap.appendChild(b);
+    });
+  }
+
+  function selectOption(i){
+    const q=state.questions[state.idx];
+    const buttons=optsWrap.querySelectorAll('.opt'); buttons.forEach(b=>b.disabled=true);
+    buttons[q.answer].classList.add('correct'); if(i!==q.answer) buttons[i].classList.add('wrong');
+    const correct = i===q.answer; if(correct) state.score++;
+    state.answers.push({q:q.q, chosen:q.options[i], correctText:q.options[q.answer], correct});
+    if(q.explain){ const d=document.createElement('div'); d.className='explain'; d.textContent=q.explain; explainWrap.appendChild(d); }
+    nextBtn.style.display='block';
+    nextBtn.textContent = (state.idx===state.questions.length-1) ? 'Submit करें' : 'अगला प्रश्न';
+  }
+
+  nextBtn.addEventListener('click', ()=>{
+    state.idx++;
+    if(state.idx>=state.questions.length) showResult(); else renderQuestion();
+  });
+
+  function genCertId(){
+    const semNo=state.sem.replace('Semester ','S');
+    const rand=Math.random().toString(36).slice(2,7).toUpperCase();
+    return 'DRX-'+semNo+'-'+state.subCode+'-'+Date.now().toString(36).toUpperCase().slice(-5)+'-'+rand;
+  }
+
+  function showResult(){
+    quizArea.style.display='none'; resultArea.style.display='block';
+    resultLoc.textContent=state.studentName+' · '+state.sem+' · '+state.subCode+' · '+state.unit;
+    const total=state.questions.length, pct=Math.round((state.score/total)*100);
+    const passed = pct>=PASS_PERCENT;
+    verdictWrap.innerHTML='<span class="verdict '+(passed?'pass':'fail')+'">'+(passed?'PASS':'FAIL')+'</span>';
+    scoreLine.textContent=state.score+' / '+total+'  ('+pct+'%)';
+    reviewWrap.innerHTML='';
+    state.answers.forEach((a,i)=>{
+      const row=document.createElement('div'); row.className='reviewRow';
+      row.innerHTML='<b>'+(i+1)+'. '+a.q+'</b>'+
+        '<span class="'+(a.correct?'tag-ok':'tag-bad')+'">आपका उत्तर: '+a.chosen+'</span>'+
+        (a.correct?'':' &nbsp;|&nbsp; सही उत्तर: '+a.correctText);
+      reviewWrap.appendChild(row);
+    });
+    certBtn.style.display = passed ? 'block' : 'none';
+    state.pct=pct; state.passed=passed; state.certId=genCertId(); state.dateStr=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+    try{
+      const key='bpharm_scores';
+      let saved=[]; try{ saved=JSON.parse(localStorage.getItem(key))||[]; }catch(e){ saved=[]; }
+      saved.unshift({name:state.studentName, sem:state.sem, sub:state.subCode, unit:state.unit, score:state.score, total, pct, passed, certId:state.certId, ts:Date.now()});
+      localStorage.setItem(key, JSON.stringify(saved.slice(0,50)));
+    }catch(e){}
+  }
+
+  certBtn.addEventListener('click', ()=>{
+    resultArea.style.display='none'; certArea.style.display='block';
+    certName.textContent=state.studentName;
+    certLine.textContent='ने '+state.sem+' के विषय "'+state.subName+' ('+state.subCode+')" के '+state.unit+' की परीक्षा में '+state.pct+'% अंकों के साथ सफलतापूर्वक उत्तीर्ण किया है।';
+    certId.textContent='Certificate ID: '+state.certId;
+    certDate.textContent='दिनांक: '+state.dateStr;
+  });
+
+  printBtn.addEventListener('click', ()=>window.print());
+
+  function resetAll(){
+    nameInput.value=''; semSel.value=''; subSel.innerHTML='<option value="">-- Subject --</option>'; subSel.disabled=true;
+    unitSel.innerHTML='<option value="">-- Unit --</option>'; unitSel.disabled=true; startBtn.disabled=true; emptyMsg.style.display='none';
+    resultArea.style.display='none'; certArea.style.display='none'; testInfoArea.style.display='none'; selectorCard.style.display='block';
+  }
+
+  retakeBtn.addEventListener('click', ()=>{
+    state.idx=0; state.score=0; state.answers=[];
+    resultArea.style.display='none'; quizArea.style.display='block'; renderQuestion();
+  });
+  backBtn.addEventListener('click', resetAll);
+  certBackBtn.addEventListener('click', resetAll);
+})();
+</script>
+</body>
+</html>

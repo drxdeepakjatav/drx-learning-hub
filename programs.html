@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Programs | DRx Learning Hub</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .program-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-top: 35px;
+        }
+
+        .program-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 28px 20px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transition: 0.3s;
+        }
+
+        .program-card:hover {
+            transform: translateY(-6px);
+        }
+
+        .program-icon {
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+
+        .program-card h3 {
+            margin-bottom: 10px;
+        }
+
+        .program-card p {
+            margin-bottom: 18px;
+        }
+
+        .program-card a {
+            text-decoration: none;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 25px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="container navbar">
+
+        <a href="index.html" class="logo">
+            <span class="logo-main">DRx</span>
+            <span class="logo-text">Learning Hub</span>
+        </a>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="categories.html" class="active">Courses</a>
+            <a href="video.html">Videos</a>
+            <a href="notes.html">Notes</a>
+            <a href="tests.html">Tests</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+
+    </div>
+
+</header>
+
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span id="categoryLabel">PROGRAMS</span>
+
+            <h2 id="categoryTitle">Explore Programs</h2>
+
+            <p id="categoryDescription">
+                Choose a program to continue your learning journey.
+            </p>
+
+        </div>
+
+
+        <div class="program-grid" id="programList"></div>
+
+
+        <a href="categories.html" class="back-link">
+            ← Back to Categories
+        </a>
+
+    </div>
+
+</section>
+
+
+<footer class="footer">
+
+    <div class="copyright">
+
+        © <span id="year"></span>
+        DRx Learning Hub | Deepak Jatav
+
+    </div>
+
+</footer>
+
+
+<script src="main.js"></script>
+
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+
+const category = params.get("category");
+
+const programData = {
+
+    pharmacy: {
+        title: "Pharmacy Programs",
+        description: "Choose your pharmacy program.",
+        icon: "💊",
+
+        programs: [
+            ["D.Pharm", "Diploma in Pharmacy"],
+            ["B.Pharm", "Bachelor of Pharmacy"],
+            ["M.Pharm", "Master of Pharmacy"],
+            ["Pharm.D", "Doctor of Pharmacy"]
+        ]
+    },
+
+
+    nursing: {
+        title: "Nursing Programs",
+        description: "Choose your nursing program.",
+        icon: "🩺",
+
+        programs: [
+            ["ANM", "Auxiliary Nurse Midwifery"],
+            ["GNM", "General Nursing and Midwifery"],
+            ["B.Sc Nursing", "Bachelor of Science in Nursing"],
+            ["M.Sc Nursing", "Master of Science in Nursing"]
+        ]
+    },
+
+
+    bsc: {
+        title: "B.Sc Programs",
+        description: "Choose your B.Sc program.",
+        icon: "🔬",
+
+        programs: [
+            ["B.Sc Biology", "Bachelor of Science in Biology"],
+            ["B.Sc Chemistry", "Bachelor of Science in Chemistry"],
+            ["B.Sc Physics", "Bachelor of Science in Physics"]
+        ]
+    },
+
+
+    paramedical: {
+        title: "Paramedical Programs",
+        description: "Choose your paramedical program.",
+        icon: "🧪",
+
+        programs: [
+            ["BMLT", "Bachelor of Medical Laboratory Technology"],
+            ["DMLT", "Diploma in Medical Laboratory Technology"],
+            ["BPT", "Bachelor of Physiotherapy"],
+            ["MMLT", "Master of Medical Laboratory Technology"]
+        ]
+    },
+
+
+    school: {
+        title: "School Programs",
+        description: "Choose your school class.",
+        icon: "🏫",
+
+        programs: [
+            ["10th", "Class 10"],
+            ["12th", "Class 12"]
+        ]
+    }
+
+};
+
+
+const data = programData[category];
+
+const programList = document.getElementById("programList");
+
+const categoryTitle = document.getElementById("categoryTitle");
+
+const categoryDescription =
+    document.getElementById("categoryDescription");
+
+
+if (!data) {
+
+    categoryTitle.textContent = "Category Not Found";
+
+    categoryDescription.textContent =
+        "Please choose a valid category.";
+
+} else {
+
+    categoryTitle.textContent = data.title;
+
+    categoryDescription.textContent =
+        data.description;
+
+
+    data.programs.forEach(program => {
+
+        const card = document.createElement("div");
+
+        card.className = "program-card";
+
+
+        card.innerHTML = `
+
+            <div class="program-icon">
+                ${data.icon}
+            </div>
+
+            <h3>${program[0]}</h3>
+
+            <p>
+                ${program[1]}
+            </p>
+
+            <a href="#">
+                Explore Program →
+            </a>
+
+        `;
+
+
+        programList.appendChild(card);
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>

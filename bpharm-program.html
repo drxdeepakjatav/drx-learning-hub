@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>B.Pharm 2026 – NEP 2020 | DRx Learning Hub</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #222;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, #0f172a, #1e3a8a);
+            color: white;
+            padding: 45px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 17px;
+            opacity: 0.9;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 18px;
+            background: white;
+            color: #1e3a8a;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        /* MAIN */
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 35px auto;
+        }
+
+        .intro {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+        }
+
+        .intro h2 {
+            color: #1e3a8a;
+            margin-bottom: 10px;
+        }
+
+        .intro p {
+            line-height: 1.7;
+        }
+
+        /* SEMESTER */
+        .semester {
+            background: white;
+            margin-bottom: 25px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+        }
+
+        .semester-header {
+            background: linear-gradient(135deg, #1d4ed8, #2563eb);
+            color: white;
+            padding: 18px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .semester-header h2 {
+            font-size: 23px;
+        }
+
+        .credit {
+            background: rgba(255,255,255,0.18);
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .semester-content {
+            padding: 20px;
+        }
+
+        /* SUBJECT */
+        .subject {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 15px;
+            background: #fafafa;
+        }
+
+        .subject:last-child {
+            margin-bottom: 0;
+        }
+
+        .subject-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .subject-code {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 5px 9px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .subject h3 {
+            font-size: 18px;
+            color: #111827;
+            line-height: 1.4;
+        }
+
+        .subject-type {
+            background: #ecfdf5;
+            color: #047857;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .subject-info {
+            margin-top: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .subject-buttons {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .subject-buttons a {
+            text-decoration: none;
+            padding: 9px 13px;
+            border-radius: 7px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .notes {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .videos {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .tests {
+            background: #f0fdf4;
+            color: #15803d;
+        }
+
+        /* ELECTIVE */
+        .elective {
+            border-left: 5px solid #f59e0b;
+            background: #fffbeb;
+        }
+
+        .elective h3 {
+            color: #92400e;
+        }
+
+        .elective-list {
+            margin-top: 12px;
+            padding-left: 20px;
+        }
+
+        .elective-list li {
+            margin-bottom: 7px;
+            line-height: 1.5;
+        }
+
+        /* SUMMARY */
+        .summary {
+            background: linear-gradient(135deg, #111827, #1e3a8a);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 35px;
+        }
+
+        .summary h2 {
+            margin-bottom: 20px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .summary-box {
+            background: rgba(255,255,255,0.12);
+            padding: 18px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .summary-box strong {
+            display: block;
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        /* FOOTER */
+        footer {
+            margin-top: 40px;
+            background: #111827;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        /* MOBILE */
+        @media (max-width: 700px) {
+
+            .header h1 {
+                font-size: 27px;
+            }
+
+            .semester-header {
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .semester-header h2 {
+                font-size: 18px;
+            }
+
+            .subject-top {
+                flex-direction: column;
+            }
+
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<header class="header">
+
+    <h1>B.Pharm 2026 – NEP 2020</h1>
+
+    <p>
+        Bachelor of Pharmacy | Semester-wise Course Structure
+    </p>
+
+    <a href="programs.html?category=pharmacy" class="back-btn">
+        ← Back to Pharmacy
+    </a>
+
+</header>
+
+
+<main class="container">
+
+    <!-- INTRO -->
+
+    <section class="intro">
+
+        <h2>📚 B.Pharm Programme</h2>
+
+        <p>
+            Explore the complete semester-wise B.Pharm course structure
+            including Theory, Practical, AEC, SEC, VAC, Internship and
+            Research Project.
+        </p>
+
+    </section>
+
+
+    <!-- ================= SEMESTER I ================= -->
+
+    <section class="semester">
+
+        <div class="semester-header">
+            <h2>Semester I</h2>
+            <span class="credit">21 Credits</span>
+        </div>
+
+        <div class="semester-content">
+
+            <div class="subject">
+                <span class="subject-code">BP101T</span>
+                <h3>Basics of Python Programming for Pharmaceutical Sciences (Theory)</h3>
+                <div class="subject-info">Theory • 2 Hours/Week • 2 Credits</div>
+
+                <div class="subject-buttons">
+                    <a href="subjects/semester-1/bp101t-basics-of-python-programming-for-pharmaceutical-sciences-theory/files/BP101T-Complete-Ebook.pdf" target="_blank"> 📖 E-Book Download</a>
+                    <a href="#" class="videos">▶ Videos</a>
+                    <a href="subjects/B.Pharm Universal Test System.html" target="_blank"> 📝 Tests</a>
+                </div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP102T</span>
+                <h3>General Pharmacy (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+                <div class="subject-buttons">
+                    <a href="subjects/semester-1/bp102t-general-pharmacy-theory/files/BP102T-Complete-Ebook.pdf" target="_blank"> 📖 E-Book Download</a>
+                    <a href="#" class="videos">▶ Videos</a>
+                    <a href="subjects/B.Pharm Universal Test System.html" target="_blank"> 📝 Tests</a>
+                </div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP103T</span>
+                <h3>Healthcare Psychology and Communication Skills (Theory)</h3>
+                <div class="subject-info">Theory • 1 Hour/Week • 1 Credit</div>
+                <div class="subject-buttons">
+                    <a href="subjects/semester-1/bp103t-healthcare-psychology-and-communication-skills-theory/files/BP103T-Complete-Ebook.pdf" target="_blank"> 📖 E-Book Download</a>
+                    <a href="#" class="videos">▶ Videos</a>
+                    <a href="tests.html" target="_blank"> 📝 Tests</a>
+                </div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP104T</span>
+                <h3>Human Anatomy, Physiology and Pathophysiology I (Theory)</h3>
+                <div class="subject-info">Theory • 4 Hours/Week • 4 Credits</div>
+                <div class="subject-buttons">
+                    <a href="subjects/semester-1/bp104t-human-anatomy-physiology-and-pathophysiology-i-theory/files/BP104T-Complete-Ebook.pdf" target="_blank"> 📖 E-Book Download</a>
+                    <a href="#" class="videos">▶ Videos</a>
+                    <a href="tests.html" target="_blank"> 📝 Tests</a>
+                </div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP105T</span>
+                <h3>Introduction to Pharmacognosy (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+                <div class="subject-buttons">
+                    <a href="subjects/semester-1/bp105t-introduction-to-pharmacognosy-theory/files/BP105T-Complete-Ebook.pdf" target="_blank"> 📖 E-Book</a>
+                    <a href="#" class="videos">▶ Videos</a>
+                    <a href="tests.html" target="_blank"> 📝 Tests</a>
+                </div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP106T</span>
+                <h3>Pharmaceutical Inorganic and Analytical Chemistry (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+                <div class="subject-buttons">
+                    <a href="subjects/semester-1/bp106t-pharmaceutical-inorganic-and-analytical-chemistry-theory/files/BP106T-Complete-Ebook.pdf" target="_blank"> 📖 E-Book</a>
+                    <a href="#" class="videos">▶ Videos</a>
+                    <a href="tests.html" target="_blank"> 📝 Tests</a>
+                </div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP107P</span>
+                <h3>General Pharmacy (Practical)</h3>
+                <div class="subject-info">Practical • 3 Hours/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP108P</span>
+                <h3>Healthcare Psychology and Communication Skills (Practical)</h3>
+                <div class="subject-info">Practical • 2 Hours/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP109P</span>
+                <h3>Human Anatomy, Physiology and Pathophysiology I (Practical)</h3>
+                <div class="subject-info">Practical • 3 Hours/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP110P</span>
+                <h3>Introduction to Pharmacognosy (Practical)</h3>
+                <div class="subject-info">Practical • 3 Hours/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP111P</span>
+                <h3>Pharmaceutical Inorganic and Analytical Chemistry (Practical)</h3>
+                <div class="subject-info">Practical • 3 Hours/Week • 1 Credit</div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ================= SEMESTER II ================= -->
+
+    <section class="semester">
+
+        <div class="semester-header">
+            <h2>Semester II</h2>
+            <span class="credit">26 Credits</span>
+        </div>
+
+        <div class="semester-content">
+
+            <div class="subject">
+                <span class="subject-code">BP201T</span>
+                <h3>Applied Biostatistics and Data Analytics for Pharmaceutical Sciences (Theory)</h3>
+                <div class="subject-info">Theory • 2 Hours/Week • 2 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP202T</span>
+                <h3>Biochemistry (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP203T</span>
+                <h3>Human Anatomy, Physiology and Pathophysiology II (Theory)</h3>
+                <div class="subject-info">Theory • 4 Hours/Week • 4 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP204T</span>
+                <h3>Pharmaceutical Organic Chemistry (Theory)</h3>
+                <div class="subject-info">Theory • 4 Hours/Week • 4 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP205T</span>
+                <h3>Pharmacognosy and Phytochemistry (Theory)</h3>
+                <div class="subject-info">Theory • 4 Hours/Week • 4 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP206T</span>
+                <h3>Physical Pharmaceutics (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP207P</span>
+                <h3>Biochemistry (Practical)</h3>
+                <div class="subject-info">Practical • 3 Hours/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP208P</span>
+                <h3>Human Anatomy, Physiology and Pathophysiology II (Practical)</h3>
+                <div class="subject-info">Practical • 3 Hours/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP209P</span>
+                <h3>Pharmaceutical Organic Chemistry (Practical)</h3>
+                <div class="subject-info">Practical • 3 Hours/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP210P</span>
+                <h3>Pharmacognosy and Phytochemistry (Practical)</h3>
+                <div class="subject-info">Practical • 3 Hours/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP211P</span>
+                <h3>Physical Pharmaceutics (Practical)</h3>
+                <div class="subject-info">Practical • 3 Hours/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject elective">
+                <span class="subject-code">BP212P</span>
+                <h3>SEC – Elective 1</h3>
+
+                <ul class="elective-list">
+                    <li>Communication Skills</li>
+                    <li>Mental Well-Being, Stress & Conflict Management</li>
+                    <li>Fundamentals of Computer Operations</li>
+                </ul>
+
+                <div class="subject-info">
+                    1 Credit • One elective course shall be selected
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ================= SEMESTER III ================= -->
+
+    <section class="semester">
+
+        <div class="semester-header">
+            <h2>Semester III</h2>
+            <span class="credit">25 Credits</span>
+        </div>
+
+        <div class="semester-content">
+
+            <div class="subject">
+                <span class="subject-code">BP301T</span>
+                <h3>Introduction to Machine Learning in Pharmaceutical Sciences (Theory)</h3>
+                <div class="subject-info">Theory • 2 Hours/Week • 2 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP302T</span>
+                <h3>Environmental Sciences (Theory)</h3>
+                <div class="subject-info">Theory • 1 Hour/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP303T</span>
+                <h3>Ethics and Universal Human Values (Theory)</h3>
+                <div class="subject-info">Theory • 1 Hour/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP304T</span>
+                <h3>General Pharmacology (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP305T</span>
+                <h3>Heterocyclic Compounds and Stereochemistry (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP306T</span>
+                <h3>Pharmaceutical Dosage Forms I (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP307T</span>
+                <h3>Pharmaceutical Engineering (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP308T</span>
+                <h3>Pharmaceutical Microbiology (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP309P</span>
+                <h3>General Pharmacology (Practical)</h3>
+                <div class="subject-info">Practical • 4 Hours/Week • 2 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP310P</span>
+                <h3>Heterocyclic Compounds and Stereochemistry (Practical)</h3>
+                <div class="subject-info">Practical • 4 Hours/Week • 2 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP311P</span>
+                <h3>Pharmaceutical Dosage Forms I (Practical)</h3>
+                <div class="subject-info">Practical • 3 Hours/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject elective">
+                <span class="subject-code">BP312P</span>
+                <h3>AEC – Elective 2</h3>
+
+                <ul class="elective-list">
+                    <li>Nutraceuticals and Functional Foods</li>
+                    <li>Food Analysis</li>
+                    <li>Yoga and Life Sciences</li>
+                </ul>
+
+                <div class="subject-info">1 Credit • One elective shall be selected</div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ================= SEMESTER IV ================= -->
+
+    <section class="semester">
+
+        <div class="semester-header">
+            <h2>Semester IV</h2>
+            <span class="credit">23 Credits</span>
+        </div>
+
+        <div class="semester-content">
+
+            <div class="subject">
+                <span class="subject-code">BP401T</span>
+                <h3>Herbal Drug Technology (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP402T</span>
+                <h3>Medicinal Chemistry (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP403T</span>
+                <h3>Pharmaceutical Biotechnology (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP404T</span>
+                <h3>Social Pharmacy and Public Health (Theory)</h3>
+                <div class="subject-info">Theory • 2 Hours/Week • 2 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP405T</span>
+                <h3>Systemic Pharmacology I (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP406P</span>
+                <h3>Herbal Drug Technology (Practical)</h3>
+                <div class="subject-info">Practical • 3 Hours/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP407P</span>
+                <h3>Medicinal Chemistry (Practical)</h3>
+                <div class="subject-info">Practical • 3 Hours/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP408P</span>
+                <h3>Pharmaceutical Biotechnology (Practical)</h3>
+                <div class="subject-info">Practical • 3 Hours/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP409P</span>
+                <h3>Social Pharmacy and Public Health (Practical)</h3>
+                <div class="subject-info">Practical • 2 Hours/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP410P</span>
+                <h3>Systemic Pharmacology I (Practical)</h3>
+                <div class="subject-info">Practical • 3 Hours/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject elective">
+                <span class="subject-code">BP411I</span>
+                <h3>Internship (Mandatory)</h3>
+                <div class="subject-info">Internship • 8 Hours/Week • 4 Credits</div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ================= SEMESTER V ================= -->
+
+    <section class="semester">
+
+        <div class="semester-header">
+            <h2>Semester V</h2>
+            <span class="credit">22 Credits</span>
+        </div>
+
+        <div class="semester-content">
+
+            <div class="subject">
+                <span class="subject-code">BP501T</span>
+                <h3>Biomedicinal Chemistry (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP502T</span>
+                <h3>Industrial Pharmacognosy (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP503T</span>
+                <h3>Innovation and Startup Ecosystem (Theory)</h3>
+                <div class="subject-info">Theory • 2 Hours/Week • 2 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP504T</span>
+                <h3>Pharmaceutical Dosage Form II (Theory)</h3>
+                <div class="subject-info">Theory • 2 Hours/Week • 2 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP505T</span>
+                <h3>Pharmaceutical Quality Assurance (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP506T</span>
+                <h3>Systemic Pharmacology II (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP507P</span>
+                <h3>Biomedicinal Chemistry (Practical)</h3>
+                <div class="subject-info">Practical • 4 Hours/Week • 2 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP508P</span>
+                <h3>Industrial Pharmacognosy (Practical)</h3>
+                <div class="subject-info">Practical • 3 Hours/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP509P</span>
+                <h3>Pharmaceutical Dosage Form II (Practical)</h3>
+                <div class="subject-info">Practical • 3 Hours/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP510P</span>
+                <h3>Systemic Pharmacology II (Practical)</h3>
+                <div class="subject-info">Practical • 4 Hours/Week • 2 Credits</div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ================= SEMESTER VI ================= -->
+
+    <section class="semester">
+
+        <div class="semester-header">
+            <h2>Semester VI</h2>
+            <span class="credit">26 Credits</span>
+        </div>
+
+        <div class="semester-content">
+
+            <div class="subject">
+                <span class="subject-code">BP601T</span>
+                <h3>Advanced Pharmacognosy (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP602T</span>
+                <h3>Biopharmaceutics and Pharmacokinetics (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP603T</span>
+                <h3>Intellectual Property Rights (Theory)</h3>
+                <div class="subject-info">Theory • 2 Hours/Week • 2 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP604T</span>
+                <h3>AI Applications in Pharmaceutical Sciences (Theory)</h3>
+                <div class="subject-info">Theory • 2 Hours/Week • 2 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP605T</span>
+                <h3>Pharmaceutical Analysis (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP606T</span>
+                <h3>Pharmaceutical Jurisprudence (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject elective">
+                <span class="subject-code">BP607T</span>
+                <h3>AEC – Elective 3</h3>
+
+                <ul class="elective-list">
+                    <li>Green Chemistry</li>
+                    <li>Materiovigilance and Hemovigilance</li>
+                    <li>Scientific Writing</li>
+                    <li>Drug Store and Business Management</li>
+                    <li>Career Building in Cultivation of Medicinal Plants</li>
+                    <li>Active Pharmaceutical Ingredients and Excipient Sciences</li>
+                </ul>
+
+                <div class="subject-info">1 Credit • One elective shall be selected</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP608P</span>
+                <h3>Biopharmaceutics and Pharmacokinetics (Practical)</h3>
+                <div class="subject-info">Practical • 3 Hours/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP609P</span>
+                <h3>Pharmaceutical Analysis (Practical)</h3>
+                <div class="subject-info">Practical • 4 Hours/Week • 2 Credits</div>
+            </div>
+
+            <div class="subject elective">
+                <span class="subject-code">BP610P</span>
+                <h3>SEC – Elective 4</h3>
+
+                <ul class="elective-list">
+                    <li>Computer-Aided Drug Design</li>
+                    <li>Analytical Method Development and Validation</li>
+                    <li>Principles of Preclinical Studies</li>
+                </ul>
+
+                <div class="subject-info">1 Credit • One elective shall be selected</div>
+            </div>
+
+            <div class="subject elective">
+                <span class="subject-code">BP611P</span>
+                <h3>VAC – Elective 5</h3>
+
+                <ul class="elective-list">
+                    <li>Professional Skills</li>
+                    <li>Process Analytical Technology (PAT) and QbD in Formulation Science</li>
+                </ul>
+
+                <div class="subject-info">1 Credit • One elective shall be selected</div>
+            </div>
+
+            <div class="subject elective">
+                <span class="subject-code">BP612I</span>
+                <h3>Internship (Mandatory)</h3>
+                <div class="subject-info">Internship • 8 Hours/Week • 4 Credits</div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ================= SEMESTER VII ================= -->
+
+    <section class="semester">
+
+        <div class="semester-header">
+            <h2>Semester VII</h2>
+            <span class="credit">26 Credits</span>
+        </div>
+
+        <div class="semester-content">
+
+            <div class="subject">
+                <span class="subject-code">BP701T</span>
+                <h3>Biostatistics and Research Methodology (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP702T</span>
+                <h3>Cosmetics and Cosmeceuticals (Theory)</h3>
+                <div class="subject-info">Theory • 2 Hours/Week • 2 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP703T</span>
+                <h3>AI in Clinical Applications (Theory)</h3>
+                <div class="subject-info">Theory • 2 Hours/Week • 2 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP704T</span>
+                <h3>Modern Analytical Techniques (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP705T</span>
+                <h3>Pharmacovigilance (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP706T</span>
+                <h3>Pharmacy Practice (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP707T</span>
+                <h3>Regulatory Affairs (Theory)</h3>
+                <div class="subject-info">Theory • 2 Hours/Week • 2 Credits</div>
+            </div>
+
+            <div class="subject elective">
+                <span class="subject-code">BP708T</span>
+                <h3>AEC – Elective 6</h3>
+
+                <ul class="elective-list">
+                    <li>Current Good Manufacturing Practices (cGMP)</li>
+                    <li>Pharmaceutical Automation</li>
+                    <li>Modern Techniques in Cellular Biology</li>
+                    <li>Medical Devices</li>
+                    <li>Transformation of Food Waste into Medicinal Products</li>
+                    <li>Biosimilars, Vaccines & Macromolecules</li>
+                </ul>
+
+                <div class="subject-info">1 Credit • One elective shall be selected</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP709P</span>
+                <h3>Modern Analytical Techniques (Practical)</h3>
+                <div class="subject-info">Practical • 3 Hours/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject elective">
+                <span class="subject-code">BP710RP</span>
+                <h3>Research Project</h3>
+                <div class="subject-info">Research Project • 6 Credits</div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ================= SEMESTER VIII ================= -->
+
+    <section class="semester">
+
+        <div class="semester-header">
+            <h2>Semester VIII</h2>
+            <span class="credit">24 Credits</span>
+        </div>
+
+        <div class="semester-content">
+
+            <div class="subject">
+                <span class="subject-code">BP801T</span>
+                <h3>Ethical Considerations and Translational Applications of AI in Pharmacy (Theory)</h3>
+                <div class="subject-info">Theory • 2 Hours/Week • 2 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP802T</span>
+                <h3>Clinical Pharmacotherapeutics (Theory)</h3>
+                <div class="subject-info">Theory • 2 Hours/Week • 2 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP803T</span>
+                <h3>Industrial Pharmacy and Facility Design (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP804T</span>
+                <h3>Pharmaceutical Management (Theory)</h3>
+                <div class="subject-info">Theory • 2 Hours/Week • 2 Credits</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP805T</span>
+                <h3>Sterile Dosage Forms and Novel Drug Delivery System (Theory)</h3>
+                <div class="subject-info">Theory • 3 Hours/Week • 3 Credits</div>
+            </div>
+
+            <div class="subject elective">
+                <span class="subject-code">BP806T</span>
+                <h3>AEC – Elective 7</h3>
+
+                <ul class="elective-list">
+                    <li>Pharmaceutical Packaging</li>
+                    <li>Supply Chain Management</li>
+                    <li>Industrial Safety and Waste Management</li>
+                    <li>Traditional Healing Practices of India</li>
+                    <li>Futuristic Pharma through AR/VR: Pharma 4.0</li>
+                    <li>Herbal Cosmetics for Industry Perspective</li>
+                </ul>
+
+                <div class="subject-info">2 Credits • One elective shall be selected</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP807P</span>
+                <h3>Pharmaceutical Marketing Skills (Practical)</h3>
+                <div class="subject-info">Practical • 2 Hours/Week • 1 Credit</div>
+            </div>
+
+            <div class="subject">
+                <span class="subject-code">BP808P</span>
+                <h3>Sterile Dosage Forms and Novel Drug Delivery System (Practical)</h3>
+                <div class="subject-info">Practical • 4 Hours/Week • 2 Credits</div>
+            </div>
+
+            <div class="subject elective">
+                <span class="subject-code">BP809P</span>
+                <h3>VAC – Elective 8</h3>
+
+                <ul class="elective-list">
+                    <li>Cleaning Validation</li>
+                    <li>Basic Training in Aseptic Handling Techniques</li>
+                    <li>Impurity Profiling</li>
+                </ul>
+
+                <div class="subject-info">1 Credit • One elective shall be selected</div>
+            </div>
+
+            <div class="subject elective">
+                <span class="subject-code">BP810RP</span>
+                <h3>Research Project</h3>
+                <div class="subject-info">Research Project • 6 Credits</div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- SUMMARY -->
+
+    <section class="summary">
+
+        <h2>📊 B.Pharm Credit Summary</h2>
+
+        <div class="summary-grid">
+
+            <div class="summary-box">
+                <strong>21</strong>
+                Semester I
+            </div>
+
+            <div class="summary-box">
+                <strong>26</strong>
+                Semester II
+            </div>
+
+            <div class="summary-box">
+                <strong>25</strong>
+                Semester III
+            </div>
+
+            <div class="summary-box">
+                <strong>23</strong>
+                Semester IV
+            </div>
+
+            <div class="summary-box">
+                <strong>22</strong>
+                Semester V
+            </div>
+
+            <div class="summary-box">
+                <strong>26</strong>
+                Semester VI
+            </div>
+
+            <div class="summary-box">
+                <strong>26</strong>
+                Semester VII
+            </div>
+
+            <div class="summary-box">
+                <strong>24</strong>
+                Semester VIII
+            </div>
+
+        </div>
+
+        <p style="margin-top:20px; text-align:center;">
+            <strong>Grand Total: 193 Credits</strong>
+        </p>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        © 2026 DRx Learning Hub | Deepak Jatav
+    </p>
+
+    <p style="margin-top:8px;">
+        B.Pharm 2026 – NEP 2020
+    </p>
+
+</footer>
+
+</body>
+</html>

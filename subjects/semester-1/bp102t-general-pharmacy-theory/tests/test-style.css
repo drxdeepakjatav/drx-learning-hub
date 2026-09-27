@@ -1,0 +1,178 @@
+/* =========================================
+   DRx Learning Hub
+   BP102T Test System - Common CSS
+   ========================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f7fb;
+    color: #172033;
+    line-height: 1.6;
+}
+
+/* HEADER */
+
+.test-header {
+    background: #172033;
+    color: white;
+    padding: 28px 20px;
+}
+
+.header-content {
+    max-width: 1100px;
+    margin: auto;
+}
+
+.test-header h1 {
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.test-header p {
+    font-size: 15px;
+    opacity: 0.9;
+}
+
+/* MAIN */
+
+.test-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.page-title {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.page-title h2 {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.page-title p {
+    color: #667085;
+}
+
+/* QUESTION CARD */
+
+.question {
+    background: white;
+    border: 1px solid #e4e7ec;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+}
+
+.question h3 {
+    font-size: 18px;
+    margin-bottom: 18px;
+    color: #172033;
+}
+
+/* OPTIONS */
+
+.question label {
+    display: block;
+    background: #f8fafc;
+    border: 1px solid #e4e7ec;
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.question label:hover {
+    background: #eef4ff;
+    border-color: #2563eb;
+}
+
+.question input[type="radio"] {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+/* BUTTONS */
+
+.test-btn {
+    display: inline-block;
+    text-decoration: none;
+    border: none;
+    background: #2563eb;
+    color: white;
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 5px;
+    transition: 0.2s;
+}
+
+.test-btn:hover {
+    background: #1d4ed8;
+}
+
+/* RESULT */
+
+#result {
+    margin-top: 30px;
+}
+
+.result-box {
+    background: white;
+    border: 1px solid #e4e7ec;
+    border-radius: 14px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+}
+
+.result-box h2 {
+    margin-bottom: 15px;
+}
+
+.result-box p {
+    margin: 8px 0;
+    font-size: 17px;
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+    .test-header h1 {
+        font-size: 23px;
+    }
+
+    .test-container {
+        margin-top: 25px;
+        padding: 0 12px;
+    }
+
+    .page-title h2 {
+        font-size: 24px;
+    }
+
+    .question {
+        padding: 18px;
+    }
+
+    .question h3 {
+        font-size: 16px;
+    }
+
+    .test-btn {
+        width: 100%;
+        margin: 5px 0;
+    }
+}

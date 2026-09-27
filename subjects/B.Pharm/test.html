@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>B.Pharm Test | DRx Learning Hub</title>
+
+    <link rel="stylesheet" href="test-style.css">
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="test-header">
+
+        <div class="header-content">
+
+            <h1>DRx Learning Hub</h1>
+
+            <p>
+                B.Pharm Universal Test System
+            </p>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="test-container">
+
+        <!-- Back -->
+
+        <a href="../../bpharm-program.html" class="back-btn">
+            ← Back to B.Pharm
+        </a>
+
+
+        <!-- Test Information -->
+
+        <div class="page-title">
+
+            <h2 id="testTitle">
+                B.Pharm Test
+            </h2>
+
+            <p id="subjectName">
+                Loading Subject...
+            </p>
+
+            <p id="unitName">
+                Loading Unit...
+            </p>
+
+        </div>
+
+
+        <!-- ================= STUDENT INFO ================= -->
+
+        <div class="student-box">
+
+            <h3>👤 Student Information</h3>
+
+            <label for="studentName">
+                Student Name
+            </label>
+
+            <input
+                type="text"
+                id="studentName"
+                placeholder="Enter your full name"
+                autocomplete="name"
+            >
+
+        </div>
+
+
+        <!-- ================= TEST FORM ================= -->
+
+        <form id="testForm">
+
+            <div id="questionsContainer">
+
+                <!-- Questions will load automatically -->
+
+            </div>
+
+
+            <!-- ================= BUTTONS ================= -->
+
+            <div style="text-align:center; margin-top:25px;">
+
+                <button
+                    type="button"
+                    class="test-btn"
+                    onclick="submitTest()"
+                >
+                    ✅ Submit Test
+                </button>
+
+                <button
+                    type="button"
+                    class="test-btn reset-btn"
+                    onclick="resetTest()"
+                >
+                    🔄 Restart
+                </button>
+
+            </div>
+
+        </form>
+
+
+        <!-- ================= RESULT ================= -->
+
+        <div id="result"></div>
+
+    </main>
+
+
+    <!-- ================= SCRIPT ================= -->
+
+    <script src="test-script.js"></script>
+
+</body>
+
+</html>
