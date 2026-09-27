@@ -8,6 +8,48 @@
 <title>Courses | DRx Learning Hub</title>
 
 <link rel="stylesheet" href="style.css">
+
+<style>
+/* ================================
+   CATEGORY COURSE SECTIONS
+================================ */
+
+.course-category-section {
+    margin-top: 50px;
+}
+
+.course-category-title {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #172033;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e5eaf2;
+}
+
+.course-category-title span {
+    margin-right: 8px;
+}
+
+.course-empty {
+    text-align: center;
+    width: 100%;
+    padding: 30px;
+    color: #667085;
+}
+
+.course-card-link {
+    display: inline-block;
+    margin-top: 12px;
+}
+
+.course-semester {
+    color: #667085;
+    font-size: 0.9rem;
+    margin: 8px 0;
+}
+</style>
+
 </head>
 
 <body>
@@ -54,11 +96,16 @@ simple and structured lessons.
 </div>
 
 
-<div class="feature-grid" id="courseList">
+<!-- CATEGORY COURSES WILL APPEAR HERE -->
 
-    <p style="text-align:center; width:100%;">
+<div id="courseList">
+
+    <p class="course-empty">
         Loading courses...
     </p>
+
+</div>
+
 
 </div>
 
@@ -76,7 +123,9 @@ DRx Learning Hub | Deepak Jatav
 
 </footer>
 
+
 <script type="module">
+
 import { initializeApp } 
 from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
 
@@ -87,15 +136,32 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
 
+/* =================================
+   FIREBASE CONFIG
+================================= */
+
 const firebaseConfig = {
+
     apiKey: "AIzaSyC-dcvx06CGJbiqCCXlteLG3IqY3C3x8OE",
+
     authDomain: "drx-learning-hub.firebaseapp.com",
+
     projectId: "drx-learning-hub",
+
     storageBucket: "drx-learning-hub.firebasestorage.app",
+
     messagingSenderId: "562733337038",
+
     appId: "1:562733337038:web:2db977c4b545cb1a5f839f",
+
     measurementId: "G-52EGNHBYF6"
+
 };
+
+
+/* =================================
+   FIREBASE INITIALIZATION
+================================= */
 
 const app = initializeApp(firebaseConfig);
 
@@ -104,18 +170,143 @@ const db = initializeFirestore(app, {}, "default");
 const courseList = document.getElementById("courseList");
 
 
+/* =================================
+   CATEGORY SETTINGS
+================================= */
+
+const categorySettings = {
+
+    pharmacy: {
+        title: "Pharmacy",
+        icon: "💊"
+    },
+
+    nursing: {
+        title: "Nursing",
+        icon: "🩺"
+    },
+
+    bsc: {
+        title: "B.Sc",
+        icon: "🔬"
+    },
+
+    paramedical: {
+        title: "Paramedical",
+        icon: "🧪"
+    },
+
+    school: {
+        title: "School",
+        icon: "🏫"
+    }
+
+};
+
+
+/* =================================
+   NORMALIZE CATEGORY
+================================= */
+
+function normalizeCategory(category) {
+
+    if (!category) {
+        return "other";
+    }
+
+    let value = String(category)
+        .trim()
+        .toLowerCase();
+
+    /* Pharmacy */
+
+    if (
+        value === "pharmacy" ||
+        value === "pharm"
+    ) {
+        return "pharmacy";
+    }
+
+
+    /* Nursing */
+
+    if (
+        value === "nursing" ||
+        value === "nurse"
+    ) {
+        return "nursing";
+    }
+
+
+    /* B.Sc */
+
+    if (
+        value === "b.sc" ||
+        value === "bsc" ||
+        value === "b.sc." ||
+        value === "science"
+    ) {
+        return "bsc";
+    }
+
+
+    /* Paramedical */
+
+    if (
+        value === "paramedical" ||
+        value === "para medical" ||
+        value === "paramedics"
+    ) {
+        return "paramedical";
+    }
+
+
+    /* School */
+
+    if (
+        value === "school" ||
+        value === "10th" ||
+        value === "12th"
+    ) {
+        return "school";
+    }
+
+
+    return "other";
+}
+
+
+/* =================================
+   ESCAPE HTML
+================================= */
+
+function escapeHTML(value) {
+
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+/* =================================
+   LOAD COURSES
+================================= */
+
 async function loadCourses() {
 
     try {
 
-        const snapshot = await getDocs(collection(db, "courses"));
+        const snapshot =
+            await getDocs(collection(db, "courses"));
 
-        courseList.innerHTML = "";
 
         if (snapshot.empty) {
 
             courseList.innerHTML = `
-                <p style="text-align:center; width:100%;">
+                <p class="course-empty">
                     No courses available yet.
                 </p>
             `;
@@ -124,50 +315,257 @@ async function loadCourses() {
         }
 
 
+        /* =================================
+           GROUP COURSES BY CATEGORY
+        ================================= */
+
+        const groupedCourses = {
+
+            pharmacy: [],
+
+            nursing: [],
+
+            bsc: [],
+
+            paramedical: [],
+
+            school: [],
+
+            other: []
+
+        };
+
+
         snapshot.forEach((doc) => {
 
             const course = doc.data();
 
-            const card = document.createElement("div");
+            const category =
+                normalizeCategory(course.category);
 
-            card.className = "feature-card";
+            if (!groupedCourses[category]) {
 
-            card.innerHTML = `
-                <div class="feature-icon">📚</div>
+                groupedCourses[category] = [];
 
-                <h3>${course.name || "Course"}</h3>
+            }
 
-                <p>
-                    ${course.description || "Learn this course with DRx Learning Hub."}
-                </p>
-
-                ${
-                    course.link
-                    ? `<a href="${course.link}">Open Course →</a>`
-                    : `<a href="#">Coming Soon →</a>`
-                }
-            `;
-
-            courseList.appendChild(card);
+            groupedCourses[category].push(course);
 
         });
 
+
+        courseList.innerHTML = "";
+
+
+        /* =================================
+           CATEGORY ORDER
+        ================================= */
+
+        const categoryOrder = [
+
+            "pharmacy",
+
+            "nursing",
+
+            "bsc",
+
+            "paramedical",
+
+            "school",
+
+            "other"
+
+        ];
+
+
+        /* =================================
+           CREATE CATEGORY SECTIONS
+        ================================= */
+
+        categoryOrder.forEach((categoryKey) => {
+
+            const courses =
+                groupedCourses[categoryKey];
+
+
+            if (!courses || courses.length === 0) {
+
+                return;
+
+            }
+
+
+            const settings =
+                categorySettings[categoryKey];
+
+
+            const section =
+                document.createElement("div");
+
+            section.className =
+                "course-category-section";
+
+
+            let title = "Other Courses";
+
+            let icon = "📚";
+
+
+            if (settings) {
+
+                title = settings.title;
+
+                icon = settings.icon;
+
+            }
+
+
+            section.innerHTML = `
+
+                <h3 class="course-category-title">
+
+                    <span>${icon}</span>
+
+                    ${title}
+
+                </h3>
+
+                <div class="feature-grid"></div>
+
+            `;
+
+
+            const grid =
+                section.querySelector(".feature-grid");
+
+
+            /* =================================
+               CREATE COURSE CARDS
+            ================================= */
+
+            courses.forEach((course) => {
+
+                const card =
+                    document.createElement("div");
+
+                card.className =
+                    "feature-card";
+
+
+                const name =
+                    escapeHTML(course.name || "Course");
+
+
+                const description =
+                    escapeHTML(
+                        course.description ||
+                        "Learn this course with DRx Learning Hub."
+                    );
+
+
+                const semester =
+                    escapeHTML(course.semester || "");
+
+
+                let linkHTML = `
+
+                    <a href="#"
+                       class="course-card-link">
+
+                       Coming Soon →
+
+                    </a>
+
+                `;
+
+
+                if (course.link) {
+
+                    linkHTML = `
+
+                        <a href="${escapeHTML(course.link)}"
+                           class="course-card-link">
+
+                           Open Course →
+
+                        </a>
+
+                    `;
+
+                }
+
+
+                card.innerHTML = `
+
+                    <div class="feature-icon">
+                        📚
+                    </div>
+
+                    <h3>
+                        ${name}
+                    </h3>
+
+                    ${
+                        semester
+                        ? `
+                        <p class="course-semester">
+                            ${semester}
+                        </p>
+                        `
+                        : ""
+                    }
+
+                    <p>
+                        ${description}
+                    </p>
+
+                    ${linkHTML}
+
+                `;
+
+
+                grid.appendChild(card);
+
+            });
+
+
+            courseList.appendChild(section);
+
+        });
+
+
     } catch (error) {
 
-        console.error("Course loading error:", error);
+        console.error(
+            "Course loading error:",
+            error
+        );
+
 
         courseList.innerHTML = `
-            <p style="text-align:center; width:100%;">
+
+            <p class="course-empty">
+
                 Unable to load courses.
+
             </p>
+
         `;
+
     }
+
 }
 
+
+/* =================================
+   START
+================================= */
 
 loadCourses();
 
 </script>
+
+
 <script src="main.js"></script>
 
 </body>
