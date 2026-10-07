@@ -13,5 +13,8 @@ firebase.initializeApp(firebaseConfig);
 
 const auth = firebase.auth();
 const db = firebase.firestore();
-
+db.settings({
+  experimentalForceLongPolling: true,
+  merge: true
+});
 console.log("Firebase Connected");
