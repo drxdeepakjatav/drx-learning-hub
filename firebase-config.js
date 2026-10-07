@@ -1,4 +1,4 @@
-const firebaseConfig = {
+var firebaseConfig = {
   apiKey: "AIzaSyC-Dcvx06CGjbiqCCXlteLG3IqY3C3x8OE",
   authDomain: "drx-learning-hub.firebaseapp.com",
   projectId: "drx-learning-hub",
@@ -12,12 +12,13 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-const auth = firebase.auth();
-const db = firebase.firestore();
+var auth = firebase.auth();
+var db = firebase.firestore();
 
-db.settings({
-  experimentalForceLongPolling: true,
-  merge: true
-});
+try {
+  db.settings({ experimentalForceLongPolling: true });
+} catch (e) {
+  console.warn("Firestore settings skipped:", e.message);
+}
 
 console.log("Firebase Connected");
