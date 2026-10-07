@@ -1,7 +1,9 @@
 ```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -9,13 +11,16 @@
 
     <link rel="stylesheet" href="../style.css">
 
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
     <script src="../firebase-config.js"></script>
     <script src="../script.js" defer></script>
+
 </head>
+
 
 <body>
 
@@ -27,7 +32,11 @@
             DRx Learning Hub
         </a>
 
-        <button class="menu-toggle" id="menuToggle">
+        <button
+            class="menu-toggle"
+            id="menuToggle"
+            type="button"
+        >
             ☰
         </button>
 
@@ -45,7 +54,11 @@
                 Website
             </a>
 
-            <button id="logoutBtn" class="btn btn-danger">
+            <button
+                id="logoutBtn"
+                class="btn btn-danger"
+                type="button"
+            >
                 Logout
             </button>
 
@@ -77,13 +90,17 @@
 
 <div class="container">
 
-    <!-- ================= ADD / EDIT FORM ================= -->
+
+    <!-- ==========================================
+         ADD / EDIT COURSE
+    =========================================== -->
 
     <div class="dashboard-card">
 
         <h2 id="formTitle">
             Add New Course
         </h2>
+
 
         <form id="courseForm">
 
@@ -92,6 +109,8 @@
                 id="editingCourseId"
             >
 
+
+            <!-- Course ID -->
 
             <div class="form-group">
 
@@ -113,6 +132,8 @@
             </div>
 
 
+            <!-- Course Title -->
+
             <div class="form-group">
 
                 <label for="courseTitle">
@@ -128,6 +149,8 @@
 
             </div>
 
+
+            <!-- Category -->
 
             <div class="form-group">
 
@@ -165,6 +188,8 @@
             </div>
 
 
+            <!-- Description -->
+
             <div class="form-group">
 
                 <label for="courseDescription">
@@ -181,6 +206,8 @@
             </div>
 
 
+            <!-- Image -->
+
             <div class="form-group">
 
                 <label for="courseImage">
@@ -195,6 +222,8 @@
 
             </div>
 
+
+            <!-- Lessons -->
 
             <div class="form-group">
 
@@ -211,6 +240,8 @@
 
             </div>
 
+
+            <!-- Status -->
 
             <div class="form-group">
 
@@ -233,6 +264,8 @@
             </div>
 
 
+            <!-- Buttons -->
+
             <div class="button-group">
 
                 <button
@@ -242,6 +275,7 @@
                 >
                     Add Course
                 </button>
+
 
                 <button
                     type="button"
@@ -266,7 +300,10 @@
     </div>
 
 
-    <!-- ================= COURSE LIST ================= -->
+
+    <!-- ==========================================
+         COURSE LIST
+    =========================================== -->
 
     <div class="section-heading">
 
@@ -281,7 +318,10 @@
     </div>
 
 
-    <div id="loadingCourses" class="empty-state">
+    <div
+        id="loadingCourses"
+        class="empty-state"
+    >
 
         <h3>
             Loading Courses...
@@ -323,6 +363,7 @@
 </main>
 
 
+
 <footer class="site-footer">
 
     <div class="container">
@@ -337,9 +378,15 @@
 </footer>
 
 
+
 <script>
 
 document.addEventListener("DOMContentLoaded", function () {
+
+
+    // ==========================================
+    // GET ELEMENTS
+    // ==========================================
 
     const courseForm =
         document.getElementById("courseForm");
@@ -396,6 +443,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentAdmin = null;
 
 
+
     // ==========================================
     // ADMIN AUTH CHECK
     // ==========================================
@@ -408,6 +456,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 "admin-login.html";
 
             return;
+
         }
 
 
@@ -434,6 +483,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     "admin-login.html";
 
                 return;
+
             }
 
 
@@ -441,9 +491,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             loadCourses();
 
-        } catch (error) {
+        }
 
-            console.error(error);
+        catch (error) {
+
+            console.error(
+                "Admin verification error:",
+                error
+            );
 
             showMessage(
                 "Unable to verify admin account.",
@@ -455,7 +510,784 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
+
     // ==========================================
     // ADD / UPDATE COURSE
-    //
+    // ==========================================
+
+    courseForm.addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+
+            if (!currentAdmin) {
+
+                showMessage(
+                    "Admin login required.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            const id =
+                courseId.value
+                    .trim()
+                    .toUpperCase();
+
+            const title =
+                courseTitle.value.trim();
+
+            const category =
+                courseCategory.value;
+
+            const description =
+                courseDescription.value.trim();
+
+            const image =
+                courseImage.value.trim();
+
+            const lessons =
+                Number(courseLessons.value) || 0;
+
+            const status =
+                courseStatus.value;
+
+            const editingId =
+                editingCourseId.value.trim();
+
+
+            if (!id || !title || !category || !description) {
+
+                showMessage(
+                    "Please fill all required fields.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            saveCourseBtn.disabled = true;
+
+            saveCourseBtn.textContent =
+                editingId
+                    ? "Updating..."
+                    : "Adding...";
+
+
+            try {
+
+
+                // ==================================
+                // UPDATE COURSE
+                // ==================================
+
+                if (editingId) {
+
+                    await db
+                        .collection("courses")
+                        .doc(editingId)
+                        .update({
+
+                            title: title,
+
+                            category: category,
+
+                            description: description,
+
+                            image: image,
+
+                            lessons: lessons,
+
+                            status: status,
+
+                            updatedAt:
+                                firebase.firestore.FieldValue.serverTimestamp(),
+
+                            updatedBy:
+                                currentAdmin.uid
+
+                        });
+
+
+                    showMessage(
+                        "Course updated successfully!",
+                        "success"
+                    );
+
+                }
+
+
+                // ==================================
+                // ADD NEW COURSE
+                // ==================================
+
+                else {
+
+
+                    const existingCourse =
+                        await db
+                            .collection("courses")
+                            .doc(id)
+                            .get();
+
+
+                    if (existingCourse.exists) {
+
+                        showMessage(
+                            "Course ID already exists. Please use another ID.",
+                            "error"
+                        );
+
+                        return;
+
+                    }
+
+
+                    await db
+                        .collection("courses")
+                        .doc(id)
+                        .set({
+
+                            title: title,
+
+                            category: category,
+
+                            description: description,
+
+                            image: image,
+
+                            lessons: lessons,
+
+                            status: status,
+
+                            createdAt:
+                                firebase.firestore.FieldValue.serverTimestamp(),
+
+                            createdBy:
+                                currentAdmin.uid,
+
+                            updatedAt:
+                                firebase.firestore.FieldValue.serverTimestamp(),
+
+                            updatedBy:
+                                currentAdmin.uid
+
+                        });
+
+
+                    showMessage(
+                        "Course added successfully!",
+                        "success"
+                    );
+
+                }
+
+
+                resetForm();
+
+                loadCourses();
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Course save error:",
+                    error
+                );
+
+                showMessage(
+                    "Error: " + error.message,
+                    "error"
+                );
+
+            }
+
+            finally {
+
+                saveCourseBtn.disabled = false;
+
+                saveCourseBtn.textContent =
+                    editingCourseId.value
+                        ? "Update Course"
+                        : "Add Course";
+
+            }
+
+        }
+    );
+
+
+
+    // ==========================================
+    // LOAD COURSES
+    // ==========================================
+
+    async function loadCourses() {
+
+        loadingCourses.style.display =
+            "block";
+
+        courseList.innerHTML = "";
+
+        noCourses.style.display =
+            "none";
+
+
+        try {
+
+            const snapshot =
+                await db
+                    .collection("courses")
+                    .get();
+
+
+            loadingCourses.style.display =
+                "none";
+
+
+            if (snapshot.empty) {
+
+                noCourses.style.display =
+                    "block";
+
+                return;
+
+            }
+
+
+            const courses = [];
+
+
+            snapshot.forEach(function (doc) {
+
+                courses.push({
+
+                    id: doc.id,
+
+                    ...doc.data()
+
+                });
+
+            });
+
+
+            // Newest first
+            courses.sort(function (a, b) {
+
+                const aTime =
+                    a.createdAt &&
+                    a.createdAt.toMillis
+                        ? a.createdAt.toMillis()
+                        : 0;
+
+                const bTime =
+                    b.createdAt &&
+                    b.createdAt.toMillis
+                        ? b.createdAt.toMillis()
+                        : 0;
+
+                return bTime - aTime;
+
+            });
+
+
+            courses.forEach(function (course) {
+
+                renderCourse(course);
+
+            });
+
+        }
+
+        catch (error) {
+
+            loadingCourses.style.display =
+                "none";
+
+            console.error(
+                "Load courses error:",
+                error
+            );
+
+            showMessage(
+                "Unable to load courses: " +
+                error.message,
+                "error"
+            );
+
+        }
+
+    }
+
+
+
+    // ==========================================
+    // RENDER COURSE
+    // ==========================================
+
+    function renderCourse(course) {
+
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "course-card";
+
+
+        const imageHTML =
+            course.image
+                ? `
+                    <img
+                        src="${escapeHTML(course.image)}"
+                        alt="${escapeHTML(course.title || "Course")}"
+                        style="width:100%; height:180px; object-fit:cover; border-radius:10px;"
+                    >
+                  `
+                : `
+                    <div
+                        style="
+                            height:180px;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            background:#f1f1f1;
+                            border-radius:10px;
+                        "
+                    >
+                        <strong>
+                            DRx Learning Hub
+                        </strong>
+                    </div>
+                  `;
+
+
+        const statusClass =
+            course.status === "active"
+                ? "alert-success"
+                : "alert-error";
+
+
+        card.innerHTML = `
+
+            ${imageHTML}
+
+            <div style="padding-top:15px;">
+
+                <span class="${statusClass}">
+                    ${escapeHTML(course.status || "inactive")}
+                </span>
+
+                <h3 style="margin-top:12px;">
+                    ${escapeHTML(course.title || "Untitled Course")}
+                </h3>
+
+                <p>
+                    <strong>Course ID:</strong>
+                    ${escapeHTML(course.id)}
+                </p>
+
+                <p>
+                    <strong>Category:</strong>
+                    ${escapeHTML(course.category || "Other")}
+                </p>
+
+                <p>
+                    <strong>Lessons:</strong>
+                    ${Number(course.lessons) || 0}
+                </p>
+
+                <p>
+                    ${escapeHTML(course.description || "")}
+                </p>
+
+
+                <div
+                    class="button-group"
+                    style="margin-top:15px;"
+                >
+
+                    <button
+                        class="btn btn-primary edit-course-btn"
+                        data-id="${escapeHTML(course.id)}"
+                        type="button"
+                    >
+                        Edit
+                    </button>
+
+                    <button
+                        class="btn btn-danger delete-course-btn"
+                        data-id="${escapeHTML(course.id)}"
+                        type="button"
+                    >
+                        Delete
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        courseList.appendChild(card);
+
+    }
+
+
+
+    // ==========================================
+    // EDIT COURSE
+    // ==========================================
+
+    courseList.addEventListener(
+        "click",
+        async function (event) {
+
+
+            const editButton =
+                event.target.closest(
+                    ".edit-course-btn"
+                );
+
+
+            const deleteButton =
+                event.target.closest(
+                    ".delete-course-btn"
+                );
+
+
+            // -------------------------------
+            // EDIT
+            // -------------------------------
+
+            if (editButton) {
+
+                const id =
+                    editButton.dataset.id;
+
+                await editCourse(id);
+
+            }
+
+
+            // -------------------------------
+            // DELETE
+            // -------------------------------
+
+            if (deleteButton) {
+
+                const id =
+                    deleteButton.dataset.id;
+
+                await deleteCourse(id);
+
+            }
+
+        }
+    );
+
+
+
+    // ==========================================
+    // EDIT FUNCTION
+    // ==========================================
+
+    async function editCourse(id) {
+
+        try {
+
+            const doc =
+                await db
+                    .collection("courses")
+                    .doc(id)
+                    .get();
+
+
+            if (!doc.exists) {
+
+                showMessage(
+                    "Course not found.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            const course =
+                doc.data();
+
+
+            editingCourseId.value =
+                id;
+
+            courseId.value =
+                id;
+
+            courseId.disabled =
+                true;
+
+            courseTitle.value =
+                course.title || "";
+
+            courseCategory.value =
+                course.category || "";
+
+            courseDescription.value =
+                course.description || "";
+
+            courseImage.value =
+                course.image || "";
+
+            courseLessons.value =
+                course.lessons || 0;
+
+            courseStatus.value =
+                course.status || "active";
+
+
+            formTitle.textContent =
+                "Edit Course";
+
+            saveCourseBtn.textContent =
+                "Update Course";
+
+            cancelEditBtn.style.display =
+                "inline-block";
+
+
+            window.scrollTo({
+
+                top: 0,
+
+                behavior: "smooth"
+
+            });
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            showMessage(
+                "Unable to load course.",
+                "error"
+            );
+
+        }
+
+    }
+
+
+
+    // ==========================================
+    // DELETE COURSE
+    // ==========================================
+
+    async function deleteCourse(id) {
+
+
+        const confirmDelete =
+            confirm(
+                "Are you sure you want to delete this course?\n\nCourse ID: " +
+                id
+            );
+
+
+        if (!confirmDelete) {
+
+            return;
+
+        }
+
+
+        try {
+
+            await db
+                .collection("courses")
+                .doc(id)
+                .delete();
+
+
+            showMessage(
+                "Course deleted successfully!",
+                "success"
+            );
+
+
+            loadCourses();
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Delete error:",
+                error
+            );
+
+            showMessage(
+                "Unable to delete course: " +
+                error.message,
+                "error"
+            );
+
+        }
+
+    }
+
+
+
+    // ==========================================
+    // CANCEL EDIT
+    // ==========================================
+
+    cancelEditBtn.addEventListener(
+        "click",
+        function () {
+
+            resetForm();
+
+        }
+    );
+
+
+
+    // ==========================================
+    // RESET FORM
+    // ==========================================
+
+    function resetForm() {
+
+        courseForm.reset();
+
+        editingCourseId.value =
+            "";
+
+        courseId.disabled =
+            false;
+
+        courseLessons.value =
+            0;
+
+        courseStatus.value =
+            "active";
+
+        formTitle.textContent =
+            "Add New Course";
+
+        saveCourseBtn.textContent =
+            "Add Course";
+
+        cancelEditBtn.style.display =
+            "none";
+
+    }
+
+
+
+    // ==========================================
+    // LOGOUT
+    // ==========================================
+
+    logoutBtn.addEventListener(
+        "click",
+        async function () {
+
+            try {
+
+                await auth.signOut();
+
+                window.location.href =
+                    "admin-login.html";
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                alert(
+                    "Logout failed."
+                );
+
+            }
+
+        }
+    );
+
+
+
+    // ==========================================
+    // ESCAPE HTML
+    // ==========================================
+
+    function escapeHTML(value) {
+
+        return String(value || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+
+
+    // ==========================================
+    // MESSAGE
+    // ==========================================
+
+    function showMessage(message, type) {
+
+        courseMessage.textContent =
+            message;
+
+        courseMessage.style.display =
+            "block";
+
+
+        if (type === "success") {
+
+            courseMessage.className =
+                "alert alert-success";
+
+        }
+
+        else {
+
+            courseMessage.className =
+                "alert alert-error";
+
+        }
+
+
+        setTimeout(function () {
+
+            courseMessage.style.display =
+                "none";
+
+        }, 5000);
+
+    }
+
+});
+
+</script>
+
+</body>
+
+</html>
 ```
