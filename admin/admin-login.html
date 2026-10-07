@@ -173,7 +173,7 @@
 
 
 <!-- =====================================================
-     FIREBASE (modular SDK, database id = "default")
+     FIREBASE (modular SDK, "(default)" database)
 ===================================================== -->
 
 <script type="module">
@@ -189,7 +189,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
 
 import {
-    initializeFirestore,
+    getFirestore,
     doc,
     getDoc
 } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
@@ -210,8 +210,8 @@ const auth = initializeAuth(app, {
     persistence: browserLocalPersistence
 });
 
-// IMPORTANT: your Firestore database id is "default" (not "(default)")
-const db = initializeFirestore(app, {}, "default");
+// Uses the standard "(default)" Firestore database
+const db = getFirestore(app);
 
 
 const form = document.getElementById("adminLoginForm");

@@ -15,9 +15,4 @@ if (!firebase.apps.length) {
 var auth = firebase.auth();
 var db = firebase.firestore();
 
-db.settings({
-  experimentalAutoDetectLongPolling: true,
-  merge: true
-});
-
 console.log("Firebase Connected");
