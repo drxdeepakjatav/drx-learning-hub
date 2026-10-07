@@ -15,10 +15,9 @@ if (!firebase.apps.length) {
 var auth = firebase.auth();
 var db = firebase.firestore();
 
-try {
-  db.settings({ experimentalForceLongPolling: true });
-} catch (e) {
-  console.warn("Firestore settings skipped:", e.message);
-}
+db.settings({
+  experimentalAutoDetectLongPolling: true,
+  merge: true
+});
 
 console.log("Firebase Connected");
