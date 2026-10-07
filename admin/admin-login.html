@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,7 +13,6 @@
 
     <title>Admin Login | DRx Learning Hub</title>
 
-    <!-- Shared CSS -->
     <link rel="stylesheet" href="../style.css">
 
 </head>
@@ -20,10 +20,6 @@
 
 <body>
 
-
-<!-- =====================================================
-     HEADER
-===================================================== -->
 
 <header class="site-header">
 
@@ -45,18 +41,12 @@
 </header>
 
 
-<!-- =====================================================
-     ADMIN LOGIN
-===================================================== -->
 
 <section class="auth-section">
 
     <div class="container">
 
         <div class="auth-card">
-
-
-            <!-- HEADER -->
 
             <div class="auth-header">
 
@@ -75,8 +65,6 @@
             </div>
 
 
-            <!-- MESSAGE -->
-
             <div
                 id="adminLoginMessage"
                 class="alert"
@@ -84,12 +72,7 @@
             ></div>
 
 
-            <!-- FORM -->
-
             <form id="adminLoginForm">
-
-
-                <!-- EMAIL -->
 
                 <div class="form-group">
 
@@ -101,13 +84,12 @@
                         type="email"
                         id="adminEmail"
                         placeholder="Enter admin email"
+                        autocomplete="email"
                         required
                     >
 
                 </div>
 
-
-                <!-- PASSWORD -->
 
                 <div class="form-group">
 
@@ -119,13 +101,12 @@
                         type="password"
                         id="adminPassword"
                         placeholder="Enter admin password"
+                        autocomplete="current-password"
                         required
                     >
 
                 </div>
 
-
-                <!-- LOGIN -->
 
                 <button
                     type="submit"
@@ -155,9 +136,6 @@
 </section>
 
 
-<!-- =====================================================
-     FOOTER
-===================================================== -->
 
 <footer class="site-footer">
 
@@ -170,6 +148,7 @@
     </div>
 
 </footer>
+
 
 
 <!-- =====================================================
@@ -185,49 +164,119 @@
 <script src="../firebase-config.js"></script>
 
 
-<!-- =====================================================
-     ADMIN LOGIN LOGIC
-===================================================== -->
 
 <script>
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
 
-    const form =
-        document.getElementById("adminLoginForm");
-
-    const message =
-        document.getElementById("adminLoginMessage");
-
-    const button =
-        document.getElementById("adminLoginButton");
+        const form =
+            document.getElementById(
+                "adminLoginForm"
+            );
 
 
-    // ================================================
-    // LOGIN
-    // ================================================
-
-    form.addEventListener(
-        "submit",
-        async function (event) {
-
-            event.preventDefault();
+        const message =
+            document.getElementById(
+                "adminLoginMessage"
+            );
 
 
-            const email =
-                document
-                    .getElementById("adminEmail")
-                    .value
-                    .trim();
-
-            const password =
-                document
-                    .getElementById("adminPassword")
-                    .value;
+        const button =
+            document.getElementById(
+                "adminLoginButton"
+            );
 
 
-            try {
+        const currentYear =
+            document.getElementById(
+                "currentYear"
+            );
+
+
+        if (currentYear) {
+
+            currentYear.textContent =
+                new Date().getFullYear();
+
+        }
+
+
+
+        // =========================================
+        // SHOW MESSAGE
+        // =========================================
+
+        function showMessage(
+            text,
+            type = "error"
+        ) {
+
+            message.style.display =
+                "block";
+
+            message.textContent =
+                text;
+
+            message.className =
+                "alert";
+
+
+            if (type === "success") {
+
+                message.classList.add(
+                    "alert-success"
+                );
+
+            } else {
+
+                message.classList.add(
+                    "alert-error"
+                );
+
+            }
+
+        }
+
+
+
+        // =========================================
+        // ADMIN LOGIN
+        // =========================================
+
+        form.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const email =
+                    document
+                        .getElementById("adminEmail")
+                        .value
+                        .trim();
+
+
+                const password =
+                    document
+                        .getElementById("adminPassword")
+                        .value;
+
+
+                if (!email || !password) {
+
+                    showMessage(
+                        "Please enter email and password.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
 
                 button.disabled =
                     true;
@@ -236,128 +285,212 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Checking...";
 
 
-                // Firebase Authentication
+                try {
 
-                const credential =
-                    await auth.signInWithEmailAndPassword(
-                        email,
-                        password
+
+                    // =================================
+                    // STEP 1
+                    // FIREBASE AUTH LOGIN
+                    // =================================
+
+                    const credential =
+                        await auth
+                            .signInWithEmailAndPassword(
+                                email,
+                                password
+                            );
+
+
+                    const user =
+                        credential.user;
+
+
+                    console.log(
+                        "Firebase Auth Success:",
+                        user.uid
                     );
 
 
-                const user =
-                    credential.user;
+
+                    // =================================
+                    // STEP 2
+                    // CHECK FIRESTORE ADMIN
+                    // =================================
+
+                    const adminDoc =
+                        await db
+                            .collection("admins")
+                            .doc(user.uid)
+                            .get();
 
 
-                // ====================================
-                // CHECK ADMIN ROLE
-                // ====================================
 
-                const adminDoc =
-                    await db
-                        .collection("admins")
-                        .doc(user.uid)
-                        .get();
+                    if (!adminDoc.exists) {
+
+                        await auth.signOut();
+
+                        throw new Error(
+                            "Login successful, but this account is not registered as an admin in Firestore."
+                        );
+
+                    }
 
 
-                if (
-                    !adminDoc.exists
-                ) {
 
-                    await auth.signOut();
+                    const adminData =
+                        adminDoc.data();
 
-                    throw new Error(
-                        "You are not authorized as an admin."
+
+
+                    if (
+                        adminData.role !==
+                        "admin"
+                    ) {
+
+                        await auth.signOut();
+
+                        throw new Error(
+                            "Admin access denied. Firestore role must be 'admin'."
+                        );
+
+                    }
+
+
+
+                    // =================================
+                    // SUCCESS
+                    // =================================
+
+                    showMessage(
+                        "Admin login successful! Redirecting...",
+                        "success"
                     );
+
+
+                    button.textContent =
+                        "Success";
+
+
+                    setTimeout(
+                        function () {
+
+                            window.location.href =
+                                "dashboard.html";
+
+                        },
+                        700
+                    );
+
 
                 }
 
 
-                const adminData =
-                    adminDoc.data();
+                catch (error) {
 
-
-                if (
-                    adminData.role !== "admin"
-                ) {
-
-                    await auth.signOut();
-
-                    throw new Error(
-                        "Admin access denied."
+                    console.error(
+                        "ADMIN LOGIN ERROR:",
+                        error
                     );
 
-                }
 
-
-                // ====================================
-                // SUCCESS
-                // ====================================
-
-                message.style.display =
-                    "block";
-
-                message.classList.add(
-                    "success"
-                );
-
-                message.textContent =
-                    "Admin login successful!";
-
-
-                setTimeout(function () {
-
-                    window.location.href =
-                        "dashboard.html";
-
-                }, 1000);
-
-
-            } catch (error) {
-
-                console.error(
-                    "Admin Login Error:",
-                    error
-                );
-
-
-                message.style.display =
-                    "block";
-
-                message.classList.remove(
-                    "success"
-                );
-
-
-                if (
-                    error.code ===
-                    "auth/invalid-credential"
-                ) {
-
-                    message.textContent =
-                        "Invalid admin email or password.";
-
-                } else {
-
-                    message.textContent =
-                        error.message ||
+                    let errorMessage =
                         "Admin login failed.";
 
+
+                    switch (error.code) {
+
+
+                        case "auth/invalid-email":
+
+                            errorMessage =
+                                "Email address is invalid.";
+
+                            break;
+
+
+                        case "auth/user-not-found":
+
+                            errorMessage =
+                                "Admin account not found in Firebase Authentication.";
+
+                            break;
+
+
+                        case "auth/wrong-password":
+
+                            errorMessage =
+                                "Incorrect password.";
+
+                            break;
+
+
+                        case "auth/invalid-credential":
+
+                            errorMessage =
+                                "Invalid email or password.";
+
+                            break;
+
+
+                        case "auth/user-disabled":
+
+                            errorMessage =
+                                "This Firebase account has been disabled.";
+
+                            break;
+
+
+                        case "auth/too-many-requests":
+
+                            errorMessage =
+                                "Too many login attempts. Please try again later.";
+
+                            break;
+
+
+                        case "permission-denied":
+
+                            errorMessage =
+                                "Firestore permission denied. Check Firebase Security Rules.";
+
+                            break;
+
+
+                        default:
+
+                            if (
+                                error.message
+                            ) {
+
+                                errorMessage =
+                                    error.message;
+
+                            }
+
+                            break;
+
+                    }
+
+
+                    showMessage(
+                        errorMessage,
+                        "error"
+                    );
+
+
+                    button.disabled =
+                        false;
+
+                    button.textContent =
+                        "Admin Login";
+
                 }
 
-
-                button.disabled =
-                    false;
-
-                button.textContent =
-                    "Admin Login";
-
             }
+        );
 
-        }
-    );
-
-});
+    }
+);
 
 </script>
 
