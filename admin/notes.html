@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manage Notes | DRx Learning Hub</title>
+
+    <link rel="stylesheet" href="../style.css">
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <script src="../firebase-config.js"></script>
+    <script src="../script.js" defer></script>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header class="site-header">
+
+    <div class="container nav-container">
+
+        <a href="dashboard.html" class="logo">
+            DRx Learning Hub
+        </a>
+
+        <button
+            class="menu-toggle"
+            id="menuToggle">
+            ☰
+        </button>
+
+        <nav
+            class="main-nav"
+            id="mainNav">
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
+            <a href="courses.html">
+                Courses
+            </a>
+
+            <a href="videos.html">
+                Videos
+            </a>
+
+            <a href="notes.html"
+               class="active">
+                Notes
+            </a>
+
+            <a href="../index.html">
+                Website
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<!-- ================= PAGE HEADER ================= -->
+
+<section class="page-header">
+
+    <div class="container">
+
+        <h1>Manage Study Notes</h1>
+
+        <p>
+            Add, edit and delete study notes
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ================= ADMIN CONTENT ================= -->
+
+<section class="section">
+
+    <div class="container">
+
+        <!-- Alert -->
+
+        <div
+            id="message"
+            class="alert"
+            style="display:none;">
+        </div>
+
+
+        <!-- ================= NOTE FORM ================= -->
+
+        <div class="admin-card">
+
+            <h2 id="formTitle">
+                Add New Note
+            </h2>
+
+
+            <form id="noteForm">
+
+
+                <!-- Note Title -->
+
+                <div class="form-group">
+
+                    <label for="title">
+                        Note Title *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="title"
+                        required
+                        placeholder="Example: Unit 1 Introduction">
+
+                </div>
+
+
+                <!-- Note Type -->
+
+                <div class="form-group">
+
+                    <label for="noteType">
+                        Note Type
+                    </label>
+
+                    <select id="noteType">
+
+                        <option value="short-note">
+                            Short Note
+                        </option>
+
+                        <option value="unit-note">
+                            Unit Note
+                        </option>
+
+                        <option value="pdf">
+                            PDF Study Material
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Course -->
+
+                <div class="form-group">
+
+                    <label for="courseId">
+                        Course *
+                    </label>
+
+                    <select
+                        id="courseId"
+                        required>
+
+                        <option value="">
+                            Loading courses...
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Unit -->
+
+                <div class="form-group">
+
+                    <label for="unit">
+                        Unit
+                    </label>
+
+                    <select id="unit">
+
+                        <option value="">
+                            Select Unit
+                        </option>
+
+                        <option value="Unit 1">
+                            Unit 1
+                        </option>
+
+                        <option value="Unit 2">
+                            Unit 2
+                        </option>
+
+                        <option value="Unit 3">
+                            Unit 3
+                        </option>
+
+                        <option value="Unit 4">
+                            Unit 4
+                        </option>
+
+                        <option value="Unit 5">
+                            Unit 5
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Description -->
+
+                <div class="form-group">
+
+                    <label for="description">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="description"
+                        rows="5"
+                        placeholder="Write short description about this note...">
+                    </textarea>
+
+                </div>
+
+
+                <!-- PDF / Note Link -->
+
+                <div class="form-group">
+
+                    <label for="pdfUrl">
+                        PDF / Note URL *
+                    </label>
+
+                    <input
+                        type="url"
+                        id="pdfUrl"
+                        required
+                        placeholder="https://example.com/file.pdf">
+
+                    <small>
+                        Paste your PDF or document's public URL here.
+                    </small>
+
+                </div>
+
+
+                <!-- Thumbnail -->
+
+                <div class="form-group">
+
+                    <label for="thumbnail">
+                        Thumbnail Image URL
+                    </label>
+
+                    <input
+                        type="url"
+                        id="thumbnail"
+                        placeholder="https://example.com/image.jpg">
+
+                </div>
+
+
+                <!-- Status -->
+
+                <div class="form-group">
+
+                    <label for="status">
+                        Status
+                    </label>
+
+                    <select id="status">
+
+                        <option value="active">
+                            Active
+                        </option>
+
+                        <option value="inactive">
+                            Inactive
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Buttons -->
+
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        id="saveBtn">
+
+                        Add Note
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        id="cancelBtn"
+                        style="display:none;">
+
+                        Cancel
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- ================= NOTES LIST ================= -->
+
+        <div class="admin-card">
+
+            <h2>
+                All Notes
+            </h2>
+
+
+            <div
+                id="notesLoading"
+                class="empty-state">
+
+                <div class="loading-spinner"></div>
+
+                <p>
+                    Loading notes...
+                </p>
+
+            </div>
+
+
+            <div
+                id="notesContainer"
+                class="admin-grid">
+            </div>
+
+
+            <div
+                id="noNotes"
+                class="empty-state"
+                style="display:none;">
+
+                <h3>
+                    No Notes Found
+                </h3>
+
+                <p>
+                    Add your first study note above.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="site-footer">
+
+    <div class="container">
+
+        <div class="footer-bottom">
+
+            <p>
+                ©
+                <span id="currentYear"></span>
+                DRx Learning Hub.
+                All Rights Reserved.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- ================= FIREBASE LOGIC ================= -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        /* ================= VARIABLES ================= */
+
+        const noteForm =
+            document.getElementById(
+                "noteForm"
+            );
+
+        const formTitle =
+            document.getElementById(
+                "formTitle"
+            );
+
+        const saveBtn =
+            document.getElementById(
+                "saveBtn"
+            );
+
+        const cancelBtn =
+            document.getElementById(
+                "cancelBtn"
+            );
+
+        const notesContainer =
+            document.getElementById(
+                "notesContainer"
+            );
+
+        const notesLoading =
+            document.getElementById(
+                "notesLoading"
+            );
+
+        const noNotes =
+            document.getElementById(
+                "noNotes"
+            );
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+        const courseSelect =
+            document.getElementById(
+                "courseId"
+            );
+
+
+        let editingNoteId = null;
+
+        let adminUser = null;
+
+
+        /* ================= ESCAPE ================= */
+
+        function escapeHTML(value) {
+
+            if (
+                value === null ||
+                value === undefined
+            ) {
+
+                return "";
+
+            }
+
+            return String(value)
+
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
+
+        }
+
+
+        /* ================= MESSAGE ================= */
+
+        function showMessage(
+            text,
+            type = "success"
+        ) {
+
+            message.textContent =
+                text;
+
+            message.className =
+                "alert alert-" +
+                type;
+
+            message.style.display =
+                "block";
+
+
+            setTimeout(
+                function () {
+
+                    message.style.display =
+                        "none";
+
+                },
+                4000
+            );
+
+        }
+
+
+        /* ================= ADMIN CHECK ================= */
+
+        auth.onAuthStateChanged(
+            async function (user) {
+
+                if (!user) {
+
+                    window.location.href =
+                        "admin-login.html";
+
+                    return;
+
+                }
+
+
+                try {
+
+                    const adminDoc =
+                        await db
+                            .collection(
+                                "admins"
+                            )
+                            .doc(user.uid)
+                            .get();
+
+
+                    if (
+                        !adminDoc.exists ||
+                        adminDoc.data().role !==
+                            "admin"
+                    ) {
+
+                        await auth.signOut();
+
+                        window.location.href =
+                            "admin-login.html";
+
+                        return;
+
+                    }
+
+
+                    adminUser = user;
+
+
+                    loadCourses();
+
+                    loadNotes();
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        error
+                    );
+
+                    showMessage(
+                        "Admin verification failed.",
+                        "error"
+                    );
+
+                }
+
+            }
+        );
+
+
+        /* ================= LOAD COURSES ================= */
+
+        async function loadCourses() {
+
+            try {
+
+                const snapshot =
+                    await db
+                        .collection(
+                            "courses"
+                        )
+                        .get();
+
+
+                courseSelect.innerHTML = `
+
+                    <option value="">
+                        Select Course
+                    </option>
+
+                `;
+
+
+                const courses = [];
+
+
+                snapshot.forEach(
+                    function (doc) {
+
+                        courses.push({
+
+                            id: doc.id,
+
+                            ...doc.data()
+
+                        });
+
+                    }
+                );
+
+
+                courses.sort(
+                    function (a, b) {
+
+                        return String(
+                            a.title || ""
+                        ).localeCompare(
+                            String(
+                                b.title || ""
+                            )
+                        );
+
+                    }
+                );
+
+
+                courses.forEach(
+                    function (course) {
+
+                        const option =
+                            document.createElement(
+                                "option"
+                            );
+
+
+                        option.value =
+                            course.id;
+
+
+                        option.textContent =
+                            (
+                                course.title ||
+                                course.id
+                            )
+                            +
+                            " (" +
+                            (
+                                course.courseId ||
+                                course.id
+                            )
+                            +
+                            ")";
+
+
+                        courseSelect.appendChild(
+                            option
+                        );
+
+                    }
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Course loading error:",
+                    error
+                );
+
+
+                courseSelect.innerHTML = `
+
+                    <option value="">
+                        Unable to load courses
+                    </option>
+
+                `;
+
+            }
+
+        }
+
+
+        /* ================= LOAD NOTES ================= */
+
+        async function loadNotes() {
+
+            try {
+
+                notesLoading.style.display =
+                    "block";
+
+                notesContainer.innerHTML =
+                    "";
+
+                noNotes.style.display =
+                    "none";
+
+
+                const snapshot =
+                    await db
+                        .collection(
+                            "notes"
+                        )
+                        .get();
+
+
+                const notes = [];
+
+
+                snapshot.forEach(
+                    function (doc) {
+
+                        notes.push({
+
+                            id: doc.id,
+
+                            ...doc.data()
+
+                        });
+
+                    }
+                );
+
+
+                notes.sort(
+                    function (a, b) {
+
+                        const aTime =
+                            a.createdAt &&
+                            a.createdAt.toMillis
+                                ? a.createdAt.toMillis()
+                                : 0;
+
+                        const bTime =
+                            b.createdAt &&
+                            b.createdAt.toMillis
+                                ? b.createdAt.toMillis()
+                                : 0;
+
+
+                        return (
+                            bTime - aTime
+                        );
+
+                    }
+                );
+
+
+                notesLoading.style.display =
+                    "none";
+
+
+                if (
+                    notes.length === 0
+                ) {
+
+                    noNotes.style.display =
+                        "block";
+
+                    return;
+
+                }
+
+
+                notes.forEach(
+                    function (note) {
+
+                        renderNote(
+                            note
+                        );
+
+                    }
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Notes loading error:",
+                    error
+                );
+
+
+                notesLoading.style.display =
+                    "none";
+
+
+                notesContainer.innerHTML = `
+
+                    <div class="alert alert-error">
+
+                        Unable to load notes.
+
+                    </div>
+
+                `;
+
+            }
+
+        }
+
+
+        /* ================= RENDER NOTE ================= */
+
+        function renderNote(note) {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "admin-card";
+
+
+            const title =
+                escapeHTML(
+                    note.title ||
+                    "Untitled Note"
+                );
+
+
+            const type =
+                escapeHTML(
+                    note.noteType ||
+                    "note"
+                );
+
+
+            const courseId =
+                escapeHTML(
+                    note.courseId ||
+                    "General"
+                );
+
+
+            const unit =
+                escapeHTML(
+                    note.unit ||
+                    "All Units"
+                );
+
+
+            const status =
+                escapeHTML(
+                    note.status ||
+                    "inactive"
+                );
+
+
+            const description =
+                escapeHTML(
+                    note.description ||
+                    ""
+                );
+
+
+            const pdfUrl =
+                escapeHTML(
+                    note.pdfUrl ||
+                    ""
+                );
+
+
+            card.innerHTML = `
+
+                <h3>
+                    ${title}
+                </h3>
+
+
+                <p>
+
+                    <strong>
+                        Type:
+                    </strong>
+
+                    ${type}
+
+                </p>
+
+
+                <p>
+
+                    <strong>
+                        Course:
+                    </strong>
+
+                    ${courseId}
+
+                </p>
+
+
+                <p>
+
+                    <strong>
+                        Unit:
+                    </strong>
+
+                    ${unit}
+
+                </p>
+
+
+                ${
+                    description
+                        ? `
+                            <p>
+                                ${description}
+                            </p>
+                          `
+                        : ""
+                }
+
+
+                <p>
+
+                    <strong>
+                        Status:
+                    </strong>
+
+                    ${status}
+
+                </p>
+
+
+                <div class="form-actions">
+
+                    ${
+                        pdfUrl
+                            ? `
+                                <a
+                                    href="${pdfUrl}"
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="btn btn-secondary">
+
+                                    View PDF
+
+                                </a>
+                              `
+                            : ""
+                    }
+
+
+                    <button
+                        class="btn btn-primary edit-note"
+                        data-id="${note.id}">
+
+                        Edit
+
+                    </button>
+
+
+                    <button
+                        class="btn btn-danger delete-note"
+                        data-id="${note.id}">
+
+                        Delete
+
+                    </button>
+
+                </div>
+
+            `;
+
+
+            notesContainer.appendChild(
+                card
+            );
+
+
+            /* Edit */
+
+            card
+                .querySelector(
+                    ".edit-note"
+                )
+                .addEventListener(
+                    "click",
+                    function () {
+
+                        editNote(
+                            note
+                        );
+
+                    }
+                );
+
+
+            /* Delete */
+
+            card
+                .querySelector(
+                    ".delete-note"
+                )
+                .addEventListener(
+                    "click",
+                    function () {
+
+                        deleteNote(
+                            note.id
+                        );
+
+                    }
+                );
+
+        }
+
+
+        /* ================= ADD / UPDATE ================= */
+
+        noteForm.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                if (!adminUser) {
+
+                    showMessage(
+                        "Admin not authenticated.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                const title =
+                    document
+                        .getElementById(
+                            "title"
+                        )
+                        .value
+                        .trim();
+
+
+                const noteType =
+                    document
+                        .getElementById(
+                            "noteType"
+                        )
+                        .value;
+
+
+                const courseId =
+                    document
+                        .getElementById(
+                            "courseId"
+                        )
+                        .value;
+
+
+                const unit =
+                    document
+                        .getElementById(
+                            "unit"
+                        )
+                        .value;
+
+
+                const description =
+                    document
+                        .getElementById(
+                            "description"
+                        )
+                        .value
+                        .trim();
+
+
+                const pdfUrl =
+                    document
+                        .getElementById(
+                            "pdfUrl"
+                        )
+                        .value
+                        .trim();
+
+
+                const thumbnail =
+                    document
+                        .getElementById(
+                            "thumbnail"
+                        )
+                        .value
+                        .trim();
+
+
+                const status =
+                    document
+                        .getElementById(
+                            "status"
+                        )
+                        .value;
+
+
+                if (
+                    !title ||
+                    !courseId ||
+                    !pdfUrl
+                ) {
+
+                    showMessage(
+                        "Please fill all required fields.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                saveBtn.disabled =
+                    true;
+
+                saveBtn.textContent =
+                    "Saving...";
+
+
+                try {
+
+                    const data = {
+
+                        title: title,
+
+                        noteType: noteType,
+
+                        courseId: courseId,
+
+                        unit: unit,
+
+                        description: description,
+
+                        pdfUrl: pdfUrl,
+
+                        thumbnail: thumbnail,
+
+                        status: status,
+
+                        updatedAt:
+                            firebase.firestore
+                                .FieldValue
+                                .serverTimestamp(),
+
+                        updatedBy:
+                            adminUser.uid
+
+                    };
+
+
+                    if (editingNoteId) {
+
+                        await db
+                            .collection(
+                                "notes"
+                            )
+                            .doc(
+                                editingNoteId
+                            )
+                            .update(
+                                data
+                            );
+
+
+                        showMessage(
+                            "Note updated successfully."
+                        );
+
+                    }
+
+                    else {
+
+                        data.createdAt =
+                            firebase.firestore
+                                .FieldValue
+                                .serverTimestamp();
+
+                        data.createdBy =
+                            adminUser.uid;
+
+
+                        await db
+                            .collection(
+                                "notes"
+                            )
+                            .add(
+                                data
+                            );
+
+
+                        showMessage(
+                            "Note added successfully."
+                        );
+
+                    }
+
+
+                    resetForm();
+
+                    loadNotes();
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        error
+                    );
+
+
+                    showMessage(
+                        "Error saving note: " +
+                        error.message,
+                        "error"
+                    );
+
+                }
+
+                finally {
+
+                    saveBtn.disabled =
+                        false;
+
+                    saveBtn.textContent =
+                        editingNoteId
+                            ? "Update Note"
+                            : "Add Note";
+
+                }
+
+            }
+        );
+
+
+        /* ================= EDIT NOTE ================= */
+
+        function editNote(note) {
+
+            editingNoteId =
+                note.id;
+
+
+            formTitle.textContent =
+                "Edit Note";
+
+
+            saveBtn.textContent =
+                "Update Note";
+
+
+            cancelBtn.style.display =
+                "inline-block";
+
+
+            document
+                .getElementById(
+                    "title"
+                )
+                .value =
+                    note.title || "";
+
+
+            document
+                .getElementById(
+                    "noteType"
+                )
+                .value =
+                    note.noteType ||
+                    "short-note";
+
+
+            document
+                .getElementById(
+                    "courseId"
+                )
+                .value =
+                    note.courseId ||
+                    "";
+
+
+            document
+                .getElementById(
+                    "unit"
+                )
+                .value =
+                    note.unit ||
+                    "";
+
+
+            document
+                .getElementById(
+                    "description"
+                )
+                .value =
+                    note.description ||
+                    "";
+
+
+            document
+                .getElementById(
+                    "pdfUrl"
+                )
+                .value =
+                    note.pdfUrl ||
+                    "";
+
+
+            document
+                .getElementById(
+                    "thumbnail"
+                )
+                .value =
+                    note.thumbnail ||
+                    "";
+
+
+            document
+                .getElementById(
+                    "status"
+                )
+                .value =
+                    note.status ||
+                    "active";
+
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }
+
+
+        /* ================= DELETE ================= */
+
+        async function deleteNote(
+            noteId
+        ) {
+
+            const confirmed =
+                confirm(
+                    "Are you sure you want to delete this note?"
+                );
+
+
+            if (!confirmed) {
+
+                return;
+
+            }
+
+
+            try {
+
+                await db
+                    .collection(
+                        "notes"
+                    )
+                    .doc(
+                        noteId
+                    )
+                    .delete();
+
+
+                showMessage(
+                    "Note deleted successfully."
+                );
+
+
+                loadNotes();
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    error
+                );
+
+
+                showMessage(
+                    "Error deleting note: " +
+                    error.message,
+                    "error"
+                );
+
+            }
+
+        }
+
+
+        /* ================= CANCEL ================= */
+
+        cancelBtn.addEventListener(
+            "click",
+            resetForm
+        );
+
+
+        /* ================= RESET ================= */
+
+        function resetForm() {
+
+            editingNoteId =
+                null;
+
+
+            noteForm.reset();
+
+
+            formTitle.textContent =
+                "Add New Note";
+
+
+            saveBtn.textContent =
+                "Add Note";
+
+
+            cancelBtn.style.display =
+                "none";
+
+        }
+
+    });
+
+</script>
+
+</body>
+</html>

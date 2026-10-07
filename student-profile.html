@@ -1,0 +1,921 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Student Profile | DRx Learning Hub</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="site-header">
+
+    <div class="container header-inner">
+
+        <a href="index.html" class="logo">
+            <span>DRx</span> Learning Hub
+        </a>
+
+        <button
+            class="menu-toggle"
+            id="menuToggle"
+            aria-label="Open Menu"
+        >
+            ☰
+        </button>
+
+        <nav
+            class="main-nav"
+            id="mainNav"
+        >
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="courses.html">
+                Courses
+            </a>
+
+            <a href="videos.html">
+                Videos
+            </a>
+
+            <a href="notes.html">
+                Notes
+            </a>
+
+            <a href="tests.html">
+                Tests
+            </a>
+
+            <a href="about.html">
+                About
+            </a>
+
+            <a href="student-profile.html" class="active">
+                Profile
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     PROFILE
+===================================================== -->
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="profile-page">
+
+
+            <!-- PROFILE HEADER -->
+
+            <div class="profile-header">
+
+                <div class="profile-avatar">
+                    <span id="profileInitial">
+                        D
+                    </span>
+                </div>
+
+                <div>
+
+                    <h1 id="profileName">
+                        Loading...
+                    </h1>
+
+                    <p id="profileEmail">
+                        Loading...
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- PROFILE CARD -->
+
+            <div class="profile-card">
+
+                <h2>
+                    Student Profile
+                </h2>
+
+
+                <div class="profile-details">
+
+
+                    <!-- NAME -->
+
+                    <div class="profile-detail">
+
+                        <span class="detail-label">
+                            Full Name
+                        </span>
+
+                        <strong id="studentName">
+                            Loading...
+                        </strong>
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="profile-detail">
+
+                        <span class="detail-label">
+                            Email Address
+                        </span>
+
+                        <strong id="studentEmail">
+                            Loading...
+                        </strong>
+
+                    </div>
+
+
+                    <!-- ROLE -->
+
+                    <div class="profile-detail">
+
+                        <span class="detail-label">
+                            Account Type
+                        </span>
+
+                        <strong id="studentRole">
+                            Student
+                        </strong>
+
+                    </div>
+
+
+                    <!-- UID -->
+
+                    <div class="profile-detail">
+
+                        <span class="detail-label">
+                            Student ID
+                        </span>
+
+                        <strong
+                            id="studentUID"
+                            style="word-break:break-all;"
+                        >
+                            Loading...
+                        </strong>
+
+                    </div>
+
+
+                    <!-- STATUS -->
+
+                    <div class="profile-detail">
+
+                        <span class="detail-label">
+                            Account Status
+                        </span>
+
+                        <strong id="studentStatus">
+                            Active
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- LOGOUT -->
+
+                <div class="profile-actions">
+
+                    <button
+                        id="logoutButton"
+                        class="btn btn-primary"
+                    >
+                        Logout
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- DASHBOARD LINKS -->
+
+            <div class="profile-dashboard">
+
+                <h2>
+                    Student Dashboard
+                </h2>
+
+
+                <div class="card-grid">
+
+
+                    <!-- MY COURSES -->
+
+                    <div class="card">
+
+                        <div class="card-icon">
+                            📚
+                        </div>
+
+                        <h3>
+                            My Courses
+                        </h3>
+
+                        <p>
+                            View your enrolled courses
+                            and learning progress.
+                        </p>
+
+                        <a
+                            href="my-courses.html"
+                            class="btn btn-primary"
+                        >
+                            My Courses
+                        </a>
+
+                    </div>
+
+
+                    <!-- VIDEOS -->
+
+                    <div class="card">
+
+                        <div class="card-icon">
+                            🎥
+                        </div>
+
+                        <h3>
+                            Video Lectures
+                        </h3>
+
+                        <p>
+                            Watch educational video lectures
+                            and playlists.
+                        </p>
+
+                        <a
+                            href="videos.html"
+                            class="btn btn-primary"
+                        >
+                            Watch Videos
+                        </a>
+
+                    </div>
+
+
+                    <!-- NOTES -->
+
+                    <div class="card">
+
+                        <div class="card-icon">
+                            📖
+                        </div>
+
+                        <h3>
+                            Study Notes
+                        </h3>
+
+                        <p>
+                            Access short notes and
+                            study materials.
+                        </p>
+
+                        <a
+                            href="notes.html"
+                            class="btn btn-primary"
+                        >
+                            Study Notes
+                        </a>
+
+                    </div>
+
+
+                    <!-- TESTS -->
+
+                    <div class="card">
+
+                        <div class="card-icon">
+                            📝
+                        </div>
+
+                        <h3>
+                            Online Tests
+                        </h3>
+
+                        <p>
+                            Practice MCQs and check
+                            your test results.
+                        </p>
+
+                        <a
+                            href="tests.html"
+                            class="btn btn-primary"
+                        >
+                            Take Test
+                        </a>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="site-footer">
+
+    <div class="footer-bottom">
+
+        <p>
+            © <span id="currentYear"></span>
+            DRx Learning Hub. All Rights Reserved.
+        </p>
+
+    </div>
+
+</footer>
+
+
+<!-- =====================================================
+     FIREBASE
+===================================================== -->
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script src="firebase-config.js"></script>
+
+<script src="script.js"></script>
+
+
+<!-- =====================================================
+     PROFILE FIREBASE LOGIC
+===================================================== -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+
+    // ================================================
+    // GET ELEMENTS
+    // ================================================
+
+    const profileName =
+        document.getElementById("profileName");
+
+    const profileEmail =
+        document.getElementById("profileEmail");
+
+    const studentName =
+        document.getElementById("studentName");
+
+    const studentEmail =
+        document.getElementById("studentEmail");
+
+    const studentRole =
+        document.getElementById("studentRole");
+
+    const studentUID =
+        document.getElementById("studentUID");
+
+    const studentStatus =
+        document.getElementById("studentStatus");
+
+    const profileInitial =
+        document.getElementById("profileInitial");
+
+    const logoutButton =
+        document.getElementById("logoutButton");
+
+
+    // ================================================
+    // CHECK LOGIN
+    // ================================================
+
+    auth.onAuthStateChanged(async function (user) {
+
+
+        // User is NOT logged in
+
+        if (!user) {
+
+            window.location.href =
+                "login.html";
+
+            return;
+        }
+        async function loadMyResults(user) {
+
+    const resultsLoading =
+        document.getElementById(
+            "resultsLoading"
+        );
+
+    const resultsContainer =
+        document.getElementById(
+            "resultsContainer"
+        );
+
+    const noResults =
+        document.getElementById(
+            "noResults"
+        );
+
+
+    try {
+
+        resultsLoading.style.display =
+            "block";
+
+        resultsContainer.style.display =
+            "none";
+
+        noResults.style.display =
+            "none";
+
+
+        const snapshot =
+            await db
+                .collection("results")
+                .where(
+                    "studentId",
+                    "==",
+                    user.uid
+                )
+                .get();
+
+
+        const results = [];
+
+
+        snapshot.forEach(
+            function (doc) {
+
+                results.push({
+
+                    id: doc.id,
+
+                    ...doc.data()
+
+                });
+
+            }
+        );
+
+
+        /* Newest first */
+
+        results.sort(
+            function (a, b) {
+
+                const aTime =
+                    a.submittedAt &&
+                    a.submittedAt.toMillis
+                        ? a.submittedAt.toMillis()
+                        : 0;
+
+
+                const bTime =
+                    b.submittedAt &&
+                    b.submittedAt.toMillis
+                        ? b.submittedAt.toMillis()
+                        : 0;
+
+
+                return bTime - aTime;
+
+            }
+        );
+
+
+        resultsLoading.style.display =
+            "none";
+
+
+        if (results.length === 0) {
+
+            noResults.style.display =
+                "block";
+
+            return;
+
+        }
+
+
+        resultsContainer.style.display =
+            "block";
+
+
+        resultsContainer.innerHTML =
+            "";
+
+
+        results.forEach(
+            function (result) {
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                card.className =
+                    "admin-card";
+
+
+                const percentage =
+                    Number(
+                        result.percentage
+                    ) || 0;
+
+
+                const submittedDate =
+                    result.submittedAt &&
+                    result.submittedAt.toDate
+                        ? result.submittedAt
+                            .toDate()
+                            .toLocaleString(
+                                "en-IN"
+                            )
+                        : "Date unavailable";
+
+
+                card.innerHTML = `
+
+                    <h3>
+                        ${escapeHTML(
+                            result.testTitle ||
+                            "Online Test"
+                        )}
+                    </h3>
+
+
+                    <p>
+
+                        <strong>
+                            Score:
+                        </strong>
+
+                        ${Number(
+                            result.score
+                        ) || 0}
+
+                        /
+
+                        ${Number(
+                            result.totalMarks
+                        ) || 0}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Percentage:
+                        </strong>
+
+                        ${percentage}%
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Attempted:
+                        </strong>
+
+                        ${Number(
+                            result.attempted
+                        ) || 0}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Correct:
+                        </strong>
+
+                        ${Number(
+                            result.correct
+                        ) || 0}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Wrong:
+                        </strong>
+
+                        ${Number(
+                            result.wrong
+                        ) || 0}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Submitted:
+                        </strong>
+
+                        ${escapeHTML(
+                            submittedDate
+                        )}
+
+                    </p>
+
+                `;
+
+
+                resultsContainer.appendChild(
+                    card
+                );
+
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Results loading error:",
+            error
+        );
+
+
+        resultsLoading.style.display =
+            "none";
+
+
+        resultsContainer.style.display =
+            "block";
+
+
+        resultsContainer.innerHTML = `
+
+            <div class="alert alert-error">
+
+                Unable to load test results.
+
+                <br><br>
+
+                ${escapeHTML(
+                    error.message
+                )}
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* ================= ESCAPE HTML ================= */
+
+function escapeHTML(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+        // ============================================
+        // FIREBASE AUTH DATA
+        // ============================================
+
+        const name =
+            user.displayName || "Student";
+
+        const email =
+            user.email || "";
+
+        const uid =
+            user.uid;
+
+
+        // ============================================
+        // DISPLAY AUTH DATA
+        // ============================================
+
+        profileName.textContent =
+            name;
+
+        profileEmail.textContent =
+            email;
+
+        studentName.textContent =
+            name;
+
+        studentEmail.textContent =
+            email;
+
+        studentUID.textContent =
+            uid;
+
+        studentStatus.textContent =
+            "Active";
+
+
+        // First letter
+
+        profileInitial.textContent =
+            name.charAt(0).toUpperCase();
+
+
+        // ============================================
+        // GET FIRESTORE STUDENT DATA
+        // ============================================
+
+        try {
+
+            const studentDoc =
+                await db
+                    .collection("students")
+                    .doc(uid)
+                    .get();
+
+
+            if (studentDoc.exists) {
+
+                const data =
+                    studentDoc.data();
+
+
+                if (data.name) {
+
+                    profileName.textContent =
+                        data.name;
+
+                    studentName.textContent =
+                        data.name;
+
+                    profileInitial.textContent =
+                        data.name
+                            .charAt(0)
+                            .toUpperCase();
+                }
+
+
+                if (data.role) {
+
+                    studentRole.textContent =
+                        data.role;
+                }
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Firestore Error:",
+                error
+            );
+
+        }
+
+    });
+
+
+    // ================================================
+    // LOGOUT
+    // ================================================
+
+    logoutButton.addEventListener(
+        "click",
+        async function () {
+
+            try {
+
+                logoutButton.disabled =
+                    true;
+
+                logoutButton.textContent =
+                    "Logging out...";
+
+
+                await auth.signOut();
+
+
+                window.location.href =
+                    "login.html";
+
+
+            } catch (error) {
+
+                console.error(
+                    "Logout Error:",
+                    error
+                );
+
+                logoutButton.disabled =
+                    false;
+
+                logoutButton.textContent =
+                    "Logout";
+
+                alert(
+                    "Logout failed. Please try again."
+                );
+
+            }
+
+        }
+    );
+
+});
+
+
+</script>
+
+
+</body>
+
+</html>
+```

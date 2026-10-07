@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Enroll Students - Admin | DRx Learning Hub</title>
+
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="container nav-container">
+
+        <a href="dashboard.html" class="logo">
+            DRx Learning Hub
+        </a>
+
+        <button class="menu-toggle" id="menuToggle">☰</button>
+
+        <nav class="main-nav" id="mainNav">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="courses.html">Courses</a>
+            <a href="videos.html">Videos</a>
+            <a href="notes.html">Notes</a>
+            <a href="tests.html">Tests</a>
+            <a href="students.html">Students</a>
+            <a href="enrollments.html" class="active">Enrollments</a>
+            <a href="results.html">Results</a>
+            <button id="logoutBtn" class="btn btn-danger">Logout</button>
+        </nav>
+
+    </div>
+</header>
+
+
+<main>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Student Enrollment</h1>
+            <p>Assign courses to registered students.</p>
+        </div>
+    </section>
+
+
+    <section class="section">
+
+        <div class="container">
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    <h2>Enroll Student</h2>
+
+                    <form id="enrollmentForm">
+
+                        <!-- STUDENT -->
+                        <div class="form-group">
+
+                            <label for="studentSelect">
+                                Select Student
+                            </label>
+
+                            <select
+                                id="studentSelect"
+                                required
+                            >
+
+                                <option value="">
+                                    Loading students...
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- COURSE -->
+                        <div class="form-group">
+
+                            <label for="courseSelect">
+                                Select Course
+                            </label>
+
+                            <select
+                                id="courseSelect"
+                                required
+                            >
+
+                                <option value="">
+                                    Loading courses...
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            Enroll Student
+                        </button>
+
+                    </form>
+
+                    <div
+                        id="message"
+                        class="alert"
+                        style="display:none; margin-top:20px;"
+                    ></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ENROLLMENT LIST -->
+
+    <section class="section">
+
+        <div class="container">
+
+            <div class="section-header">
+
+                <div>
+                    <h2>Current Enrollments</h2>
+                    <p>Students and their assigned courses.</p>
+                </div>
+
+                <div class="search-box">
+
+                    <input
+                        type="text"
+                        id="searchEnrollment"
+                        placeholder="Search student or course..."
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="loading"
+                class="loading"
+            >
+                Loading enrollments...
+            </div>
+
+
+            <div
+                id="enrollmentContainer"
+                class="cards-grid"
+            ></div>
+
+
+            <div
+                id="emptyState"
+                class="empty-state"
+                style="display:none;"
+            >
+
+                <h3>No enrollments found</h3>
+
+                <p>
+                    No student has been enrolled in a course yet.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer class="site-footer">
+
+    <div class="container">
+
+        <p>
+            © <span id="currentYear"></span>
+            DRx Learning Hub. All Rights Reserved.
+        </p>
+
+    </div>
+
+</footer>
+
+
+<!-- FIREBASE -->
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script src="../firebase-config.js"></script>
+
+<script src="../script.js"></script>
+
+
+<script>
+
+let currentAdmin = null;
+
+let students = [];
+
+let courses = [];
+
+let enrollments = [];
+
+
+// ======================================
+// ADMIN CHECK
+// ======================================
+
+auth.onAuthStateChanged(async (user) => {
+
+    if (!user) {
+
+        window.location.href = "admin-login.html";
+
+        return;
+    }
+
+
+    try {
+
+        const adminDoc = await db
+            .collection("admins")
+            .doc(user.uid)
+            .get();
+
+
+        if (
+            !adminDoc.exists ||
+            adminDoc.data().role !== "admin"
+        ) {
+
+            await auth.signOut();
+
+            window.location.href =
+                "admin-login.html";
+
+            return;
+        }
+
+
+        currentAdmin = user;
+
+        await loadStudents();
+
+        await loadCourses();
+
+        await loadEnrollments();
+
+    } catch (error) {
+
+        console.error(error);
+
+        showMessage(
+            "Admin verification failed.",
+            "error"
+        );
+
+    }
+
+});
+
+
+// ======================================
+// LOAD STUDENTS
+// ======================================
+
+async function loadStudents() {
+
+    const select =
+        document.getElementById("studentSelect");
+
+
+    try {
+
+        const snapshot =
+            await db
+                .collection("students")
+                .get();
+
+
+        students = [];
+
+
+        snapshot.forEach((doc) => {
+
+            const data = doc.data();
+
+
+            students.push({
+
+                id: doc.id,
+
+                name: data.name || "No Name",
+
+                email: data.email || ""
+
+            });
+
+        });
+
+
+        students.sort((a, b) =>
+            a.name.localeCompare(b.name)
+        );
+
+
+        select.innerHTML =
+            `<option value="">
+                Select Student
+            </option>`;
+
+
+        students.forEach((student) => {
+
+            const option =
+                document.createElement("option");
+
+
+            option.value = student.id;
+
+
+            option.textContent =
+                `${student.name} (${student.email})`;
+
+
+            select.appendChild(option);
+
+        });
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        select.innerHTML =
+            `<option value="">
+                Failed to load students
+            </option>`;
+
+    }
+
+}
+
+
+// ======================================
+// LOAD COURSES
+// ======================================
+
+async function loadCourses() {
+
+    const select =
+        document.getElementById("courseSelect");
+
+
+    try {
+
+        const snapshot =
+            await db
+                .collection("courses")
+                .get();
+
+
+        courses = [];
+
+
+        snapshot.forEach((doc) => {
+
+            const data = doc.data();
+
+
+            courses.push({
+
+                id: doc.id,
+
+                title: data.title || doc.id,
+
+                courseId: data.courseId || doc.id,
+
+                status: data.status || "inactive"
+
+            });
+
+        });
+
+
+        courses.sort((a, b) =>
+            a.title.localeCompare(b.title)
+        );
+
+
+        select.innerHTML =
+            `<option value="">
+                Select Course
+            </option>`;
+
+
+        courses.forEach((course) => {
+
+            const option =
+                document.createElement("option");
+
+
+            option.value = course.id;
+
+
+            option.textContent =
+                `${course.title} (${course.courseId})`;
+
+
+            if (course.status !== "active") {
+
+                option.textContent +=
+                    " - Inactive";
+
+            }
+
+
+            select.appendChild(option);
+
+        });
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        select.innerHTML =
+            `<option value="">
+                Failed to load courses
+            </option>`;
+
+    }
+
+}
+
+
+// ======================================
+// LOAD ENROLLMENTS
+// ======================================
+
+async function loadEnrollments() {
+
+    const container =
+        document.getElementById(
+            "enrollmentContainer"
+        );
+
+    const loading =
+        document.getElementById("loading");
+
+    const emptyState =
+        document.getElementById("emptyState");
+
+
+    loading.style.display = "block";
+
+
+    try {
+
+        const snapshot =
+            await db
+                .collection("enrollments")
+                .get();
+
+
+        enrollments = [];
+
+
+        snapshot.forEach((doc) => {
+
+            const data = doc.data();
+
+
+            enrollments.push({
+
+                id: doc.id,
+
+                studentId:
+                    data.studentId || "",
+
+                studentName:
+                    data.studentName || "Unknown Student",
+
+                studentEmail:
+                    data.studentEmail || "",
+
+                courseId:
+                    data.courseId || "",
+
+                courseTitle:
+                    data.courseTitle || "Unknown Course",
+
+                enrolledAt:
+                    data.enrolledAt || null
+
+            });
+
+        });
+
+
+        enrollments.sort((a, b) => {
+
+            const dateA =
+                a.enrolledAt &&
+                a.enrolledAt.toDate
+                    ? a.enrolledAt.toDate()
+                    : new Date(0);
+
+
+            const dateB =
+                b.enrolledAt &&
+                b.enrolledAt.toDate
+                    ? b.enrolledAt.toDate()
+                    : new Date(0);
+
+
+            return dateB - dateA;
+
+        });
+
+
+        renderEnrollments(enrollments);
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        container.innerHTML = `
+            <div class="alert alert-error">
+                ${escapeHTML(error.message)}
+            </div>
+        `;
+
+    }
+
+
+    loading.style.display = "none";
+
+}
+
+
+// ======================================
+// ENROLL STUDENT
+// ======================================
+
+document
+    .getElementById("enrollmentForm")
+    .addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+
+            const studentId =
+                document.getElementById(
+                    "studentSelect"
+                ).value;
+
+
+            const courseId =
+                document.getElementById(
+                    "courseSelect"
+                ).value;
+
+
+            if (!studentId || !courseId) {
+
+                showMessage(
+                    "Please select student and course.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            const student =
+                students.find(
+                    item => item.id === studentId
+                );
+
+
+            const course =
+                courses.find(
+                    item => item.id === courseId
+                );
+
+
+            if (!student || !course) {
+
+                showMessage(
+                    "Student or course not found.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            try {
+
+                // Prevent duplicate enrollment
+
+                const existing =
+                    await db
+                        .collection("enrollments")
+                        .where(
+                            "studentId",
+                            "==",
+                            studentId
+                        )
+                        .where(
+                            "courseId",
+                            "==",
+                            courseId
+                        )
+                        .get();
+
+
+                if (!existing.empty) {
+
+                    showMessage(
+                        "Student is already enrolled in this course.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                // Create enrollment
+
+                await db
+                    .collection("enrollments")
+                    .add({
+
+                        studentId:
+                            studentId,
+
+                        studentName:
+                            student.name,
+
+                        studentEmail:
+                            student.email,
+
+                        courseId:
+                            courseId,
+
+                        courseTitle:
+                            course.title,
+
+                        enrolledAt:
+                            firebase.firestore
+                                .FieldValue
+                                .serverTimestamp(),
+
+                        enrolledBy:
+                            currentAdmin.uid
+
+                    });
+
+
+                // Also update student's enrolledCourses array
+
+                await db
+                    .collection("students")
+                    .doc(studentId)
+                    .update({
+
+                        enrolledCourses:
+                            firebase.firestore
+                                .FieldValue
+                                .arrayUnion(courseId)
+
+                    });
+
+
+                showMessage(
+                    "Student enrolled successfully!",
+                    "success"
+                );
+
+
+                document
+                    .getElementById(
+                        "enrollmentForm"
+                    )
+                    .reset();
+
+
+                await loadEnrollments();
+
+            } catch (error) {
+
+                console.error(error);
+
+                showMessage(
+                    error.message,
+                    "error"
+                );
+
+            }
+
+        }
+    );
+
+
+// ======================================
+// RENDER ENROLLMENTS
+// ======================================
+
+function renderEnrollments(list) {
+
+    const container =
+        document.getElementById(
+            "enrollmentContainer"
+        );
+
+    const emptyState =
+        document.getElementById(
+            "emptyState"
+        );
+
+
+    container.innerHTML = "";
+
+
+    if (list.length === 0) {
+
+        emptyState.style.display = "block";
+
+        return;
+
+    }
+
+
+    emptyState.style.display = "none";
+
+
+    list.forEach((item) => {
+
+        let date = "N/A";
+
+
+        if (
+            item.enrolledAt &&
+            item.enrolledAt.toDate
+        ) {
+
+            date =
+                item.enrolledAt
+                    .toDate()
+                    .toLocaleDateString(
+                        "en-IN",
+                        {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric"
+                        }
+                    );
+
+        }
+
+
+        const card =
+            document.createElement("div");
+
+
+        card.className = "card";
+
+
+        card.innerHTML = `
+
+            <div class="card-body">
+
+                <h3>
+                    ${escapeHTML(
+                        item.courseTitle
+                    )}
+                </h3>
+
+                <p>
+                    <strong>Student:</strong>
+                    ${escapeHTML(
+                        item.studentName
+                    )}
+                </p>
+
+                <p>
+                    <strong>Email:</strong>
+                    ${escapeHTML(
+                        item.studentEmail
+                    )}
+                </p>
+
+                <p>
+                    <strong>Course ID:</strong>
+                    ${escapeHTML(
+                        item.courseId
+                    )}
+                </p>
+
+                <p>
+                    <strong>Enrolled:</strong>
+                    ${date}
+                </p>
+
+                <button
+                    class="btn btn-danger"
+                    onclick="removeEnrollment('${item.id}', '${item.studentId}', '${item.courseId}')"
+                >
+                    Remove
+                </button>
+
+            </div>
+
+        `;
+
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+// ======================================
+// REMOVE ENROLLMENT
+// ======================================
+
+async function removeEnrollment(
+    enrollmentId,
+    studentId,
+    courseId
+) {
+
+    const confirmed =
+        confirm(
+            "Remove this course from the student?"
+        );
+
+
+    if (!confirmed) return;
+
+
+    try {
+
+        // Delete enrollment document
+
+        await db
+            .collection("enrollments")
+            .doc(enrollmentId)
+            .delete();
+
+
+        // Remove course from student's array
+
+        await db
+            .collection("students")
+            .doc(studentId)
+            .update({
+
+                enrolledCourses:
+                    firebase.firestore
+                        .FieldValue
+                        .arrayRemove(courseId)
+
+            });
+
+
+        showMessage(
+            "Enrollment removed successfully.",
+            "success"
+        );
+
+
+        loadEnrollments();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        showMessage(
+            error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+// ======================================
+// SEARCH
+// ======================================
+
+document
+    .getElementById("searchEnrollment")
+    .addEventListener(
+        "input",
+        function () {
+
+            const search =
+                this.value
+                    .toLowerCase()
+                    .trim();
+
+
+            if (!search) {
+
+                renderEnrollments(
+                    enrollments
+                );
+
+                return;
+
+            }
+
+
+            const filtered =
+                enrollments.filter(
+                    item =>
+
+                        item.studentName
+                            .toLowerCase()
+                            .includes(search)
+
+                        ||
+
+                        item.studentEmail
+                            .toLowerCase()
+                            .includes(search)
+
+                        ||
+
+                        item.courseTitle
+                            .toLowerCase()
+                            .includes(search)
+
+                        ||
+
+                        item.courseId
+                            .toLowerCase()
+                            .includes(search)
+
+                );
+
+
+            renderEnrollments(filtered);
+
+        }
+    );
+
+
+// ======================================
+// MESSAGE
+// ======================================
+
+function showMessage(message, type) {
+
+    const box =
+        document.getElementById("message");
+
+
+    box.style.display = "block";
+
+
+    box.className =
+        "alert " +
+        (
+            type === "success"
+                ? "alert-success"
+                : "alert-error"
+        );
+
+
+    box.textContent = message;
+
+
+    setTimeout(() => {
+
+        box.style.display = "none";
+
+    }, 4000);
+
+}
+
+
+// ======================================
+// LOGOUT
+// ======================================
+
+document
+    .getElementById("logoutBtn")
+    .addEventListener(
+        "click",
+        async () => {
+
+            await auth.signOut();
+
+            window.location.href =
+                "admin-login.html";
+
+        }
+    );
+
+</script>
+
+</body>
+</html>

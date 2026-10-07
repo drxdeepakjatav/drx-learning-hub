@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Courses | DRx Learning Hub</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="site-header">
+
+    <div class="container nav-container">
+
+        <a href="index.html" class="logo">
+            DRx Learning Hub
+        </a>
+
+        <button class="menu-toggle" id="menuToggle">
+            ☰
+        </button>
+
+        <nav class="main-nav" id="mainNav">
+
+            <a href="index.html">Home</a>
+            <a href="courses.html">Courses</a>
+            <a href="videos.html">Videos</a>
+            <a href="notes.html">Notes</a>
+            <a href="tests.html">Tests</a>
+            <a href="student-profile.html">Profile</a>
+            <a href="my-courses.html" class="active">
+                My Courses
+            </a>
+
+            <button id="logoutBtn" class="btn btn-danger">
+                Logout
+            </button>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<main>
+
+    <!-- PAGE HEADER -->
+
+    <section class="page-header">
+
+        <div class="container">
+
+            <h1>My Courses</h1>
+
+            <p>
+                Access your enrolled courses, videos, notes and tests.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- STUDENT INFO -->
+
+    <section class="section">
+
+        <div class="container">
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    <h2 id="welcomeName">
+                        My Learning Dashboard
+                    </h2>
+
+                    <p id="studentEmail">
+                        Loading student information...
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- COURSES -->
+
+    <section class="section">
+
+        <div class="container">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        My Enrolled Courses
+                    </h2>
+
+                    <p>
+                        Courses assigned to your account.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="loading"
+                class="loading"
+            >
+                Loading your courses...
+            </div>
+
+
+            <div
+                id="coursesContainer"
+                class="cards-grid"
+            ></div>
+
+
+            <div
+                id="emptyState"
+                class="empty-state"
+                style="display:none;"
+            >
+
+                <h3>No Courses Yet</h3>
+
+                <p>
+                    You have not been enrolled in any course yet.
+                </p>
+
+                <a
+                    href="courses.html"
+                    class="btn btn-primary"
+                >
+                    Browse Courses
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer class="site-footer">
+
+    <div class="container">
+
+        <p>
+            © <span id="currentYear"></span>
+            DRx Learning Hub. All Rights Reserved.
+        </p>
+
+    </div>
+
+</footer>
+
+
+<!-- FIREBASE -->
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script src="firebase-config.js"></script>
+
+<script src="script.js"></script>
+
+
+<script>
+
+let currentUser = null;
+
+let enrolledCourses = [];
+
+
+// ==========================================
+// AUTH CHECK
+// ==========================================
+
+auth.onAuthStateChanged(async (user) => {
+
+    if (!user) {
+
+        window.location.href = "login.html";
+
+        return;
+
+    }
+
+
+    currentUser = user;
+
+
+    document.getElementById("studentEmail")
+        .textContent =
+        user.email || "";
+
+
+    document.getElementById("welcomeName")
+        .textContent =
+        "Welcome, " +
+        (user.displayName || "Student");
+
+
+    await loadMyCourses(user);
+
+});
+
+
+// ==========================================
+// LOAD MY COURSES
+// ==========================================
+
+async function loadMyCourses(user) {
+
+    const loading =
+        document.getElementById("loading");
+
+    const container =
+        document.getElementById(
+            "coursesContainer"
+        );
+
+    const emptyState =
+        document.getElementById(
+            "emptyState"
+        );
+
+
+    loading.style.display = "block";
+
+    container.innerHTML = "";
+
+    emptyState.style.display = "none";
+
+
+    try {
+
+        // Get student profile
+
+        const studentDoc =
+            await db
+                .collection("students")
+                .doc(user.uid)
+                .get();
+
+
+        if (!studentDoc.exists) {
+
+            loading.style.display = "none";
+
+            emptyState.style.display = "block";
+
+            return;
+
+        }
+
+
+        const studentData =
+            studentDoc.data();
+
+
+        const courseIds =
+            studentData.enrolledCourses || [];
+
+
+        if (courseIds.length === 0) {
+
+            loading.style.display = "none";
+
+            emptyState.style.display = "block";
+
+            return;
+
+        }
+
+
+        // Get course documents
+
+        enrolledCourses = [];
+
+
+        for (const courseId of courseIds) {
+
+            const courseDoc =
+                await db
+                    .collection("courses")
+                    .doc(courseId)
+                    .get();
+
+
+            if (!courseDoc.exists) {
+
+                continue;
+
+            }
+
+
+            const course =
+                courseDoc.data();
+
+
+            if (course.status !== "active") {
+
+                continue;
+
+            }
+
+
+            enrolledCourses.push({
+
+                id: courseDoc.id,
+
+                ...course
+
+            });
+
+        }
+
+
+        renderCourses(enrolledCourses);
+
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        container.innerHTML = `
+
+            <div class="alert alert-error">
+
+                Unable to load your courses.
+
+                <br><br>
+
+                ${escapeHTML(error.message)}
+
+            </div>
+
+        `;
+
+    }
+
+
+    loading.style.display = "none";
+
+}
+
+
+// ==========================================
+// RENDER COURSES
+// ==========================================
+
+async function renderCourses(courses) {
+
+    const container =
+        document.getElementById(
+            "coursesContainer"
+        );
+
+
+    container.innerHTML = "";
+
+
+    if (courses.length === 0) {
+
+        document.getElementById(
+            "emptyState"
+        ).style.display = "block";
+
+        return;
+
+    }
+
+
+    for (const course of courses) {
+
+        const card =
+            document.createElement("div");
+
+
+        card.className = "card";
+
+
+        let imageHTML = "";
+
+
+        if (course.image) {
+
+            imageHTML = `
+
+                <img
+                    src="${escapeHTML(course.image)}"
+                    alt="${escapeHTML(course.title)}"
+                    style="
+                        width:100%;
+                        height:200px;
+                        object-fit:cover;
+                    "
+                >
+
+            `;
+
+        }
+
+
+        // Get course statistics
+
+        const stats =
+            await getCourseStats(course.id);
+
+
+        card.innerHTML = `
+
+            ${imageHTML}
+
+            <div class="card-body">
+
+                <h3>
+                    ${escapeHTML(
+                        course.title || "Course"
+                    )}
+                </h3>
+
+
+                <p>
+                    ${escapeHTML(
+                        course.description || ""
+                    )}
+                </p>
+
+
+                <p>
+                    <strong>Course ID:</strong>
+                    ${escapeHTML(
+                        course.courseId || course.id
+                    )}
+                </p>
+
+
+                <div
+                    class="stats-grid"
+                    style="margin-top:15px;"
+                >
+
+                    <div class="stat-card">
+
+                        <h3>
+                            ${stats.videos}
+                        </h3>
+
+                        <p>Videos</p>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <h3>
+                            ${stats.notes}
+                        </h3>
+
+                        <p>Notes</p>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <h3>
+                            ${stats.tests}
+                        </h3>
+
+                        <p>Tests</p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    style="
+                        display:flex;
+                        flex-wrap:wrap;
+                        gap:10px;
+                        margin-top:20px;
+                    "
+                >
+
+                    <a
+                        href="videos.html?course=${encodeURIComponent(course.id)}"
+                        class="btn btn-primary"
+                    >
+                        Videos
+                    </a>
+
+
+                    <a
+                        href="notes.html?course=${encodeURIComponent(course.id)}"
+                        class="btn btn-secondary"
+                    >
+                        Notes
+                    </a>
+
+
+                    <a
+                        href="tests.html?course=${encodeURIComponent(course.id)}"
+                        class="btn btn-primary"
+                    >
+                        Tests
+                    </a>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        container.appendChild(card);
+
+    }
+
+}
+
+
+// ==========================================
+// COURSE STATS
+// ==========================================
+
+async function getCourseStats(courseId) {
+
+    let videos = 0;
+
+    let notes = 0;
+
+    let tests = 0;
+
+
+    try {
+
+        const videosSnapshot =
+            await db
+                .collection("videos")
+                .where(
+                    "courseId",
+                    "==",
+                    courseId
+                )
+                .where(
+                    "status",
+                    "==",
+                    "active"
+                )
+                .get();
+
+
+        videos =
+            videosSnapshot.size;
+
+
+    } catch (error) {
+
+        console.error(
+            "Video count error:",
+            error
+        );
+
+    }
+
+
+    try {
+
+        const notesSnapshot =
+            await db
+                .collection("notes")
+                .where(
+                    "courseId",
+                    "==",
+                    courseId
+                )
+                .where(
+                    "status",
+                    "==",
+                    "active"
+                )
+                .get();
+
+
+        notes =
+            notesSnapshot.size;
+
+
+    } catch (error) {
+
+        console.error(
+            "Notes count error:",
+            error
+        );
+
+    }
+
+
+    try {
+
+        const testsSnapshot =
+            await db
+                .collection("tests")
+                .where(
+                    "courseId",
+                    "==",
+                    courseId
+                )
+                .where(
+                    "status",
+                    "==",
+                    "active"
+                )
+                .get();
+
+
+        tests =
+            testsSnapshot.size;
+
+
+    } catch (error) {
+
+        console.error(
+            "Tests count error:",
+            error
+        );
+
+    }
+
+
+    return {
+
+        videos,
+        notes,
+        tests
+
+    };
+
+}
+
+
+// ==========================================
+// LOGOUT
+// ==========================================
+
+document
+    .getElementById("logoutBtn")
+    .addEventListener(
+        "click",
+        async () => {
+
+            try {
+
+                await auth.signOut();
+
+                window.location.href =
+                    "login.html";
+
+            } catch (error) {
+
+                console.error(error);
+
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+</html>

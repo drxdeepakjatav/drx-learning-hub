@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Video Lectures | DRx Learning Hub</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <script src="firebase-config.js"></script>
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header class="site-header">
+
+    <div class="container nav-container">
+
+        <a href="index.html" class="logo">
+            DRx Learning Hub
+        </a>
+
+        <button
+            class="menu-toggle"
+            id="menuToggle">
+            ☰
+        </button>
+
+        <nav
+            class="main-nav"
+            id="mainNav">
+
+            <a href="index.html">Home</a>
+
+            <a href="courses.html">
+                Courses
+            </a>
+
+            <a href="videos.html"
+               class="active">
+                Videos
+            </a>
+
+            <a href="notes.html">
+                Notes
+            </a>
+
+            <a href="tests.html">
+                Tests
+            </a>
+
+            <a href="index.html#about">
+                About
+            </a>
+
+            <a href="login.html"
+               class="nav-login">
+                Login
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<!-- ================= PAGE HEADER ================= -->
+
+<section class="page-header">
+
+    <div class="container">
+
+        <h1>Video Lectures</h1>
+
+        <p>
+            Learn through video lectures and YouTube playlists
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ================= VIDEOS ================= -->
+
+<section class="section">
+
+    <div class="container">
+
+        <!-- Search -->
+
+        <div class="search-box">
+
+            <input
+                type="text"
+                id="videoSearch"
+                placeholder="Search videos..."
+            >
+
+        </div>
+
+
+        <!-- Filter -->
+
+        <div class="course-filter">
+
+            <button
+                class="filter-btn active"
+                data-course="all">
+
+                All
+
+            </button>
+
+            <div id="courseFilters"></div>
+
+        </div>
+
+
+        <!-- Loading -->
+
+        <div
+            id="videosLoading"
+            class="empty-state">
+
+            <div class="loading-spinner"></div>
+
+            <p>
+                Loading videos...
+            </p>
+
+        </div>
+
+
+        <!-- Latest Videos -->
+
+        <div id="latestSection"
+             style="display:none;">
+
+            <h2 class="section-title">
+                Latest Videos
+            </h2>
+
+            <div
+                id="latestVideos"
+                class="video-grid">
+            </div>
+
+        </div>
+
+
+        <!-- YouTube Videos -->
+
+        <div id="videoSection"
+             style="display:none;">
+
+            <h2 class="section-title">
+                YouTube Videos
+            </h2>
+
+            <div
+                id="videosContainer"
+                class="video-grid">
+            </div>
+
+        </div>
+
+
+        <!-- Playlists -->
+
+        <div id="playlistSection"
+             style="display:none;">
+
+            <h2 class="section-title">
+                YouTube Playlists
+            </h2>
+
+            <div
+                id="playlistsContainer"
+                class="video-grid">
+            </div>
+
+        </div>
+
+
+        <!-- No Videos -->
+
+        <div
+            id="noVideos"
+            class="empty-state"
+            style="display:none;">
+
+            <h3>
+                No Videos Available
+            </h3>
+
+            <p>
+                Videos will appear here when admin adds them.
+            </p>
+
+        </div>
+
+
+        <!-- No Search Result -->
+
+        <div
+            id="noSearchResults"
+            class="empty-state"
+            style="display:none;">
+
+            <h3>
+                No Matching Videos
+            </h3>
+
+            <p>
+                Try another video name or course.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= STUDENT CTA ================= -->
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="cta-box">
+
+            <h2>
+                Want to Learn More?
+            </h2>
+
+            <p>
+                Login or create your student account
+                to access your courses.
+            </p>
+
+            <a
+                href="signup.html"
+                class="btn btn-primary">
+
+                Create Student Account
+
+            </a>
+
+            <a
+                href="login.html"
+                class="btn btn-secondary">
+
+                Student Login
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="site-footer">
+
+    <div class="container">
+
+        <div class="footer-content">
+
+            <div>
+
+                <h3>
+                    DRx Learning Hub
+                </h3>
+
+                <p>
+                    Learn • Practice • Prepare • Grow
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <h4>
+                    Quick Links
+                </h4>
+
+                <a href="index.html">
+                    Home
+                </a>
+
+                <a href="courses.html">
+                    Courses
+                </a>
+
+                <a href="videos.html">
+                    Videos
+                </a>
+
+                <a href="notes.html">
+                    Notes
+                </a>
+
+                <a href="tests.html">
+                    Tests
+                </a>
+
+            </div>
+
+
+            <div>
+
+                <h4>
+                    Student
+                </h4>
+
+                <a href="login.html">
+                    Login
+                </a>
+
+                <a href="signup.html">
+                    Signup
+                </a>
+
+                <a href="student-profile.html">
+                    Student Profile
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <p>
+                ©
+                <span id="currentYear"></span>
+                DRx Learning Hub.
+                All Rights Reserved.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- ================= FIREBASE VIDEO LOGIC ================= -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const loading =
+            document.getElementById(
+                "videosLoading"
+            );
+
+        const latestSection =
+            document.getElementById(
+                "latestSection"
+            );
+
+        const latestVideos =
+            document.getElementById(
+                "latestVideos"
+            );
+
+        const videoSection =
+            document.getElementById(
+                "videoSection"
+            );
+
+        const videosContainer =
+            document.getElementById(
+                "videosContainer"
+            );
+
+        const playlistSection =
+            document.getElementById(
+                "playlistSection"
+            );
+
+        const playlistsContainer =
+            document.getElementById(
+                "playlistsContainer"
+            );
+
+        const noVideos =
+            document.getElementById(
+                "noVideos"
+            );
+
+        const noSearchResults =
+            document.getElementById(
+                "noSearchResults"
+            );
+
+        const search =
+            document.getElementById(
+                "videoSearch"
+            );
+
+        const courseFilters =
+            document.getElementById(
+                "courseFilters"
+            );
+
+
+        let allVideos = [];
+
+        let selectedCourse = "all";
+
+
+        /* ================= ESCAPE HTML ================= */
+
+        function escapeHTML(value) {
+
+            if (
+                value === null ||
+                value === undefined
+            ) {
+                return "";
+            }
+
+            return String(value)
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
+
+        }
+
+
+        /* ================= YOUTUBE PARSER ================= */
+
+        function getYouTubeEmbedUrl(url) {
+
+            if (!url) {
+                return "";
+            }
+
+            try {
+
+                const parsed =
+                    new URL(url);
+
+
+                /* Playlist */
+
+                const playlistId =
+                    parsed.searchParams.get(
+                        "list"
+                    );
+
+                if (playlistId) {
+
+                    return (
+                        "https://www.youtube.com/embed/videoseries?list="
+                        +
+                        encodeURIComponent(
+                            playlistId
+                        )
+                    );
+
+                }
+
+
+                /* Standard YouTube */
+
+                let videoId =
+                    parsed.searchParams.get(
+                        "v"
+                    );
+
+
+                /* youtu.be */
+
+                if (
+                    !videoId &&
+                    parsed.hostname.includes(
+                        "youtu.be"
+                    )
+                ) {
+
+                    videoId =
+                        parsed.pathname
+                            .replace(
+                                "/",
+                                ""
+                            );
+
+                }
+
+
+                /* Shorts */
+
+                if (
+                    !videoId &&
+                    parsed.pathname
+                        .startsWith(
+                            "/shorts/"
+                        )
+                ) {
+
+                    videoId =
+                        parsed.pathname
+                            .split(
+                                "/shorts/"
+                            )[1]
+                            .split(
+                                "/"
+                            )[0];
+
+                }
+
+
+                /* Embed URL */
+
+                if (
+                    !videoId &&
+                    parsed.pathname
+                        .startsWith(
+                            "/embed/"
+                        )
+                ) {
+
+                    videoId =
+                        parsed.pathname
+                            .split(
+                                "/embed/"
+                            )[1]
+                            .split(
+                                "/"
+                            )[0];
+
+                }
+
+
+                if (!videoId) {
+
+                    return "";
+
+                }
+
+
+                return (
+                    "https://www.youtube.com/embed/"
+                    +
+                    encodeURIComponent(
+                        videoId
+                    )
+                );
+
+            }
+
+            catch (error) {
+
+                return "";
+
+            }
+
+        }
+
+
+        /* ================= LOAD VIDEOS ================= */
+
+        async function loadVideos() {
+
+            try {
+
+                const snapshot =
+                let videoQuery = db
+                  .collection("videos")
+                 .where("status", "==", "active");
+
+            if (selectedCourseId) {
+                  videoQuery = videoQuery.where(
+                     "courseId",
+                     "==",
+                     selectedCourseId
+                  );
+            }
+
+            const snapshot = await videoQuery.get();
+
+
+                allVideos = [];
+
+
+                snapshot.forEach(
+                    function (doc) {
+
+                        allVideos.push({
+
+                            id: doc.id,
+
+                            ...doc.data()
+
+                        });
+
+                    }
+                );
+
+
+                /* Newest first */
+
+                allVideos.sort(
+                    function (a, b) {
+
+                        const aTime =
+                            a.createdAt &&
+                            a.createdAt.toMillis
+                                ? a.createdAt.toMillis()
+                                : 0;
+
+                        const bTime =
+                            b.createdAt &&
+                            b.createdAt.toMillis
+                                ? b.createdAt.toMillis()
+                                : 0;
+
+                        return bTime - aTime;
+
+                    }
+                );
+
+
+                loading.style.display =
+                    "none";
+
+
+                if (
+                    allVideos.length === 0
+                ) {
+
+                    noVideos.style.display =
+                        "block";
+
+                    return;
+
+                }
+
+
+                createCourseFilters();
+
+                renderVideos();
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Video loading error:",
+                    error
+                );
+
+
+                loading.style.display =
+                    "none";
+
+
+                videosContainer.style.display =
+                    "grid";
+
+
+                videosContainer.innerHTML = `
+
+                    <div class="alert alert-error">
+
+                        Unable to load videos.
+
+                        <br><br>
+
+                        Please check Firebase
+                        Firestore connection.
+
+                    </div>
+
+                `;
+
+            }
+
+        }
+
+
+        /* ================= COURSE FILTERS ================= */
+
+        function createCourseFilters() {
+
+            const courseIds = [];
+
+            allVideos.forEach(
+                function (video) {
+
+                    if (
+                        video.courseId &&
+                        !courseIds.includes(
+                            video.courseId
+                        )
+                    ) {
+
+                        courseIds.push(
+                            video.courseId
+                        );
+
+                    }
+
+                }
+            );
+
+
+            courseIds.forEach(
+                function (courseId) {
+
+                    const button =
+                        document.createElement(
+                            "button"
+                        );
+
+                    button.className =
+                        "filter-btn";
+
+                    button.dataset.course =
+                        courseId;
+
+                    button.textContent =
+                        courseId;
+
+
+                    button.addEventListener(
+                        "click",
+                        function () {
+
+                            document
+                                .querySelectorAll(
+                                    ".filter-btn"
+                                )
+                                .forEach(
+                                    function (
+                                        btn
+                                    ) {
+
+                                        btn.classList
+                                            .remove(
+                                                "active"
+                                            );
+
+                                    }
+                                );
+
+
+                            button.classList.add(
+                                "active"
+                            );
+
+
+                            selectedCourse =
+                                courseId;
+
+
+                            renderVideos();
+
+                        }
+                    );
+
+
+                    courseFilters.appendChild(
+                        button
+                    );
+
+                }
+            );
+
+
+            document
+                .querySelector(
+                    '[data-course="all"]'
+                )
+                .addEventListener(
+                    "click",
+                    function () {
+
+                        document
+                            .querySelectorAll(
+                                ".filter-btn"
+                            )
+                            .forEach(
+                                function (
+                                    btn
+                                ) {
+
+                                    btn.classList
+                                        .remove(
+                                            "active"
+                                        );
+
+                                }
+                            );
+
+
+                        this.classList.add(
+                            "active"
+                        );
+
+
+                        selectedCourse =
+                            "all";
+
+
+                        renderVideos();
+
+                    }
+                );
+
+        }
+
+
+        /* ================= FILTER ================= */
+
+        function getFilteredVideos() {
+
+            const searchText =
+                search.value
+                    .trim()
+                    .toLowerCase();
+
+
+            return allVideos.filter(
+                function (video) {
+
+                    const courseMatch =
+                        selectedCourse ===
+                            "all"
+                        ||
+                        String(
+                            video.courseId ||
+                            ""
+                        )
+                        .toLowerCase()
+                        ===
+                        String(
+                            selectedCourse
+                        )
+                        .toLowerCase();
+
+
+                    const searchMatch =
+
+                        !searchText
+
+                        ||
+
+                        String(
+                            video.title ||
+                            ""
+                        )
+                        .toLowerCase()
+                        .includes(
+                            searchText
+                        )
+
+                        ||
+
+                        String(
+                            video.description ||
+                            ""
+                        )
+                        .toLowerCase()
+                        .includes(
+                            searchText
+                        )
+
+                        ||
+
+                        String(
+                            video.courseId ||
+                            ""
+                        )
+                        .toLowerCase()
+                        .includes(
+                            searchText
+                        );
+
+
+                    return (
+                        courseMatch &&
+                        searchMatch
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* ================= VIDEO CARD ================= */
+
+        function createVideoCard(video) {
+
+            const title =
+                escapeHTML(
+                    video.title ||
+                    "Untitled Video"
+                );
+
+
+            const description =
+                escapeHTML(
+                    video.description ||
+                    ""
+                );
+
+
+            const courseId =
+                escapeHTML(
+                    video.courseId ||
+                    "General"
+                );
+
+
+            const embedUrl =
+                getYouTubeEmbedUrl(
+                    video.youtubeUrl
+                );
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "video-card";
+
+
+            let mediaHTML = "";
+
+
+            if (embedUrl) {
+
+                mediaHTML = `
+
+                    <div class="video-wrapper">
+
+                        <iframe
+                            src="${escapeHTML(embedUrl)}"
+                            title="${title}"
+                            frameborder="0"
+                            loading="lazy"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen>
+                        </iframe>
+
+                    </div>
+
+                `;
+
+            }
+
+            else {
+
+                mediaHTML = `
+
+                    <div class="video-thumbnail">
+
+                        📺
+
+                    </div>
+
+                `;
+
+            }
+
+
+            card.innerHTML = `
+
+                ${mediaHTML}
+
+                <div class="video-card-content">
+
+                    <span class="course-category">
+
+                        ${courseId}
+
+                    </span>
+
+
+                    <h3>
+
+                        ${title}
+
+                    </h3>
+
+
+                    ${
+                        description
+                            ? `<p>${description}</p>`
+                            : ""
+                    }
+
+                </div>
+
+            `;
+
+
+            return card;
+
+        }
+
+
+        /* ================= RENDER ================= */
+
+        function renderVideos() {
+
+            const filtered =
+                getFilteredVideos();
+
+
+            latestVideos.innerHTML =
+                "";
+
+            videosContainer.innerHTML =
+                "";
+
+            playlistsContainer.innerHTML =
+                "";
+
+
+            latestSection.style.display =
+                "none";
+
+            videoSection.style.display =
+                "none";
+
+            playlistSection.style.display =
+                "none";
+
+            noSearchResults.style.display =
+                "none";
+
+
+            if (filtered.length === 0) {
+
+                noSearchResults.style.display =
+                    "block";
+
+                return;
+
+            }
+
+
+            const normalVideos =
+                filtered.filter(
+                    function (video) {
+
+                        return (
+                            String(
+                                video.type ||
+                                "video"
+                            )
+                            .toLowerCase()
+                            !==
+                            "playlist"
+                        );
+
+                    }
+                );
+
+
+            const playlists =
+                filtered.filter(
+                    function (video) {
+
+                        return (
+                            String(
+                                video.type ||
+                                ""
+                            )
+                            .toLowerCase()
+                            ===
+                            "playlist"
+                        );
+
+                    }
+                );
+
+
+            /* Latest 3 */
+
+            const latest =
+                filtered.slice(0, 3);
+
+
+            if (latest.length > 0) {
+
+                latestSection.style.display =
+                    "block";
+
+
+                latest.forEach(
+                    function (video) {
+
+                        latestVideos.appendChild(
+                            createVideoCard(
+                                video
+                            )
+                        );
+
+                    }
+                );
+
+            }
+
+
+            /* Normal videos */
+
+            if (
+                normalVideos.length > 0
+            ) {
+
+                videoSection.style.display =
+                    "block";
+
+
+                normalVideos.forEach(
+                    function (video) {
+
+                        videosContainer.appendChild(
+                            createVideoCard(
+                                video
+                            )
+                        );
+
+                    }
+                );
+
+            }
+
+
+            /* Playlists */
+
+            if (
+                playlists.length > 0
+            ) {
+
+                playlistSection.style.display =
+                    "block";
+
+
+                playlists.forEach(
+                    function (video) {
+
+                        playlistsContainer.appendChild(
+                            createVideoCard(
+                                video
+                            )
+                        );
+
+                    }
+                );
+
+            }
+
+        }
+
+
+        /* ================= SEARCH ================= */
+
+        search.addEventListener(
+            "input",
+            renderVideos
+        );
+
+
+        /* ================= START ================= */
+
+        if (
+            typeof db !==
+            "undefined"
+        ) {
+
+            loadVideos();
+
+        }
+
+        else {
+
+            loading.style.display =
+                "none";
+
+
+            noVideos.style.display =
+                "block";
+
+
+            noVideos.innerHTML = `
+
+                <h3>
+                    Firebase Connection Error
+                </h3>
+
+                <p>
+                    Please check firebase-config.js
+                </p>
+
+            `;
+
+        }
+
+    });
+
+</script>
+
+</body>
+</html>

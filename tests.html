@@ -1,176 +1,602 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta charset="UTF-8">
+    <title>Online Tests | DRx Learning Hub</title>
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
 
-<title>Online Tests | DRx Learning Hub</title>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-<link rel="stylesheet"
-href="style.css">
+    <script src="firebase-config.js"></script>
+    <script src="script.js" defer></script>
 </head>
-
 
 <body>
 
+<header class="site-header">
 
-<header class="header">
+    <div class="container nav-container">
 
-<div class="container navbar">
+        <a href="index.html" class="logo">
+            DRx Learning Hub
+        </a>
 
-<a href="index.html"
-class="logo">
+        <button class="menu-toggle" id="menuToggle">
+            ☰
+        </button>
 
-<span class="logo-main">
-DRx
-</span>
+        <nav class="main-nav" id="mainNav">
 
-<span class="logo-text">
-Learning Hub
-</span>
+            <a href="index.html">Home</a>
+            <a href="courses.html">Courses</a>
+            <a href="videos.html">Videos</a>
+            <a href="notes.html">Notes</a>
+            <a href="tests.html" class="active">Tests</a>
+            <a href="student-profile.html">Profile</a>
 
-</a>
+        </nav>
 
-
-<nav>
-
-<a href="index.html">Home</a>
-
-<a href="courses.html">Courses</a>
-
-<a href="videos.html">Videos</a>
-
-<a href="notes.html">Notes</a>
-
-<a href="tests.html"
-class="active">
-Tests
-</a>
-
-<a href="about.html">About</a>
-
-<a href="contact.html">Contact</a>
-
-</nav>
-
-</div>
+    </div>
 
 </header>
 
 
-<section class="section">
+<section class="page-header">
 
-<div class="container">
+    <div class="container">
 
+        <h1>Online Tests</h1>
 
-<div class="section-heading">
+        <p>
+            Practice MCQ tests and check your knowledge.
+        </p>
 
-<span>TEST YOUR KNOWLEDGE</span>
-
-<h2>
-Online Tests
-</h2>
-
-<p>
-Practice MCQs and improve your preparation.
-</p>
-
-</div>
-
-
-<div class="feature-grid">
-
-
-<div class="feature-card">
-
-<div class="feature-icon">
-💊
-</div>
-
-<h3>
-Pharmacy MCQ
-</h3>
-
-<p>
-Practice important pharmacy questions.
-</p>
-
-<a href="subjects/B.Pharm Universal Test System.html" target="_blank">
-Start Test →
-</a>
-
-</div>
-
-
-<div class="feature-card">
-
-<div class="feature-icon">
-🧬
-</div>
-
-<h3>
-Biology MCQ
-</h3>
-
-<p>
-Test your biology knowledge.
-</p>
-
-<a href="#">
-Start Test →
-</a>
-
-</div>
-
-
-<div class="feature-card">
-
-<div class="feature-icon">
-🔬
-</div>
-
-<h3>
-Science MCQ
-</h3>
-
-<p>
-Practice general science questions.
-</p>
-
-<a href="#">
-Start Test →
-</a>
-
-</div>
-
-
-</div>
-
-
-</div>
+    </div>
 
 </section>
 
 
-<footer class="footer">
+<section class="section">
 
-<div class="copyright">
+    <div class="container">
 
-© <span id="year"></span>
-DRx Learning Hub | Deepak Jatav
+        <!-- Search -->
 
-</div>
+        <div class="search-box">
+
+            <input
+                type="text"
+                id="searchTest"
+                placeholder="Search tests..."
+            >
+
+        </div>
+
+
+        <!-- Loading -->
+
+        <div
+            id="loading"
+            class="empty-state">
+
+            <div class="loading-spinner"></div>
+
+            <p>
+                Loading tests...
+            </p>
+
+        </div>
+
+
+        <!-- Error -->
+
+        <div
+            id="errorMessage"
+            class="alert alert-error"
+            style="display:none;">
+        </div>
+
+
+        <!-- Tests -->
+
+        <div
+            id="testsContainer"
+            class="course-grid">
+        </div>
+
+
+        <!-- Empty -->
+
+        <div
+            id="emptyState"
+            class="empty-state"
+            style="display:none;">
+
+            <h3>
+                No Tests Available
+            </h3>
+
+            <p>
+                New tests will appear here soon.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer class="site-footer">
+
+    <div class="container">
+
+        <div class="footer-bottom">
+
+            <p>
+                ©
+                <span id="currentYear"></span>
+                DRx Learning Hub.
+                All Rights Reserved.
+            </p>
+
+        </div>
+
+    </div>
 
 </footer>
 
 
-<script src="js/main.js"></script>
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const testsContainer =
+            document.getElementById(
+                "testsContainer"
+            );
+
+        const loading =
+            document.getElementById(
+                "loading"
+            );
+
+        const emptyState =
+            document.getElementById(
+                "emptyState"
+            );
+
+        const errorMessage =
+            document.getElementById(
+                "errorMessage"
+            );
+
+        const searchInput =
+            document.getElementById(
+                "searchTest"
+            );
+
+
+        let allTests = [];
+
+
+        /* ================= ESCAPE HTML ================= */
+
+        function escapeHTML(value) {
+
+            if (
+                value === null ||
+                value === undefined
+            ) {
+                return "";
+            }
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+        }
+
+
+        /* ================= LOAD TESTS ================= */
+
+        async function loadTests() {
+
+            try {
+
+                loading.style.display =
+                    "block";
+
+                emptyState.style.display =
+                    "none";
+
+                errorMessage.style.display =
+                    "none";
+
+
+                const snapshot =
+                    await db
+                        .collection("tests")
+                        .where(
+                            "status",
+                            "==",
+                            "active"
+                        )
+                        .get();
+
+
+                allTests = [];
+
+
+                snapshot.forEach(
+                    function (doc) {
+
+                        allTests.push({
+
+                            id: doc.id,
+
+                            ...doc.data()
+
+                        });
+
+                    }
+                );
+
+
+                /* Sort newest first */
+
+                allTests.sort(
+                    function (a, b) {
+
+                        const aTime =
+                            a.createdAt &&
+                            a.createdAt.toMillis
+                                ? a.createdAt.toMillis()
+                                : 0;
+
+                        const bTime =
+                            b.createdAt &&
+                            b.createdAt.toMillis
+                                ? b.createdAt.toMillis()
+                                : 0;
+
+                        return bTime - aTime;
+
+                    }
+                );
+
+
+                loading.style.display =
+                    "none";
+
+
+                renderTests(
+                    allTests
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Test loading error:",
+                    error
+                );
+
+
+                loading.style.display =
+                    "none";
+
+
+                errorMessage.textContent =
+                    "Unable to load tests. " +
+                    error.message;
+
+
+                errorMessage.style.display =
+                    "block";
+
+            }
+
+        }
+
+
+        /* ================= RENDER TESTS ================= */
+
+        function renderTests(
+            tests
+        ) {
+
+            testsContainer.innerHTML =
+                "";
+
+
+            if (
+                tests.length === 0
+            ) {
+
+                emptyState.style.display =
+                    "block";
+
+                return;
+
+            }
+
+
+            emptyState.style.display =
+                "none";
+
+
+            tests.forEach(
+                function (test) {
+
+                    const card =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    card.className =
+                        "course-card";
+
+
+                    const questionsCount =
+                        Array.isArray(
+                            test.questions
+                        )
+                            ? test.questions.length
+                            : (
+                                test.totalQuestions ||
+                                0
+                            );
+
+
+                    const totalMarks =
+                        Number(
+                            test.totalMarks
+                        ) || 0;
+
+
+                    const duration =
+                        Number(
+                            test.duration
+                        ) || 0;
+
+
+                    card.innerHTML = `
+
+                        <div class="card-content">
+
+                            <span class="badge">
+                                Online Test
+                            </span>
+
+                            <h3>
+                                ${escapeHTML(
+                                    test.title ||
+                                    "Untitled Test"
+                                )}
+                            </h3>
+
+                            <p>
+                                ${escapeHTML(
+                                    test.description ||
+                                    "Test your knowledge with MCQ questions."
+                                )}
+                            </p>
+
+
+                            <div class="test-info">
+
+                                <p>
+                                    <strong>
+                                        Course:
+                                    </strong>
+
+                                    ${escapeHTML(
+                                        test.courseId ||
+                                        "-"
+                                    )}
+                                </p>
+
+
+                                <p>
+                                    <strong>
+                                        Unit:
+                                    </strong>
+
+                                    ${escapeHTML(
+                                        test.unit ||
+                                        "All Units"
+                                    )}
+                                </p>
+
+
+                                <p>
+                                    <strong>
+                                        Questions:
+                                    </strong>
+
+                                    ${questionsCount}
+                                </p>
+
+
+                                <p>
+                                    <strong>
+                                        Marks:
+                                    </strong>
+
+                                    ${totalMarks}
+                                </p>
+
+
+                                <p>
+                                    <strong>
+                                        Duration:
+                                    </strong>
+
+                                    ${duration} minutes
+                                </p>
+
+                            </div>
+
+
+                            <button
+                                class="btn btn-primary start-test"
+                                data-id="${escapeHTML(
+                                    test.id
+                                )}">
+
+                                Start Test
+
+                            </button>
+
+                        </div>
+
+                    `;
+
+
+                    testsContainer.appendChild(
+                        card
+                    );
+
+                }
+            );
+
+
+            document
+                .querySelectorAll(
+                    ".start-test"
+                )
+                .forEach(
+                    function (button) {
+
+                        button.addEventListener(
+                            "click",
+                            function () {
+
+                                const testId =
+                                    this.dataset.id;
+
+
+                                window.location.href =
+                                    "test-attempt.html?id=" +
+                                    encodeURIComponent(
+                                        testId
+                                    );
+
+                            }
+                        );
+
+                    }
+                );
+
+        }
+
+
+        /* ================= SEARCH ================= */
+
+        searchInput.addEventListener(
+            "input",
+            function () {
+
+                const keyword =
+                    this.value
+                        .trim()
+                        .toLowerCase();
+
+
+                if (!keyword) {
+
+                    renderTests(
+                        allTests
+                    );
+
+                    return;
+
+                }
+
+
+                const filtered =
+                    allTests.filter(
+                        function (test) {
+
+                            return (
+
+                                String(
+                                    test.title ||
+                                    ""
+                                )
+                                .toLowerCase()
+                                .includes(
+                                    keyword
+                                )
+
+                                ||
+
+                                String(
+                                    test.courseId ||
+                                    ""
+                                )
+                                .toLowerCase()
+                                .includes(
+                                    keyword
+                                )
+
+                                ||
+
+                                String(
+                                    test.unit ||
+                                    ""
+                                )
+                                .toLowerCase()
+                                .includes(
+                                    keyword
+                                )
+
+                                ||
+
+                                String(
+                                    test.description ||
+                                    ""
+                                )
+                                .toLowerCase()
+                                .includes(
+                                    keyword
+                                )
+
+                            );
+
+                        }
+                    );
+
+
+                renderTests(
+                    filtered
+                );
+
+            }
+        );
+
+
+        /* ================= START ================= */
+
+        loadTests();
+
+    });
+
+</script>
 
 </body>
-
 </html>

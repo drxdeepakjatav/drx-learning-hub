@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Students - Admin | DRx Learning Hub</title>
+
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="container nav-container">
+
+        <a href="dashboard.html" class="logo">
+            DRx Learning Hub
+        </a>
+
+        <button class="menu-toggle" id="menuToggle">
+            ☰
+        </button>
+
+        <nav class="main-nav" id="mainNav">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="courses.html">Courses</a>
+            <a href="videos.html">Videos</a>
+            <a href="notes.html">Notes</a>
+            <a href="tests.html">Tests</a>
+            <a href="students.html" class="active">Students</a>
+            <a href="results.html">Results</a>
+            <button id="logoutBtn" class="btn btn-danger">Logout</button>
+        </nav>
+
+    </div>
+</header>
+
+
+<main>
+
+    <!-- PAGE HEADER -->
+    <section class="page-header">
+        <div class="container">
+
+            <h1>Registered Students</h1>
+
+            <p>
+                Manage and view students registered on DRx Learning Hub.
+            </p>
+
+        </div>
+    </section>
+
+
+    <!-- STAT -->
+    <section class="section">
+
+        <div class="container">
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <h3 id="totalStudents">0</h3>
+                    <p>Total Students</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- STUDENTS -->
+    <section class="section">
+
+        <div class="container">
+
+            <div class="section-header">
+
+                <div>
+                    <h2>Students List</h2>
+                </div>
+
+                <div class="search-box">
+
+                    <input
+                        type="text"
+                        id="studentSearch"
+                        placeholder="Search name, email or UID..."
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div id="loading" class="loading">
+                Loading students...
+            </div>
+
+
+            <div id="studentsContainer" class="cards-grid">
+            </div>
+
+
+            <div id="emptyState" class="empty-state" style="display:none;">
+                <h3>No students found</h3>
+                <p>No registered students are available.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer class="site-footer">
+
+    <div class="container">
+
+        <p>
+            © <span id="currentYear"></span>
+            DRx Learning Hub. All Rights Reserved.
+        </p>
+
+    </div>
+
+</footer>
+
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script src="../firebase-config.js"></script>
+
+<script src="../script.js"></script>
+
+
+<script>
+
+let allStudents = [];
+
+
+// -----------------------------------
+// CHECK ADMIN
+// -----------------------------------
+
+auth.onAuthStateChanged(async (user) => {
+
+    if (!user) {
+
+        window.location.href = "admin-login.html";
+
+        return;
+    }
+
+
+    try {
+
+        const adminDoc = await db
+            .collection("admins")
+            .doc(user.uid)
+            .get();
+
+
+        if (!adminDoc.exists ||
+            adminDoc.data().role !== "admin") {
+
+            await auth.signOut();
+
+            window.location.href = "admin-login.html";
+
+            return;
+        }
+
+
+        loadStudents();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Admin verification failed.");
+
+    }
+
+});
+
+
+// -----------------------------------
+// LOAD STUDENTS
+// -----------------------------------
+
+async function loadStudents() {
+
+    const loading =
+        document.getElementById("loading");
+
+    const container =
+        document.getElementById("studentsContainer");
+
+    const emptyState =
+        document.getElementById("emptyState");
+
+
+    loading.style.display = "block";
+
+    container.innerHTML = "";
+
+    emptyState.style.display = "none";
+
+
+    try {
+
+        const snapshot =
+            await db.collection("students").get();
+
+
+        allStudents = [];
+
+
+        snapshot.forEach((doc) => {
+
+            const data = doc.data();
+
+
+            allStudents.push({
+
+                id: doc.id,
+
+                name: data.name || "No Name",
+
+                email: data.email || "No Email",
+
+                uid: data.uid || doc.id,
+
+                role: data.role || "student",
+
+                createdAt: data.createdAt || null
+
+            });
+
+        });
+
+
+        // Newest first
+
+        allStudents.sort((a, b) => {
+
+            const dateA =
+                a.createdAt && a.createdAt.toDate
+                    ? a.createdAt.toDate()
+                    : new Date(0);
+
+            const dateB =
+                b.createdAt && b.createdAt.toDate
+                    ? b.createdAt.toDate()
+                    : new Date(0);
+
+            return dateB - dateA;
+
+        });
+
+
+        document.getElementById("totalStudents")
+            .textContent = allStudents.length;
+
+
+        renderStudents(allStudents);
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        container.innerHTML = `
+            <div class="alert alert-error">
+                Failed to load students.
+                <br>
+                ${escapeHTML(error.message)}
+            </div>
+        `;
+
+    }
+
+
+    loading.style.display = "none";
+
+}
+
+
+// -----------------------------------
+// RENDER STUDENTS
+// -----------------------------------
+
+function renderStudents(students) {
+
+    const container =
+        document.getElementById("studentsContainer");
+
+    const emptyState =
+        document.getElementById("emptyState");
+
+
+    container.innerHTML = "";
+
+
+    if (students.length === 0) {
+
+        emptyState.style.display = "block";
+
+        return;
+
+    }
+
+
+    emptyState.style.display = "none";
+
+
+    students.forEach((student) => {
+
+        let registrationDate = "N/A";
+
+
+        if (
+            student.createdAt &&
+            student.createdAt.toDate
+        ) {
+
+            registrationDate =
+                student.createdAt
+                    .toDate()
+                    .toLocaleDateString("en-IN", {
+
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric"
+
+                    });
+
+        }
+
+
+        const card = document.createElement("div");
+
+        card.className = "card";
+
+
+        card.innerHTML = `
+
+            <div class="card-body">
+
+                <h3>
+                    ${escapeHTML(student.name)}
+                </h3>
+
+                <p>
+                    <strong>Email:</strong>
+                    ${escapeHTML(student.email)}
+                </p>
+
+                <p>
+                    <strong>UID:</strong>
+                    <small>
+                        ${escapeHTML(student.uid)}
+                    </small>
+                </p>
+
+                <p>
+                    <strong>Role:</strong>
+                    ${escapeHTML(student.role)}
+                </p>
+
+                <p>
+                    <strong>Registered:</strong>
+                    ${registrationDate}
+                </p>
+
+            </div>
+
+        `;
+
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+// -----------------------------------
+// SEARCH
+// -----------------------------------
+
+document
+    .getElementById("studentSearch")
+    .addEventListener("input", function () {
+
+        const search =
+            this.value
+                .toLowerCase()
+                .trim();
+
+
+        if (!search) {
+
+            renderStudents(allStudents);
+
+            return;
+
+        }
+
+
+        const filtered =
+            allStudents.filter((student) => {
+
+                return (
+
+                    student.name
+                        .toLowerCase()
+                        .includes(search)
+
+                    ||
+
+                    student.email
+                        .toLowerCase()
+                        .includes(search)
+
+                    ||
+
+                    student.uid
+                        .toLowerCase()
+                        .includes(search)
+
+                );
+
+            });
+
+
+        renderStudents(filtered);
+
+    });
+
+
+// -----------------------------------
+// LOGOUT
+// -----------------------------------
+
+document
+    .getElementById("logoutBtn")
+    .addEventListener("click", async () => {
+
+        try {
+
+            await auth.signOut();
+
+            window.location.href =
+                "admin-login.html";
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert("Logout failed.");
+
+        }
+
+    });
+
+
+</script>
+
+</body>
+</html>

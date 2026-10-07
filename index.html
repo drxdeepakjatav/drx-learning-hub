@@ -1,45 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="google-site-verification" content="KPB1YvCWe8Wf9XWYFjS9mbAmDTN4PcTKXal-0yYupE0" />
 
-    <title>DRx Learning Hub | Deepak Jatav</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <meta name="description"
-          content="DRx Learning Hub by Deepak Jatav - Pharmacy, Biology, Study Materials, MCQs, Courses and Educational Videos.">
+          content="DRx Learning Hub - Courses, Video Lectures, Study Notes and Online Tests">
 
+    <title>DRx Learning Hub | Learn • Practice • Grow</title>
+
+    <!-- MASTER CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 
+
 <body>
 
-<!-- ================= HEADER ================= -->
 
-<header class="header">
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
-    <div class="container navbar">
+<header class="site-header">
+
+    <div class="container header-container">
+
+        <!-- LOGO -->
 
         <a href="index.html" class="logo">
-            <span class="logo-main">DRx</span>
-            <span class="logo-text">Learning Hub</span>
+
+            <span class="logo-icon">DRx</span>
+
+            <span>Learning Hub</span>
+
         </a>
 
-        <button class="menu-btn" id="menuBtn">
+
+        <!-- MOBILE MENU BUTTON -->
+
+        <button class="menu-toggle"
+                aria-label="Open Menu">
+
             ☰
+
         </button>
 
-        <nav id="navMenu">
 
-            <a href="index.html" class="active">Home</a>
-            <a href="courses.html">Courses</a>
-            <a href="video.html">Videos</a>
-            <a href="notes.html">Notes</a>
-            <a href="tests.html">Tests</a>
-            <a href="about.html">About</a>
-            <a href="student-register.html">Student Registration</a>
-            <a href="contact.html">Contact</a>
-            <a href="admin.html">Admin</a>
+        <!-- NAVIGATION -->
+
+        <nav class="main-nav">
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="courses.html">
+                Courses
+            </a>
+
+            <a href="videos.html">
+                Videos
+            </a>
+
+            <a href="notes.html">
+                Notes
+            </a>
+
+            <a href="tests.html">
+                Tests
+            </a>
+
+            <a href="#about">
+                About
+            </a>
+
+            <a href="login.html"
+               class="nav-login">
+
+                Login
+
+            </a>
 
         </nav>
 
@@ -48,75 +91,62 @@
 </header>
 
 
-<!-- ================= HERO ================= -->
+
+<!-- =====================================================
+     HERO SECTION
+===================================================== -->
 
 <section class="hero">
 
     <div class="container hero-content">
 
-        <div class="hero-text">
+        <span class="hero-badge">
 
-            <span class="badge">
-                🎓 Learn • Understand • Grow
-            </span>
+            🎓 Educational Platform
 
-            <h1>
-                Welcome to
-                <span>DRx Learning Hub</span>
-            </h1>
-
-            <p class="hero-subtitle">
-                Your learning platform for Pharmacy, Biology,
-                Science, Competitive Exams and Educational Content.
-            </p>
-
-            <div class="hero-buttons">
-
-                <a href="courses.html" class="btn primary-btn">
-                    Explore Courses
-                </a>
-
-                <a href="video.html" class="btn secondary-btn">
-                    Watch Videos
-                </a>
-
-            </div>
-
-        </div>
+        </span>
 
 
-        <div class="hero-card">
+        <h1>
 
-            <div class="profile-circle">
-                <img src="image/profile.png"
-                     alt="Deepak Jatav"
-                     onerror="this.style.display='none'">
-            </div>
+            Welcome to
 
-            <h3>Deepak Jatav</h3>
+            <span>DRx Learning Hub</span>
 
-            <p>
-                M.Pharm – Pharmaceutics
-            </p>
+        </h1>
 
-            <div class="hero-stat">
 
-                <div>
-                    <strong>DRx</strong>
-                    <small>Learning</small>
-                </div>
+        <p>
 
-                <div>
-                    <strong>📚</strong>
-                    <small>Education</small>
-                </div>
+            Learn • Practice • Prepare • Grow
 
-                <div>
-                    <strong>🎥</strong>
-                    <small>YouTube</small>
-                </div>
+        </p>
 
-            </div>
+
+        <p>
+
+            Courses, video lectures, study notes and
+            online tests — all in one place.
+
+        </p>
+
+
+        <div class="hero-buttons">
+
+            <a href="courses.html"
+               class="btn btn-primary">
+
+                📚 Explore Courses
+
+            </a>
+
+
+            <a href="signup.html"
+               class="btn btn-secondary">
+
+                👨‍🎓 Join Now
+
+            </a>
 
         </div>
 
@@ -125,142 +155,626 @@
 </section>
 
 
-<!-- ================= FEATURES ================= -->
+
+<!-- =====================================================
+     COURSES
+===================================================== -->
+
+<section class="section"
+         id="courses">
+
+    <div class="container">
+
+        <div class="section-header">
+
+            <h2>
+                📚 Our Courses
+            </h2>
+
+            <p>
+                Choose your course and start learning.
+            </p>
+
+        </div>
+
+
+        <div class="card-grid">
+
+
+            <!-- B.PHARM -->
+
+            <div class="card">
+
+                <div class="card-icon">
+                    💊
+                </div>
+
+                <h3>
+                    B.Pharm
+                </h3>
+
+                <p>
+                    Pharmacy subjects, study notes,
+                    video lectures and exam preparation.
+                </p>
+
+                <a href="courses.html"
+                   class="btn btn-primary btn-small">
+
+                    View Courses →
+
+                </a>
+
+            </div>
+
+
+            <!-- M.PHARM -->
+
+            <div class="card">
+
+                <div class="card-icon">
+                    🎓
+                </div>
+
+                <h3>
+                    M.Pharm
+                </h3>
+
+                <p>
+                    Advanced pharmacy learning,
+                    research and academic resources.
+                </p>
+
+                <a href="courses.html"
+                   class="btn btn-primary btn-small">
+
+                    View Courses →
+
+                </a>
+
+            </div>
+
+
+            <!-- MMLT -->
+
+            <div class="card">
+
+                <div class="card-icon">
+                    🔬
+                </div>
+
+                <h3>
+                    MMLT
+                </h3>
+
+                <p>
+                    Medical Laboratory Technology
+                    notes, lectures and online tests.
+                </p>
+
+                <a href="courses.html"
+                   class="btn btn-primary btn-small">
+
+                    View Courses →
+
+                </a>
+
+            </div>
+
+
+            <!-- OTHER -->
+
+            <div class="card">
+
+                <div class="card-icon">
+                    📖
+                </div>
+
+                <h3>
+                    Other Courses
+                </h3>
+
+                <p>
+                    More educational courses and
+                    study resources will be added.
+                </p>
+
+                <a href="courses.html"
+                   class="btn btn-primary btn-small">
+
+                    Explore →
+
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     VIDEO LECTURES
+===================================================== -->
+
+<section class="section section-light"
+         id="videos">
+
+    <div class="container">
+
+        <div class="section-header">
+
+            <h2>
+                🎥 Video Lectures
+            </h2>
+
+            <p>
+                Learn through organized YouTube
+                lectures and playlists.
+            </p>
+
+        </div>
+
+
+        <div class="card-grid">
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    ▶️
+                </div>
+
+                <h3>
+                    YouTube Videos
+                </h3>
+
+                <p>
+                    Watch individual educational
+                    lectures and latest videos.
+                </p>
+
+                <a href="videos.html"
+                   class="btn btn-primary btn-small">
+
+                    Watch Videos →
+
+                </a>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    📺
+                </div>
+
+                <h3>
+                    YouTube Playlists
+                </h3>
+
+                <p>
+                    Subject-wise and course-wise
+                    organized playlists.
+                </p>
+
+                <a href="videos.html"
+                   class="btn btn-primary btn-small">
+
+                    View Playlists →
+
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     STUDY NOTES
+===================================================== -->
+
+<section class="section"
+         id="notes">
+
+    <div class="container">
+
+        <div class="section-header">
+
+            <h2>
+                📚 Study Notes
+            </h2>
+
+            <p>
+                Simple and exam-oriented study material.
+            </p>
+
+        </div>
+
+
+        <div class="card-grid">
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    📝
+                </div>
+
+                <h3>
+                    Short Notes
+                </h3>
+
+                <p>
+                    Quick revision notes for
+                    exam preparation.
+                </p>
+
+                <a href="notes.html"
+                   class="btn btn-primary btn-small">
+
+                    Read Notes →
+
+                </a>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    📑
+                </div>
+
+                <h3>
+                    Unit-wise Notes
+                </h3>
+
+                <p>
+                    Study material organized
+                    according to units.
+                </p>
+
+                <a href="notes.html"
+                   class="btn btn-primary btn-small">
+
+                    View Notes →
+
+                </a>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    📕
+                </div>
+
+                <h3>
+                    PDF Study Material
+                </h3>
+
+                <p>
+                    Useful PDFs and educational
+                    resources for students.
+                </p>
+
+                <a href="notes.html"
+                   class="btn btn-primary btn-small">
+
+                    View PDFs →
+
+                </a>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    🔎
+                </div>
+
+                <h3>
+                    Search Notes
+                </h3>
+
+                <p>
+                    Find study material quickly
+                    using the notes section.
+                </p>
+
+                <a href="notes.html"
+                   class="btn btn-primary btn-small">
+
+                    Search →
+
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     ONLINE TESTS
+===================================================== -->
+
+<section class="section section-light"
+         id="tests">
+
+    <div class="container">
+
+        <div class="section-header">
+
+            <h2>
+                📝 Online Tests
+            </h2>
+
+            <p>
+                Practice MCQs and check your preparation.
+            </p>
+
+        </div>
+
+
+        <div class="card-grid">
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    ❓
+                </div>
+
+                <h3>
+                    MCQ Tests
+                </h3>
+
+                <p>
+                    Practice multiple-choice questions
+                    online.
+                </p>
+
+                <a href="tests.html"
+                   class="btn btn-primary btn-small">
+
+                    Start Test →
+
+                </a>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    📚
+                </div>
+
+                <h3>
+                    Unit-wise Tests
+                </h3>
+
+                <p>
+                    Test your knowledge unit by unit.
+                </p>
+
+                <a href="tests.html"
+                   class="btn btn-primary btn-small">
+
+                    Start Test →
+
+                </a>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    🏆
+                </div>
+
+                <h3>
+                    Results
+                </h3>
+
+                <p>
+                    Check your score and
+                    performance.
+                </p>
+
+                <a href="tests.html"
+                   class="btn btn-primary btn-small">
+
+                    View Results →
+
+                </a>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    📊
+                </div>
+
+                <h3>
+                    Progress
+                </h3>
+
+                <p>
+                    Track your learning and
+                    test performance.
+                </p>
+
+                <a href="login.html"
+                   class="btn btn-primary btn-small">
+
+                    Student Login →
+
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     LATEST VIDEOS
+===================================================== -->
 
 <section class="section">
 
     <div class="container">
 
-        <div class="section-heading">
-
-            <span>LEARNING PLATFORM</span>
+        <div class="section-header">
 
             <h2>
-                Learn Everything in One Place
+                🔥 Latest Videos
             </h2>
 
             <p>
-                Explore educational content designed for
-                pharmacy and science learners.
-            </p>
-
-        </div>
-
-
-        <div class="feature-grid">
-
-            <div class="feature-card">
-
-                <div class="feature-icon">📚</div>
-
-                <h3>Courses</h3>
-
-                <p>
-                    Structured learning content for
-                    pharmacy, biology and science.
-                </p>
-
-                <a href="courses.html">
-                    Explore →
-                </a>
-
-            </div>
-
-
-            <div class="feature-card">
-
-                <div class="feature-icon">🎥</div>
-
-                <h3>Video Lectures</h3>
-
-                <p>
-                    Watch educational videos from
-                    the DRx Learning Hub YouTube channel.
-                </p>
-
-                <a href="video.html">
-                    Watch →
-                </a>
-
-            </div>
-
-
-            <div class="feature-card">
-
-                <div class="feature-icon">📝</div>
-
-                <h3>Study Notes</h3>
-
-                <p>
-                    Access useful notes, diagrams,
-                    summaries and study resources.
-                </p>
-
-                <a href="studynote.html">
-                    Study →
-                </a>
-
-            </div>
-
-
-            <div class="feature-card">
-
-                <div class="feature-icon">🧠</div>
-
-                <h3>Online Tests</h3>
-
-                <p>
-                    Practice MCQs and test your
-                    knowledge.
-                </p>
-
-                <a href="tests.html">
-                    Practice →
-                </a>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ================= LATEST YOUTUBE ================= -->
-
-<section class="section youtube-section">
-
-    <div class="container">
-
-        <div class="section-heading">
-
-            <span>YOUTUBE</span>
-
-            <h2>Latest Videos</h2>
-
-            <p>
-                Latest educational videos from
+                Latest educational content from
                 DRx Learning Hub.
             </p>
 
         </div>
 
 
-        <div id="youtube-videos" class="video-grid">
+        <div class="video-grid">
 
-            <div class="loading">
-                Loading latest videos...
+
+            <!-- VIDEO 1 -->
+
+            <div class="video-card">
+
+                <div class="video-thumbnail">
+
+                    <div class="play-button">
+                        ▶
+                    </div>
+
+                </div>
+
+                <div class="video-info">
+
+                    <h3>
+                        Latest Lecture
+                    </h3>
+
+                    <p>
+                        New educational video
+                        will appear here.
+                    </p>
+
+                    <a href="videos.html"
+                       class="btn btn-primary btn-small">
+
+                        Watch Now
+
+                    </a>
+
+                </div>
+
             </div>
 
-        </div>
+
+            <!-- VIDEO 2 -->
+
+            <div class="video-card">
+
+                <div class="video-thumbnail">
+
+                    <div class="play-button">
+                        ▶
+                    </div>
+
+                </div>
+
+                <div class="video-info">
+
+                    <h3>
+                        Exam Preparation
+                    </h3>
+
+                    <p>
+                        Important concepts and
+                        exam preparation.
+                    </p>
+
+                    <a href="videos.html"
+                       class="btn btn-primary btn-small">
+
+                        Watch Now
+
+                    </a>
+
+                </div>
+
+            </div>
 
 
-        <div class="center">
+            <!-- VIDEO 3 -->
 
-            <a href="video.html" class="btn primary-btn">
-                View All Videos
-            </a>
+            <div class="video-card">
+
+                <div class="video-thumbnail">
+
+                    <div class="play-button">
+                        ▶
+                    </div>
+
+                </div>
+
+                <div class="video-info">
+
+                    <h3>
+                        New Study Video
+                    </h3>
+
+                    <p>
+                        New study content will
+                        be added regularly.
+                    </p>
+
+                    <a href="videos.html"
+                       class="btn btn-primary btn-small">
+
+                        Watch Now
+
+                    </a>
+
+                </div>
+
+            </div>
+
 
         </div>
 
@@ -269,169 +783,256 @@
 </section>
 
 
-<!-- ================= ABOUT ================= -->
 
-<section class="section about-preview">
+<!-- =====================================================
+     STUDENT CTA
+===================================================== -->
 
-    <div class="container about-grid">
-
-        <div>
-
-            <span class="section-label">
-                ABOUT DRx LEARNING HUB
-            </span>
-
-            <h2>
-                Education Made Simple
-            </h2>
-
-            <p>
-                DRx Learning Hub is an educational platform
-                created by Deepak Jatav to provide simple,
-                useful and exam-oriented learning content.
-            </p>
-
-            <p>
-                The platform focuses on Pharmacy, Biology,
-                Science, MCQs, study notes and educational
-                videos.
-            </p>
-
-            <a href="about.html" class="btn primary-btn">
-                Know More
-            </a>
-
-        </div>
-
-
-        <div class="about-box">
-
-            <h3>
-                What You Can Learn
-            </h3>
-
-            <ul>
-
-                <li>✔ Pharmacy</li>
-                <li>✔ Pharmaceutics</li>
-                <li>✔ Pharmacology</li>
-                <li>✔ Biology</li>
-                <li>✔ General Science</li>
-                <li>✔ MCQs & Exams</li>
-                <li>✔ Study Skills</li>
-
-            </ul>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ================= CTA ================= -->
-
-<section class="cta">
+<section class="section section-light">
 
     <div class="container">
 
-        <h2>
-            Start Learning Today
-        </h2>
+        <div class="card text-center">
 
-        <p>
-            Subscribe to DRx Learning Hub and continue
-            your learning journey.
-        </p>
+            <h2>
+                🎓 Start Your Learning Journey
+            </h2>
 
-        <a
-            href="https://www.youtube.com/@drxdeepakjatav"
-            target="_blank"
-            class="btn youtube-btn">
+            <p>
+                Create your student account and
+                access your courses, notes, videos
+                and tests.
+            </p>
 
-            ▶ Subscribe on YouTube
+            <br>
 
-        </a>
+            <a href="signup.html"
+               class="btn btn-primary">
+
+                Create Student Account
+
+            </a>
+
+            <a href="login.html"
+               class="btn btn-secondary">
+
+                Student Login
+
+            </a>
+
+        </div>
 
     </div>
 
 </section>
 
 
-<!-- ================= FOOTER ================= -->
 
-<footer class="footer">
+<!-- =====================================================
+     ABOUT DRx LEARNING HUB
+===================================================== -->
 
-    <div class="container footer-grid">
+<section class="section"
+         id="about">
 
-        <div>
+    <div class="container">
 
-            <h3>
-                DRx Learning Hub
-            </h3>
+        <div class="section-header">
 
-            <p>
-                Learn • Understand • Grow
-            </p>
-
-            <p>
-                By Deepak Jatav
-            </p>
+            <h2>
+                ABOUT DRx LEARNING HUB
+            </h2>
 
         </div>
 
 
-        <div>
+        <div class="about-content">
 
-            <h4>Quick Links</h4>
+            <p>
 
-            <a href="index.html">Home</a>
-            <a href="courses.html">Courses</a>
-            <a href="video.html">Videos</a>
-            <a href="notes.html">Notes</a>
-            <a href="tests.html">Tests</a>
-            <a href="student-register.html">Student Registration</a>
+                <strong>DRx Learning Hub</strong>
+                is an educational platform designed
+                to provide students with organized
+                study materials, video lectures,
+                short notes and online tests in
+                one place.
 
-        </div>
+            </p>
 
 
-        <div>
+            <p>
 
-            <h4>Connect</h4>
+                Our goal is to make learning simple,
+                accessible and exam-oriented for
+                students.
 
-            <a href="https://www.youtube.com/@drxdeepakjatav"
-               target="_blank">
-                YouTube
-            </a>
+            </p>
 
-            <a href="https://www.instagram.com/drxlearninghub/"
-               target="_blank">
-                Instagram
-            </a>
 
-            <a href="https://x.com/drxdeepakjatav"
-               target="_blank">
-                X / Twitter
-            </a>
+            <p>
+
+                Students can explore courses,
+                watch educational videos, study
+                notes and practice online tests
+                through one platform.
+
+            </p>
 
         </div>
 
     </div>
 
+</section>
 
-    <div class="copyright">
 
-        © <span id="year"></span>
-        DRx Learning Hub | Deepak Jatav.
-        All Rights Reserved.
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="site-footer">
+
+    <div class="container">
+
+        <div class="footer-grid">
+
+
+            <!-- BRAND -->
+
+            <div class="footer-brand">
+
+                <h3>
+                    DRx Learning Hub
+                </h3>
+
+                <p>
+                    Learn • Practice • Prepare • Grow
+                </p>
+
+                <br>
+
+                <p>
+                    An educational platform for
+                    students and learners.
+                </p>
+
+            </div>
+
+
+            <!-- QUICK LINKS -->
+
+            <div class="footer-column">
+
+                <h4>
+                    Quick Links
+                </h4>
+
+                <a href="index.html">
+                    Home
+                </a>
+
+                <a href="courses.html">
+                    Courses
+                </a>
+
+                <a href="videos.html">
+                    Videos
+                </a>
+
+                <a href="notes.html">
+                    Notes
+                </a>
+
+            </div>
+
+
+            <!-- STUDENT -->
+
+            <div class="footer-column">
+
+                <h4>
+                    Student
+                </h4>
+
+                <a href="login.html">
+                    Login
+                </a>
+
+                <a href="signup.html">
+                    Signup
+                </a>
+
+                <a href="student-profile.html">
+                    Profile
+                </a>
+
+                <a href="my-courses.html">
+                    My Courses
+                </a>
+
+            </div>
+
+
+            <!-- MORE -->
+
+            <div class="footer-column">
+
+                <h4>
+                    More
+                </h4>
+
+                <a href="tests.html">
+                    Online Tests
+                </a>
+
+                <a href="#about">
+                    About
+                </a>
+
+                <a href="#">
+                    Contact
+                </a>
+
+                <a href="#">
+                    Privacy Policy
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- COPYRIGHT -->
+
+        <div class="footer-bottom">
+
+            © <span class="current-year">2026</span>
+            DRx Learning Hub.
+            All Rights Reserved.
+
+        </div>
 
     </div>
 
 </footer>
 
 
-<script src="main.js"></script>
-<script src=youtube.js"></script>
+
+<!-- =====================================================
+     MASTER JAVASCRIPT
+===================================================== -->
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script src="firebase-config.js"></script>
+
+<script src="script.js" defer></script>
 
 </body>
+
 </html>

@@ -1,80 +1,461 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Courses Management | DRx Admin</title>
-    <link rel="stylesheet" href="admin-courses.css">
+
+    <title>Manage Courses | DRx Learning Hub</title>
+
+    <link rel="stylesheet" href="../style.css">
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <script src="../firebase-config.js"></script>
+    <script src="../script.js" defer></script>
 </head>
+
 <body>
 
-<header class="header">
-    <h2>DRx Admin</h2>
-    <a href="admin.html">← Back to Dashboard</a>
+<header class="site-header">
+
+    <div class="container header-inner">
+
+        <a href="../index.html" class="logo">
+            DRx Learning Hub
+        </a>
+
+        <button class="menu-toggle" id="menuToggle">
+            ☰
+        </button>
+
+        <nav class="main-nav" id="mainNav">
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
+            <a href="courses.html">
+                Courses
+            </a>
+
+            <a href="../courses.html">
+                Website
+            </a>
+
+            <button id="logoutBtn" class="btn btn-danger">
+                Logout
+            </button>
+
+        </nav>
+
+    </div>
+
 </header>
+
+
+<main>
+
+<section class="page-header">
+
+    <div class="container">
+
+        <h1>Manage Courses</h1>
+
+        <p>
+            Add, edit and delete courses from Firebase.
+        </p>
+
+    </div>
+
+</section>
+
+
+<section class="section">
 
 <div class="container">
 
-    <div class="card">
-        <h1>📚 Courses Management</h1>
+    <!-- ================= ADD / EDIT FORM ================= -->
+
+    <div class="dashboard-card">
+
+        <h2 id="formTitle">
+            Add New Course
+        </h2>
 
         <form id="courseForm">
-            <div class="form-grid">
 
-                <div>
-                    <label for="courseName">Course Name</label>
-                    <input type="text" id="courseName" placeholder="Example: B.Pharm" required>
-                </div>
+            <input
+                type="hidden"
+                id="editingCourseId"
+            >
 
-                <div>
-                    <label for="category">Category</label>
-                    <select id="category" required>
-                        <option value="">Select Category</option>
-                        <option value="10TH">10TH</option>
-                        <option value="12TH">12TH</option>
-                        <option value="Pharmacy">Pharmacy</option>
-                        <option value="Paramedical">Paramedical</option>
-                        <option value="Nursing">Nursing</option>
-                    </select>
-                </div>
 
-                <div>
-                    <label for="semester">Semester</label>
-                    <input type="text" id="semester" placeholder="Example: Semester 1">
-                </div>
+            <div class="form-group">
 
-                <div>
-                    <label for="courseCode">Course Code</label>
-                    <input type="text" id="courseCode" placeholder="Example: BP101T">
-                </div>
+                <label for="courseId">
+                    Course ID
+                </label>
 
-                <div class="full">
-                    <label for="description">Description</label>
-                    <textarea id="description" placeholder="Course description..."></textarea>
-                </div>
+                <input
+                    type="text"
+                    id="courseId"
+                    placeholder="Example: BP102T"
+                    required
+                >
 
-                <div class="full">
-                    <label for="courseLink">Course Page / Link</label>
-                    <input type="text" id="courseLink" placeholder="Example: bpharm.html">
-                </div>
-
-                <div class="full">
-                    <button class="add-btn" type="submit" id="addCourseBtn">➕ Add Course</button>
-                </div>
+                <small>
+                    Unique ID जैसे BP102T, BP201T, MMLT01
+                </small>
 
             </div>
+
+
+            <div class="form-group">
+
+                <label for="courseTitle">
+                    Course Title
+                </label>
+
+                <input
+                    type="text"
+                    id="courseTitle"
+                    placeholder="Example: General Pharmacy"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="courseCategory">
+                    Category
+                </label>
+
+                <select
+                    id="courseCategory"
+                    required
+                >
+
+                    <option value="">
+                        Select Category
+                    </option>
+
+                    <option value="bpharm">
+                        B.Pharm
+                    </option>
+
+                    <option value="mpharm">
+                        M.Pharm
+                    </option>
+
+                    <option value="mmlt">
+                        MMLT
+                    </option>
+
+                    <option value="other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="courseDescription">
+                    Description
+                </label>
+
+                <textarea
+                    id="courseDescription"
+                    rows="5"
+                    placeholder="Write course description..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="courseImage">
+                    Course Image URL
+                </label>
+
+                <input
+                    type="url"
+                    id="courseImage"
+                    placeholder="https://example.com/image.jpg"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="courseLessons">
+                    Number of Lessons
+                </label>
+
+                <input
+                    type="number"
+                    id="courseLessons"
+                    min="0"
+                    value="0"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="courseStatus">
+                    Status
+                </label>
+
+                <select id="courseStatus">
+
+                    <option value="active">
+                        Active
+                    </option>
+
+                    <option value="inactive">
+                        Inactive
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="button-group">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                    id="saveCourseBtn"
+                >
+                    Add Course
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="cancelEditBtn"
+                    style="display:none;"
+                >
+                    Cancel Edit
+                </button>
+
+            </div>
+
         </form>
 
-        <div id="message"></div>
+
+        <div
+            id="courseMessage"
+            class="alert"
+            style="display:none; margin-top:20px;"
+        ></div>
+
     </div>
 
-    <div class="card">
-        <h1>📋 Existing Courses</h1>
-        <div id="courseList">Checking admin login...</div>
+
+    <!-- ================= COURSE LIST ================= -->
+
+    <div class="section-heading">
+
+        <h2>
+            All Courses
+        </h2>
+
+        <p>
+            Courses stored in Firebase Firestore.
+        </p>
+
+    </div>
+
+
+    <div id="loadingCourses" class="empty-state">
+
+        <h3>
+            Loading Courses...
+        </h3>
+
+        <p>
+            Please wait.
+        </p>
+
+    </div>
+
+
+    <div
+        id="courseList"
+        class="card-grid"
+    ></div>
+
+
+    <div
+        id="noCourses"
+        class="empty-state"
+        style="display:none;"
+    >
+
+        <h3>
+            No Courses Found
+        </h3>
+
+        <p>
+            Add your first course using the form above.
+        </p>
+
     </div>
 
 </div>
 
-<script type="module" src="admin-courses.js"></script>
-</body>
-</html>
+</section>
+
+</main>
+
+
+<footer class="site-footer">
+
+    <div class="container">
+
+        <p>
+            © <span class="current-year"></span>
+            DRx Learning Hub. All Rights Reserved.
+        </p>
+
+    </div>
+
+</footer>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const courseForm =
+        document.getElementById("courseForm");
+
+    const editingCourseId =
+        document.getElementById("editingCourseId");
+
+    const courseId =
+        document.getElementById("courseId");
+
+    const courseTitle =
+        document.getElementById("courseTitle");
+
+    const courseCategory =
+        document.getElementById("courseCategory");
+
+    const courseDescription =
+        document.getElementById("courseDescription");
+
+    const courseImage =
+        document.getElementById("courseImage");
+
+    const courseLessons =
+        document.getElementById("courseLessons");
+
+    const courseStatus =
+        document.getElementById("courseStatus");
+
+    const saveCourseBtn =
+        document.getElementById("saveCourseBtn");
+
+    const cancelEditBtn =
+        document.getElementById("cancelEditBtn");
+
+    const formTitle =
+        document.getElementById("formTitle");
+
+    const courseList =
+        document.getElementById("courseList");
+
+    const loadingCourses =
+        document.getElementById("loadingCourses");
+
+    const noCourses =
+        document.getElementById("noCourses");
+
+    const courseMessage =
+        document.getElementById("courseMessage");
+
+    const logoutBtn =
+        document.getElementById("logoutBtn");
+
+
+    let currentAdmin = null;
+
+
+    // ==========================================
+    // ADMIN AUTH CHECK
+    // ==========================================
+
+    auth.onAuthStateChanged(async function (user) {
+
+        if (!user) {
+
+            window.location.href =
+                "admin-login.html";
+
+            return;
+        }
+
+
+        try {
+
+            const adminDoc = await db
+                .collection("admins")
+                .doc(user.uid)
+                .get();
+
+
+            if (
+                !adminDoc.exists ||
+                adminDoc.data().role !== "admin"
+            ) {
+
+                await auth.signOut();
+
+                alert(
+                    "Access denied. Admin account required."
+                );
+
+                window.location.href =
+                    "admin-login.html";
+
+                return;
+            }
+
+
+            currentAdmin = user;
+
+            loadCourses();
+
+        } catch (error) {
+
+            console.error(error);
+
+            showMessage(
+                "Unable to verify admin account.",
+                "error"
+            );
+
+        }
+
+    });
+
+
+    // ==========================================
+    // ADD / UPDATE COURSE
+    //
+```

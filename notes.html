@@ -1,173 +1,987 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta charset="UTF-8">
+    <title>Study Notes | DRx Learning Hub</title>
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
 
-<title>Notes | DRx Learning Hub</title>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-<link rel="stylesheet"
-href="style.css">
+    <script src="firebase-config.js"></script>
+    <script src="script.js" defer></script>
 </head>
-
 
 <body>
 
+<!-- ================= HEADER ================= -->
 
-<header class="header">
+<header class="site-header">
 
-<div class="container navbar">
+    <div class="container nav-container">
 
-<a href="index.html" class="logo">
+        <a href="index.html" class="logo">
+            DRx Learning Hub
+        </a>
 
-<span class="logo-main">DRx</span>
+        <button
+            class="menu-toggle"
+            id="menuToggle">
+            ☰
+        </button>
 
-<span class="logo-text">
-Learning Hub
-</span>
+        <nav
+            class="main-nav"
+            id="mainNav">
 
-</a>
+            <a href="index.html">
+                Home
+            </a>
 
+            <a href="courses.html">
+                Courses
+            </a>
 
-<nav>
+            <a href="videos.html">
+                Videos
+            </a>
 
-<a href="index.html">Home</a>
+            <a href="notes.html"
+               class="active">
+                Notes
+            </a>
 
-<a href="courses.html">Courses</a>
+            <a href="tests.html">
+                Tests
+            </a>
 
-<a href="videos.html">Videos</a>
+            <a href="index.html#about">
+                About
+            </a>
 
-<a href="notes.html"
-class="active">
-Notes
-</a>
+            <a href="login.html"
+               class="nav-login">
+                Login
+            </a>
 
-<a href="tests.html">Tests</a>
+        </nav>
 
-<a href="about.html">About</a>
-
-<a href="contact.html">Contact</a>
-
-</nav>
-
-</div>
+    </div>
 
 </header>
 
 
-<section class="section">
+<!-- ================= PAGE HEADER ================= -->
 
-<div class="container">
+<section class="page-header">
 
+    <div class="container">
 
-<div class="section-heading">
+        <h1>
+            Study Notes
+        </h1>
 
-<span>STUDY MATERIAL</span>
+        <p>
+            Short Notes • Unit Notes • PDF Study Material
+        </p>
 
-<h2>
-Study Notes
-</h2>
-
-<p>
-Important notes and learning resources.
-</p>
-
-</div>
-
-
-<div class="feature-grid">
-
-
-<div class="feature-card">
-
-<div class="feature-icon">
-💊
-</div>
-
-<h3>
-Pharmaceutics Notes
-</h3>
-
-<p>
-Important concepts and revision notes.
-</p>
-
-<a href="#">
-Coming Soon →
-</a>
-
-</div>
-
-
-<div class="feature-card">
-
-<div class="feature-icon">
-🧬
-</div>
-
-<h3>
-Biology Notes
-</h3>
-
-<p>
-Diagrams, concepts and quick revision.
-</p>
-
-<a href="#">
-Coming Soon →
-</a>
-
-</div>
-
-
-<div class="feature-card">
-
-<div class="feature-icon">
-📝
-</div>
-
-<h3>
-Exam Notes
-</h3>
-
-<p>
-Important questions and exam preparation.
-</p>
-
-<a href="#">
-Coming Soon →
-</a>
-
-</div>
-
-
-</div>
-
-
-</div>
+    </div>
 
 </section>
 
 
-<footer class="footer">
+<!-- ================= NOTES ================= -->
 
-<div class="copyright">
+<section class="section">
 
-© <span id="year"></span>
-DRx Learning Hub | Deepak Jatav
+    <div class="container">
 
-</div>
+        <!-- Search -->
+
+        <div class="search-box">
+
+            <input
+                type="text"
+                id="noteSearch"
+                placeholder="Search notes, course or unit..."
+            >
+
+        </div>
+
+
+        <!-- Filters -->
+
+        <div class="course-filter">
+
+            <button
+                class="filter-btn active"
+                data-filter="all">
+
+                All
+
+            </button>
+
+            <button
+                class="filter-btn"
+                data-filter="short-note">
+
+                Short Notes
+
+            </button>
+
+            <button
+                class="filter-btn"
+                data-filter="unit-note">
+
+                Unit Notes
+
+            </button>
+
+            <button
+                class="filter-btn"
+                data-filter="pdf">
+
+                PDF
+
+            </button>
+
+        </div>
+
+
+        <!-- Loading -->
+
+        <div
+            id="notesLoading"
+            class="empty-state">
+
+            <div class="loading-spinner"></div>
+
+            <p>
+                Loading study notes...
+            </p>
+
+        </div>
+
+
+        <!-- Notes Container -->
+
+        <div
+            id="notesContainer"
+            class="notes-grid"
+            style="display:none;">
+        </div>
+
+
+        <!-- No Notes -->
+
+        <div
+            id="noNotes"
+            class="empty-state"
+            style="display:none;">
+
+            <h3>
+                No Notes Available
+            </h3>
+
+            <p>
+                Study material will appear here
+                when admin adds it.
+            </p>
+
+        </div>
+
+
+        <!-- No Search -->
+
+        <div
+            id="noSearchResults"
+            class="empty-state"
+            style="display:none;">
+
+            <h3>
+                No Matching Notes
+            </h3>
+
+            <p>
+                Try another keyword, course or unit.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= STUDENT CTA ================= -->
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="cta-box">
+
+            <h2>
+                Start Learning
+            </h2>
+
+            <p>
+                Create your student account and
+                keep your learning material organized.
+            </p>
+
+            <a
+                href="signup.html"
+                class="btn btn-primary">
+
+                Create Student Account
+
+            </a>
+
+            <a
+                href="login.html"
+                class="btn btn-secondary">
+
+                Student Login
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="site-footer">
+
+    <div class="container">
+
+        <div class="footer-content">
+
+            <div>
+
+                <h3>
+                    DRx Learning Hub
+                </h3>
+
+                <p>
+                    Learn • Practice • Prepare • Grow
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <h4>
+                    Quick Links
+                </h4>
+
+                <a href="index.html">
+                    Home
+                </a>
+
+                <a href="courses.html">
+                    Courses
+                </a>
+
+                <a href="videos.html">
+                    Videos
+                </a>
+
+                <a href="notes.html">
+                    Notes
+                </a>
+
+                <a href="tests.html">
+                    Tests
+                </a>
+
+            </div>
+
+
+            <div>
+
+                <h4>
+                    Student
+                </h4>
+
+                <a href="login.html">
+                    Login
+                </a>
+
+                <a href="signup.html">
+                    Signup
+                </a>
+
+                <a href="student-profile.html">
+                    Student Profile
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <p>
+                ©
+                <span id="currentYear"></span>
+                DRx Learning Hub.
+                All Rights Reserved.
+            </p>
+
+        </div>
+
+    </div>
 
 </footer>
 
 
-<script src="main.js"></script>
+<!-- ================= FIREBASE NOTES LOGIC ================= -->
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const selectedCourseId = urlParams.get("course");
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const loading =
+            document.getElementById(
+                "notesLoading"
+            );
+
+        const container =
+            document.getElementById(
+                "notesContainer"
+            );
+
+        const noNotes =
+            document.getElementById(
+                "noNotes"
+            );
+
+        const noSearchResults =
+            document.getElementById(
+                "noSearchResults"
+            );
+
+        const search =
+            document.getElementById(
+                "noteSearch"
+            );
+
+        const filterButtons =
+            document.querySelectorAll(
+                ".filter-btn"
+            );
+
+
+        let allNotes = [];
+
+        let selectedFilter = "all";
+
+
+        /* ================= ESCAPE HTML ================= */
+
+        function escapeHTML(value) {
+
+            if (
+                value === null ||
+                value === undefined
+            ) {
+
+                return "";
+
+            }
+
+            return String(value)
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
+
+        }
+
+
+        /* ================= LOAD NOTES ================= */
+
+        async function loadNotes() {
+
+            try {
+
+                loading.style.display =
+                    "block";
+
+                container.style.display =
+                    "none";
+
+                noNotes.style.display =
+                    "none";
+
+
+                let noteQuery = db
+    .collection("notes")
+    .where("status", "==", "active");
+
+if (selectedCourseId) {
+    noteQuery = noteQuery.where(
+        "courseId",
+        "==",
+        selectedCourseId
+    );
+}
+
+const snapshot = await noteQuery.get();
+
+
+                allNotes = [];
+
+
+                snapshot.forEach(
+                    function (doc) {
+
+                        allNotes.push({
+
+                            id: doc.id,
+
+                            ...doc.data()
+
+                        });
+
+                    }
+                );
+
+
+                /* Newest first */
+
+                allNotes.sort(
+                    function (a, b) {
+
+                        const aTime =
+                            a.createdAt &&
+                            a.createdAt.toMillis
+                                ? a.createdAt.toMillis()
+                                : 0;
+
+                        const bTime =
+                            b.createdAt &&
+                            b.createdAt.toMillis
+                                ? b.createdAt.toMillis()
+                                : 0;
+
+
+                        return bTime - aTime;
+
+                    }
+                );
+
+
+                loading.style.display =
+                    "none";
+
+
+                if (
+                    allNotes.length === 0
+                ) {
+
+                    noNotes.style.display =
+                        "block";
+
+                    return;
+
+                }
+
+
+                renderNotes();
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Notes loading error:",
+                    error
+                );
+
+
+                loading.style.display =
+                    "none";
+
+
+                container.style.display =
+                    "block";
+
+
+                container.innerHTML = `
+
+                    <div class="alert alert-error">
+
+                        Unable to load study notes.
+
+                        <br><br>
+
+                        Please try again later.
+
+                    </div>
+
+                `;
+
+            }
+
+        }
+
+
+        /* ================= FILTER NOTES ================= */
+
+        function getFilteredNotes() {
+
+            const searchText =
+                search.value
+                    .trim()
+                    .toLowerCase();
+
+
+            return allNotes.filter(
+                function (note) {
+
+                    const type =
+                        String(
+                            note.noteType ||
+                            ""
+                        )
+                        .toLowerCase();
+
+
+                    const filterMatch =
+                        selectedFilter ===
+                            "all"
+                        ||
+                        type ===
+                            selectedFilter;
+
+
+                    const searchMatch =
+
+                        !searchText
+
+                        ||
+
+                        String(
+                            note.title ||
+                            ""
+                        )
+                        .toLowerCase()
+                        .includes(
+                            searchText
+                        )
+
+                        ||
+
+                        String(
+                            note.courseId ||
+                            ""
+                        )
+                        .toLowerCase()
+                        .includes(
+                            searchText
+                        )
+
+                        ||
+
+                        String(
+                            note.unit ||
+                            ""
+                        )
+                        .toLowerCase()
+                        .includes(
+                            searchText
+                        )
+
+                        ||
+
+                        String(
+                            note.description ||
+                            ""
+                        )
+                        .toLowerCase()
+                        .includes(
+                            searchText
+                        );
+
+
+                    return (
+                        filterMatch &&
+                        searchMatch
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* ================= CREATE CARD ================= */
+
+        function createNoteCard(note) {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "note-card";
+
+
+            const title =
+                escapeHTML(
+                    note.title ||
+                    "Untitled Note"
+                );
+
+
+            const description =
+                escapeHTML(
+                    note.description ||
+                    ""
+                );
+
+
+            const courseId =
+                escapeHTML(
+                    note.courseId ||
+                    "General"
+                );
+
+
+            const unit =
+                escapeHTML(
+                    note.unit ||
+                    "All Units"
+                );
+
+
+            const noteType =
+                String(
+                    note.noteType ||
+                    "note"
+                )
+                .toLowerCase();
+
+
+            let typeLabel =
+                "Study Note";
+
+
+            if (
+                noteType ===
+                "short-note"
+            ) {
+
+                typeLabel =
+                    "Short Note";
+
+            }
+
+            else if (
+                noteType ===
+                "unit-note"
+            ) {
+
+                typeLabel =
+                    "Unit Note";
+
+            }
+
+            else if (
+                noteType ===
+                "pdf"
+            ) {
+
+                typeLabel =
+                    "PDF";
+
+            }
+
+
+            const pdfUrl =
+                note.pdfUrl || "";
+
+
+            const thumbnail =
+                note.thumbnail || "";
+
+
+            let imageHTML = `
+
+                <div class="note-image-placeholder">
+
+                    📚
+
+                </div>
+
+            `;
+
+
+            if (thumbnail) {
+
+                imageHTML = `
+
+                    <img
+                        src="${escapeHTML(thumbnail)}"
+                        alt="${title}"
+                        loading="lazy"
+                        onerror="this.style.display='none';"
+                    >
+
+                `;
+
+            }
+
+
+            card.innerHTML = `
+
+                <div class="note-card-image">
+
+                    ${imageHTML}
+
+                </div>
+
+
+                <div class="note-card-content">
+
+                    <span class="note-type">
+
+                        ${escapeHTML(
+                            typeLabel
+                        )}
+
+                    </span>
+
+
+                    <h3>
+
+                        ${title}
+
+                    </h3>
+
+
+                    <div class="note-meta">
+
+                        <span>
+                            📘 ${courseId}
+                        </span>
+
+                        <span>
+                            📖 ${unit}
+                        </span>
+
+                    </div>
+
+
+                    ${
+                        description
+                            ? `
+                                <p>
+                                    ${description}
+                                </p>
+                              `
+                            : ""
+                    }
+
+
+                    ${
+                        pdfUrl
+                            ? `
+                                <a
+                                    href="${escapeHTML(pdfUrl)}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="btn btn-primary">
+
+                                    ${
+                                        noteType === "pdf"
+                                            ? "Open PDF"
+                                            : "View Note"
+                                    }
+
+                                </a>
+                              `
+                            : ""
+                    }
+
+                </div>
+
+            `;
+
+
+            return card;
+
+        }
+
+
+        /* ================= RENDER ================= */
+
+        function renderNotes() {
+
+            const filtered =
+                getFilteredNotes();
+
+
+            container.innerHTML =
+                "";
+
+
+            noSearchResults.style.display =
+                "none";
+
+
+            if (
+                filtered.length === 0
+            ) {
+
+                container.style.display =
+                    "none";
+
+                noSearchResults.style.display =
+                    "block";
+
+                return;
+
+            }
+
+
+            container.style.display =
+                "grid";
+
+
+            filtered.forEach(
+                function (note) {
+
+                    container.appendChild(
+                        createNoteCard(
+                            note
+                        )
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* ================= SEARCH ================= */
+
+        search.addEventListener(
+            "input",
+            renderNotes
+        );
+
+
+        /* ================= FILTER BUTTONS ================= */
+
+        filterButtons.forEach(
+            function (button) {
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        filterButtons.forEach(
+                            function (btn) {
+
+                                btn.classList.remove(
+                                    "active"
+                                );
+
+                            }
+                        );
+
+
+                        button.classList.add(
+                            "active"
+                        );
+
+
+                        selectedFilter =
+                            button.dataset.filter;
+
+
+                        renderNotes();
+
+                    }
+                );
+
+            }
+        );
+
+
+        /* ================= START ================= */
+
+        if (
+            typeof db !==
+            "undefined"
+        ) {
+
+            loadNotes();
+
+        }
+
+        else {
+
+            loading.style.display =
+                "none";
+
+
+            noNotes.style.display =
+                "block";
+
+
+            noNotes.innerHTML = `
+
+                <h3>
+                    Firebase Connection Error
+                </h3>
+
+                <p>
+                    Please check firebase-config.js
+                </p>
+
+            `;
+
+        }
+
+    });
+
+</script>
 
 </body>
-
 </html>

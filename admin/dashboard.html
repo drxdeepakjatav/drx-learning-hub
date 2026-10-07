@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | DRx Learning Hub</title>
+
+    <link rel="stylesheet" href="../style.css">
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <script src="../firebase-config.js"></script>
+    <script src="../script.js" defer></script>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="site-header">
+
+    <div class="container header-inner">
+
+        <a href="../index.html" class="logo">
+            DRx Learning Hub
+        </a>
+
+        <button class="menu-toggle" id="menuToggle">
+            ☰
+        </button>
+
+        <nav class="main-nav" id="mainNav">
+
+            <a href="../index.html">Home</a>
+            <a href="../courses.html">Courses</a>
+            <a href="../videos.html">Videos</a>
+            <a href="../notes.html">Notes</a>
+            <a href="../tests.html">Tests</a>
+
+            <button id="logoutBtn" class="btn btn-danger">
+                Logout
+            </button>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<!-- ================= ADMIN DASHBOARD ================= -->
+<main>
+
+<section class="page-header">
+
+    <div class="container">
+
+        <h1>Admin Dashboard</h1>
+
+        <p>
+            Manage DRx Learning Hub from one place.
+        </p>
+
+    </div>
+
+</section>
+
+
+<section class="section">
+
+<div class="container">
+
+    <!-- ADMIN INFO -->
+
+    <div class="dashboard-card">
+
+        <h2>Welcome, Admin 👋</h2>
+
+        <p>
+            <strong>Email:</strong>
+            <span id="adminEmail">Loading...</span>
+        </p>
+
+        <p>
+            <strong>Role:</strong>
+            <span id="adminRole">Checking...</span>
+        </p>
+
+    </div>
+
+
+    <!-- ================= STATS ================= -->
+
+    <div class="stats-grid">
+
+        <!-- COURSES -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📚
+            </div>
+
+            <div>
+
+                <h3 id="courseCount">
+                    0
+                </h3>
+
+                <p>
+                    Courses
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- VIDEOS -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🎥
+            </div>
+
+            <div>
+
+                <h3 id="videoCount">
+                    0
+                </h3>
+
+                <p>
+                    Videos
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- NOTES -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📖
+            </div>
+
+            <div>
+
+                <h3 id="noteCount">
+                    0
+                </h3>
+
+                <p>
+                    Study Notes
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- TESTS -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📝
+            </div>
+
+            <div>
+
+                <h3 id="testCount">
+                    0
+                </h3>
+
+                <p>
+                    Online Tests
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- STUDENTS -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                👨‍🎓
+            </div>
+
+            <div>
+
+                <h3 id="studentCount">
+                    0
+                </h3>
+
+                <p>
+                    Students
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- RESULTS -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🏆
+            </div>
+
+            <div>
+
+                <h3 id="resultCount">
+                    0
+                </h3>
+
+                <p>
+                    Results
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= MANAGEMENT ================= -->
+
+    <div class="section-heading">
+
+        <h2>
+            Manage Website
+        </h2>
+
+        <p>
+            Add, edit and manage your learning content.
+        </p>
+
+    </div>
+
+
+    <div class="card-grid">
+
+
+        <!-- COURSES -->
+
+        <div class="card">
+
+            <h3>
+                📚 Courses
+            </h3>
+
+            <p>
+                Add and manage B.Pharm, M.Pharm, MMLT and other courses.
+            </p>
+
+            <a href="courses.html" class="btn btn-primary">
+                Manage Courses
+            </a>
+
+        </div>
+
+
+        <!-- VIDEOS -->
+
+        <div class="card">
+
+            <h3>
+                🎥 Video Lectures
+            </h3>
+
+            <p>
+                Manage YouTube videos and playlists.
+            </p>
+
+            <button class="btn btn-secondary" disabled>
+                Coming Soon
+            </button>
+
+        </div>
+
+
+        <!-- NOTES -->
+
+        <div class="card">
+
+            <h3>
+                📖 Study Notes
+            </h3>
+
+            <p>
+                Add short notes, unit-wise notes and PDF study material.
+            </p>
+
+            <button class="btn btn-secondary" disabled>
+                Coming Soon
+            </button>
+
+        </div>
+
+
+        <!-- TESTS -->
+
+        <div class="card">
+
+            <h3>
+                📝 Online Tests
+            </h3>
+
+            <p>
+                Create MCQ tests and manage questions.
+            </p>
+
+             <a href="tests.html" class="btn btn-primary">
+             Manage Tests
+               </a>
+        </div>
+
+        </div>
+
+
+        <!-- STUDENTS -->
+
+        <div class="card">
+
+            <h3>
+                👨‍🎓 Students
+            </h3>
+
+            <p>
+                View registered students and manage enrollment.
+            </p>
+
+           <a href="students.html" class="btn btn-primary">
+               Manage Students
+           </a>
+
+        </div>
+
+
+        <!-- RESULTS -->
+
+        <div class="card">
+
+            <h3>
+                🏆 Results
+            </h3>
+
+            <p>
+                View student test results and scores.
+            </p>
+
+             <a href="results.html" class="btn btn-primary">
+             View Results
+             </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= QUICK ACTION ================= -->
+
+    <div class="dashboard-card">
+
+        <div class="section-heading">
+
+            <h2>
+                Quick Actions
+            </h2>
+
+        </div>
+
+        <div class="button-group">
+
+            <a href="courses.html" class="btn btn-primary">
+                + Add Course
+            </a>
+
+            <a href="../courses.html" class="btn btn-secondary">
+                View Website
+            </a>
+
+            <a href="../index.html" class="btn btn-secondary">
+                Home
+            </a>
+
+           <a href="enrollments.html" class="btn btn-primary">
+             Manage Enrollments
+           </a>
+        </div>
+
+    </div>
+
+
+    <!-- MESSAGE -->
+
+    <div id="adminMessage" class="alert" style="display:none;"></div>
+
+
+</div>
+
+</section>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="site-footer">
+
+    <div class="container">
+
+        <p>
+            © <span class="current-year"></span>
+            DRx Learning Hub. All Rights Reserved.
+        </p>
+
+    </div>
+
+</footer>
+
+
+<!-- ================= FIREBASE ADMIN SCRIPT ================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const adminEmail = document.getElementById("adminEmail");
+    const adminRole = document.getElementById("adminRole");
+
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const courseCount = document.getElementById("courseCount");
+    const videoCount = document.getElementById("videoCount");
+    const noteCount = document.getElementById("noteCount");
+    const testCount = document.getElementById("testCount");
+    const studentCount = document.getElementById("studentCount");
+    const resultCount = document.getElementById("resultCount");
+
+
+    // ================= AUTH CHECK =================
+
+    auth.onAuthStateChanged(async function (user) {
+
+        if (!user) {
+
+            window.location.href = "admin-login.html";
+
+            return;
+        }
+
+
+        try {
+
+            // Check admin document
+
+            const adminDoc = await db
+                .collection("admins")
+                .doc(user.uid)
+                .get();
+
+
+            if (!adminDoc.exists ||
+                adminDoc.data().role !== "admin") {
+
+                await auth.signOut();
+
+                alert("Access denied. Admin account required.");
+
+                window.location.href = "admin-login.html";
+
+                return;
+            }
+
+
+            // ================= ADMIN INFO =================
+
+            adminEmail.textContent = user.email || "Admin";
+
+            adminRole.textContent = "Administrator";
+
+
+            // ================= LOAD COUNTS =================
+
+            loadCollectionCount(
+                "courses",
+                courseCount
+            );
+
+            loadCollectionCount(
+                "videos",
+                videoCount
+            );
+
+            loadCollectionCount(
+                "notes",
+                noteCount
+            );
+
+            loadCollectionCount(
+                "tests",
+                testCount
+            );
+
+            loadCollectionCount(
+                "students",
+                studentCount
+            );
+
+            loadCollectionCount(
+                "results",
+                resultCount
+            );
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Unable to verify admin account."
+            );
+
+        }
+
+    });
+
+
+    // ================= COLLECTION COUNT =================
+
+    async function loadCollectionCount(
+        collectionName,
+        element
+    ) {
+
+        try {
+
+            const snapshot = await db
+                .collection(collectionName)
+                .get();
+
+            element.textContent =
+                snapshot.size;
+
+        } catch (error) {
+
+            console.error(
+                "Count Error:",
+                collectionName,
+                error
+            );
+
+            element.textContent = "0";
+        }
+
+    }
+
+
+    // ================= LOGOUT =================
+
+    logoutBtn.addEventListener(
+        "click",
+        async function () {
+
+            try {
+
+                await auth.signOut();
+
+                window.location.href =
+                    "admin-login.html";
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert(
+                    "Logout failed."
+                );
+
+            }
+
+        }
+    );
+
+});
+
+</script>
+
+</body>
+</html>

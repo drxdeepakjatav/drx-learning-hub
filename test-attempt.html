@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Test Attempt | DRx Learning Hub</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <script src="firebase-config.js"></script>
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+<header class="site-header">
+
+    <div class="container nav-container">
+
+        <a href="index.html" class="logo">
+            DRx Learning Hub
+        </a>
+
+        <button class="menu-toggle" id="menuToggle">
+            ☰
+        </button>
+
+        <nav class="main-nav" id="mainNav">
+
+            <a href="index.html">Home</a>
+            <a href="courses.html">Courses</a>
+            <a href="videos.html">Videos</a>
+            <a href="notes.html">Notes</a>
+            <a href="tests.html" class="active">Tests</a>
+            <a href="student-profile.html">Profile</a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<section class="page-header">
+
+    <div class="container">
+
+        <h1 id="testTitle">
+            Online Test
+        </h1>
+
+        <p id="testDescription">
+            Loading test...
+        </p>
+
+    </div>
+
+</section>
+
+
+<section class="section">
+
+    <div class="container">
+
+
+        <!-- ================= TEST HEADER ================= -->
+
+        <div
+            id="testHeader"
+            class="admin-card"
+            style="display:none;">
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <h3 id="questionCount">
+                        0
+                    </h3>
+
+                    <p>
+                        Questions
+                    </p>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <h3 id="totalMarks">
+                        0
+                    </h3>
+
+                    <p>
+                        Total Marks
+                    </p>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <h3 id="timer">
+                        00:00
+                    </h3>
+
+                    <p>
+                        Time Left
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= LOADING ================= -->
+
+        <div
+            id="loading"
+            class="empty-state">
+
+            <div class="loading-spinner"></div>
+
+            <p>
+                Loading test...
+            </p>
+
+        </div>
+
+
+        <!-- ================= ERROR ================= -->
+
+        <div
+            id="errorMessage"
+            class="alert alert-error"
+            style="display:none;">
+        </div>
+
+
+        <!-- ================= LOGIN MESSAGE ================= -->
+
+        <div
+            id="loginMessage"
+            class="empty-state"
+            style="display:none;">
+
+            <h3>
+                Login Required
+            </h3>
+
+            <p>
+                Please login to attempt this test.
+            </p>
+
+            <a
+                href="login.html"
+                class="btn btn-primary">
+
+                Login
+
+            </a>
+
+        </div>
+
+
+        <!-- ================= TEST FORM ================= -->
+
+        <form
+            id="testForm"
+            style="display:none;">
+
+            <div id="questionsContainer"></div>
+
+
+            <div
+                class="admin-card"
+                style="margin-top:25px;">
+
+                <h2>
+                    Submit Your Test
+                </h2>
+
+                <p>
+                    Make sure you have answered all
+                    questions before submitting.
+                </p>
+
+
+                <button
+                    type="submit"
+                    id="submitBtn"
+                    class="btn btn-primary">
+
+                    Submit Test
+
+                </button>
+
+            </div>
+
+        </form>
+
+
+        <!-- ================= RESULT ================= -->
+
+        <div
+            id="resultContainer"
+            class="admin-card"
+            style="display:none;">
+
+            <h2>
+                Test Result
+            </h2>
+
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <h3 id="resultScore">
+                        0
+                    </h3>
+
+                    <p>
+                        Score
+                    </p>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <h3 id="resultTotal">
+                        0
+                    </h3>
+
+                    <p>
+                        Total Marks
+                    </p>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <h3 id="resultPercentage">
+                        0%
+                    </h3>
+
+                    <p>
+                        Percentage
+                    </p>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <h3 id="resultCorrect">
+                        0
+                    </h3>
+
+                    <p>
+                        Correct
+                    </p>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <h3 id="resultWrong">
+                        0
+                    </h3>
+
+                    <p>
+                        Wrong
+                    </p>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <h3 id="resultAttempted">
+                        0
+                    </h3>
+
+                    <p>
+                        Attempted
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                style="margin-top:25px;">
+
+                <a
+                    href="tests.html"
+                    class="btn btn-primary">
+
+                    Back to Tests
+
+                </a>
+
+                <a
+                    href="student-profile.html"
+                    class="btn btn-secondary">
+
+                    My Profile
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer class="site-footer">
+
+    <div class="container">
+
+        <div class="footer-bottom">
+
+            <p>
+                ©
+                <span id="currentYear"></span>
+                DRx Learning Hub.
+                All Rights Reserved.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        /* ================= ELEMENTS ================= */
+
+        const testTitle =
+            document.getElementById(
+                "testTitle"
+            );
+
+        const testDescription =
+            document.getElementById(
+                "testDescription"
+            );
+
+        const loading =
+            document.getElementById(
+                "loading"
+            );
+
+        const errorMessage =
+            document.getElementById(
+                "errorMessage"
+            );
+
+        const loginMessage =
+            document.getElementById(
+                "loginMessage"
+            );
+
+        const testHeader =
+            document.getElementById(
+                "testHeader"
+            );
+
+        const testForm =
+            document.getElementById(
+                "testForm"
+            );
+
+        const questionsContainer =
+            document.getElementById(
+                "questionsContainer"
+            );
+
+        const timerElement =
+            document.getElementById(
+                "timer"
+            );
+
+        const submitBtn =
+            document.getElementById(
+                "submitBtn"
+            );
+
+        const resultContainer =
+            document.getElementById(
+                "resultContainer"
+            );
+
+
+        let currentTest = null;
+
+        let currentUser = null;
+
+        let timerInterval = null;
+
+        let remainingSeconds = 0;
+
+        let submitted = false;
+
+
+        /* ================= GET TEST ID ================= */
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+        const testId =
+            params.get("id");
+
+
+        if (!testId) {
+
+            loading.style.display =
+                "none";
+
+            errorMessage.textContent =
+                "Test ID is missing.";
+
+            errorMessage.style.display =
+                "block";
+
+            return;
+
+        }
+
+
+        /* ================= ESCAPE HTML ================= */
+
+        function escapeHTML(value) {
+
+            if (
+                value === null ||
+                value === undefined
+            ) {
+
+                return "";
+
+            }
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+        }
+
+
+        /* ================= AUTH ================= */
+
+        auth.onAuthStateChanged(
+            async function (user) {
+
+                if (!user) {
+
+                    loading.style.display =
+                        "none";
+
+                    loginMessage.style.display =
+                        "block";
+
+                    return;
+
+                }
+
+
+                currentUser = user;
+
+                await loadTest();
+
+            }
+        );
+
+
+        /* ================= LOAD TEST ================= */
+
+        async function loadTest() {
+
+            try {
+
+                const doc =
+                    await db
+                        .collection("tests")
+                        .doc(testId)
+                        .get();
+
+
+                loading.style.display =
+                    "none";
+
+
+                if (!doc.exists) {
+
+                    errorMessage.textContent =
+                        "Test not found.";
+
+                    errorMessage.style.display =
+                        "block";
+
+                    return;
+
+                }
+
+
+                currentTest = {
+
+                    id: doc.id,
+
+                    ...doc.data()
+
+                };
+
+
+                if (
+                    currentTest.status !==
+                    "active"
+                ) {
+
+                    errorMessage.textContent =
+                        "This test is not currently available.";
+
+                    errorMessage.style.display =
+                        "block";
+
+                    return;
+
+                }
+
+
+                const questions =
+                    Array.isArray(
+                        currentTest.questions
+                    )
+                        ? currentTest.questions
+                        : [];
+
+
+                if (
+                    questions.length === 0
+                ) {
+
+                    errorMessage.textContent =
+                        "This test has no questions.";
+
+                    errorMessage.style.display =
+                        "block";
+
+                    return;
+
+                }
+
+
+                testTitle.textContent =
+                    currentTest.title ||
+                    "Online Test";
+
+
+                testDescription.textContent =
+                    currentTest.description ||
+                    "Attempt the test below.";
+
+
+                document.getElementById(
+                    "questionCount"
+                ).textContent =
+                    questions.length;
+
+
+                document.getElementById(
+                    "totalMarks"
+                ).textContent =
+                    Number(
+                        currentTest.totalMarks
+                    ) ||
+                    questions.reduce(
+                        function (
+                            total,
+                            question
+                        ) {
+
+                            return (
+                                total +
+                                (
+                                    Number(
+                                        question.marks
+                                    ) || 1
+                                )
+                            );
+
+                        },
+                        0
+                    );
+
+
+                renderQuestions(
+                    questions
+                );
+
+
+                testHeader.style.display =
+                    "block";
+
+                testForm.style.display =
+                    "block";
+
+
+                startTimer();
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                loading.style.display =
+                    "none";
+
+                errorMessage.textContent =
+                    "Unable to load test: " +
+                    error.message;
+
+                errorMessage.style.display =
+                    "block";
+
+            }
+
+        }
+
+
+        /* ================= RENDER QUESTIONS ================= */
+
+        function renderQuestions(
+            questions
+        ) {
+
+            questionsContainer.innerHTML =
+                "";
+
+
+            questions.forEach(
+                function (
+                    question,
+                    index
+                ) {
+
+                    const card =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    card.className =
+                        "admin-card";
+
+
+                    const marks =
+                        Number(
+                            question.marks
+                        ) || 1;
+
+
+                    const options =
+                        question.options ||
+                        {};
+
+
+                    card.innerHTML = `
+
+                        <h3>
+                            Q${index + 1}.
+                            ${escapeHTML(
+                                question.question
+                            )}
+                        </h3>
+
+                        <p>
+                            <strong>
+                                Marks:
+                            </strong>
+                            ${marks}
+                        </p>
+
+
+                        <div
+                            class="test-options">
+
+                            <label>
+
+                                <input
+                                    type="radio"
+                                    name="question-${index}"
+                                    value="A">
+
+                                A.
+                                ${escapeHTML(
+                                    options.A || ""
+                                )}
+
+                            </label>
+
+
+                            <label>
+
+                                <input
+                                    type="radio"
+                                    name="question-${index}"
+                                    value="B">
+
+                                B.
+                                ${escapeHTML(
+                                    options.B || ""
+                                )}
+
+                            </label>
+
+
+                            <label>
+
+                                <input
+                                    type="radio"
+                                    name="question-${index}"
+                                    value="C">
+
+                                C.
+                                ${escapeHTML(
+                                    options.C || ""
+                                )}
+
+                            </label>
+
+
+                            <label>
+
+                                <input
+                                    type="radio"
+                                    name="question-${index}"
+                                    value="D">
+
+                                D.
+                                ${escapeHTML(
+                                    options.D || ""
+                                )}
+
+                            </label>
+
+                        </div>
+
+                    `;
+
+
+                    questionsContainer.appendChild(
+                        card
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* ================= TIMER ================= */
+
+        function startTimer() {
+
+            const duration =
+                Number(
+                    currentTest.duration
+                ) || 0;
+
+
+            if (duration <= 0) {
+
+                timerElement.textContent =
+                    "No Limit";
+
+                return;
+
+            }
+
+
+            remainingSeconds =
+                duration * 60;
+
+
+            updateTimer();
+
+
+            timerInterval =
+                setInterval(
+                    function () {
+
+                        remainingSeconds--;
+
+
+                        updateTimer();
+
+
+                        if (
+                            remainingSeconds <= 0
+                        ) {
+
+                            clearInterval(
+                                timerInterval
+                            );
+
+
+                            alert(
+                                "Time is over. Your test will be submitted."
+                            );
+
+
+                            submitTest(
+                                true
+                            );
+
+                        }
+
+                    },
+                    1000
+                );
+
+        }
+
+
+        function updateTimer() {
+
+            const minutes =
+                Math.floor(
+                    remainingSeconds / 60
+                );
+
+
+            const seconds =
+                remainingSeconds % 60;
+
+
+            timerElement.textContent =
+                String(minutes)
+                    .padStart(2, "0")
+                +
+                ":"
+                +
+                String(seconds)
+                    .padStart(2, "0");
+
+        }
+
+
+        /* ================= SUBMIT ================= */
+
+        testForm.addEventListener(
+            "submit",
+            function (event) {
+
+                event.preventDefault();
+
+                submitTest(false);
+
+            }
+        );
+
+
+        async function submitTest(
+            automaticSubmit
+        ) {
+
+            if (submitted) {
+
+                return;
+
+            }
+
+
+            if (!automaticSubmit) {
+
+                const confirmed =
+                    confirm(
+                        "Are you sure you want to submit this test?"
+                    );
+
+
+                if (!confirmed) {
+
+                    return;
+
+                }
+
+            }
+
+
+            submitted = true;
+
+            submitBtn.disabled =
+                true;
+
+            submitBtn.textContent =
+                "Submitting...";
+
+
+            if (timerInterval) {
+
+                clearInterval(
+                    timerInterval
+                );
+
+            }
+
+
+            try {
+
+                const questions =
+                    currentTest.questions ||
+                    [];
+
+
+                let score = 0;
+
+                let totalMarks = 0;
+
+                let attempted = 0;
+
+                let correct = 0;
+
+                let wrong = 0;
+
+
+                questions.forEach(
+                    function (
+                        question,
+                        index
+                    ) {
+
+                        const marks =
+                            Number(
+                                question.marks
+                            ) || 1;
+
+
+                        totalMarks +=
+                            marks;
+
+
+                        const selected =
+                            document.querySelector(
+                                `input[name="question-${index}"]:checked`
+                            );
+
+
+                        if (selected) {
+
+                            attempted++;
+
+
+                            if (
+                                selected.value ===
+                                question.correctAnswer
+                            ) {
+
+                                correct++;
+
+                                score +=
+                                    marks;
+
+                            }
+
+                            else {
+
+                                wrong++;
+
+                            }
+
+                        }
+
+                    }
+                );
+
+
+                const percentage =
+                    totalMarks > 0
+                        ? (
+                            score /
+                            totalMarks
+                        ) *
+                        100
+                        : 0;
+
+
+                /* ================= SAVE RESULT ================= */
+
+                await db
+                    .collection("results")
+                    .add({
+
+                        testId:
+                            currentTest.id,
+
+                        testTitle:
+                            currentTest.title ||
+                            "Online Test",
+
+                        studentId:
+                            currentUser.uid,
+
+                        studentName:
+                            currentUser.displayName ||
+                            "",
+
+                        studentEmail:
+                            currentUser.email ||
+                            "",
+
+                        score:
+                            score,
+
+                        totalMarks:
+                            totalMarks,
+
+                        attempted:
+                            attempted,
+
+                        correct:
+                            correct,
+
+                        wrong:
+                            wrong,
+
+                        percentage:
+                            Number(
+                                percentage.toFixed(
+                                    2
+                                )
+                            ),
+
+                        submittedAt:
+                            firebase.firestore
+                                .FieldValue
+                                .serverTimestamp()
+
+                    });
+
+
+                showResult({
+
+                    score,
+                    totalMarks,
+                    attempted,
+                    correct,
+                    wrong,
+                    percentage
+
+                });
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                submitted = false;
+
+                submitBtn.disabled =
+                    false;
+
+                submitBtn.textContent =
+                    "Submit Test";
+
+
+                errorMessage.textContent =
+                    "Unable to submit test: " +
+                    error.message;
+
+                errorMessage.style.display =
+                    "block";
+
+            }
+
+        }
+
+
+        /* ================= SHOW RESULT ================= */
+
+        function showResult(
+            result
+        ) {
+
+            testForm.style.display =
+                "none";
+
+
+            testHeader.style.display =
+                "none";
+
+
+            resultContainer.style.display =
+                "block";
+
+
+            document.getElementById(
+                "resultScore"
+            ).textContent =
+                result.score;
+
+
+            document.getElementById(
+                "resultTotal"
+            ).textContent =
+                result.totalMarks;
+
+
+            document.getElementById(
+                "resultPercentage"
+            ).textContent =
+                result.percentage +
+                "%";
+
+
+            document.getElementById(
+                "resultCorrect"
+            ).textContent =
+                result.correct;
+
+
+            document.getElementById(
+                "resultWrong"
+            ).textContent =
+                result.wrong;
+
+
+            document.getElementById(
+                "resultAttempted"
+            ).textContent =
+                result.attempted;
+
+
+            window.scrollTo({
+
+                top: 0,
+
+                behavior: "smooth"
+
+            });
+
+        }
+
+    });
+
+</script>
+
+</body>
+</html>
