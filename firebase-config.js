@@ -1,11 +1,11 @@
 var firebaseConfig = {
-  apiKey: "AIzaSyC-Dcvx06CGjbiqCCXlteLG3IqY3C3x8OE",
-  authDomain: "drx-learning-hub.firebaseapp.com",
-  projectId: "drx-learning-hub",
-  storageBucket: "drx-learning-hub.firebasestorage.app",
-  messagingSenderId: "562733337038",
-  appId: "1:562733337038:web:2db977c4b545cb1a5f839f",
-  measurementId: "G-52EGNHBYF6"
+  apiKey: "AIzaSyCWZpckA8cwboV6RVHAN57p7b8vXUByKNc",
+  authDomain: "drx-learning-hub-2.firebaseapp.com",
+  projectId: "drx-learning-hub-2",
+  storageBucket: "drx-learning-hub-2.firebasestorage.app",
+  messagingSenderId: "748103606890",
+  appId: "1:748103606890:web:6ada6d6a8ac94217532013",
+  measurementId: "G-ETWXVR01BC"
 };
 
 if (!firebase.apps.length) {

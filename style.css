@@ -1226,3 +1226,911 @@ textarea.form-control {
 .w-100 {
     width: 100%;
 }
+
+
+
+/* =========================================================
+   =========================================================
+   PART 2 - EXTRA STYLES (added to cover every HTML page)
+   =========================================================
+   ========================================================= */
+
+
+/* =========================
+   26. HEADER / NAV ALIASES
+   (pages use header-inner and nav-container)
+   ========================= */
+
+.header-inner,
+.nav-container {
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.logo span {
+    color: #0b5ed7;
+}
+
+.main-nav {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.main-nav .btn {
+    min-height: 38px;
+    padding: 8px 16px;
+    font-size: 14px;
+}
+
+.main-nav a.btn-danger,
+.main-nav .btn-danger {
+    background: #dc3545;
+    color: #ffffff;
+}
+
+.main-nav .btn-danger:hover {
+    background: #b02a37;
+}
+
+
+/* =========================
+   27. BUTTON EXTRAS
+   ========================= */
+
+.btn-full {
+    width: 100%;
+}
+
+.btn:disabled,
+.btn[disabled] {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-warning {
+    background: #f59e0b;
+    color: #ffffff;
+}
+
+.btn-warning:hover {
+    background: #d97706;
+}
+
+.btn-success:hover {
+    background: #146c43;
+}
+
+.btn-danger:hover {
+    background: #b02a37;
+}
+
+.button-group,
+.form-actions,
+.profile-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+
+.form-actions {
+    margin-top: 20px;
+}
+
+
+/* =========================
+   28. FORM CONTROLS
+   (inputs inside .form-group work without .form-control)
+   ========================= */
+
+.form-group input:not([type="checkbox"]):not([type="radio"]),
+.form-group select,
+.form-group textarea,
+.search-box input,
+.search-box select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    outline: none;
+    font-size: 14px;
+    background: #ffffff;
+    color: #1f2937;
+    transition: 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus,
+.search-box input:focus,
+.search-box select:focus {
+    border-color: #0b5ed7;
+    box-shadow: 0 0 0 3px rgba(11, 94, 215, 0.12);
+}
+
+.form-group textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 5px;
+    color: #6b7280;
+    font-size: 12px;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #9ca3af;
+}
+
+
+/* =========================
+   29. ALERT VARIANTS
+   ========================= */
+
+.alert {
+    transition: opacity 0.4s ease;
+}
+
+.alert-error {
+    background: #f8d7da;
+    color: #842029;
+    border: 1px solid #f1aeb5;
+}
+
+.alert-success,
+.alert.success {
+    background: #d1e7dd;
+    color: #0f5132;
+    border: 1px solid #a3cfbb;
+}
+
+.alert-danger {
+    border: 1px solid #f1aeb5;
+}
+
+.alert-info {
+    border: 1px solid #9eeaf9;
+}
+
+.alert-warning {
+    background: #fff3cd;
+    color: #664d03;
+    border: 1px solid #ffe69c;
+}
+
+
+/* =========================
+   30. AUTH PAGES
+   (login.html, signup.html, admin-login.html)
+   ========================= */
+
+.auth-section {
+    min-height: calc(100vh - 72px);
+    display: flex;
+    align-items: center;
+    padding: 50px 0;
+    background: linear-gradient(135deg, #eef5ff, #f5f7fb);
+}
+
+.auth-section .container {
+    display: flex;
+    justify-content: center;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 440px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 35px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.auth-header .card-icon {
+    margin: 0 auto 14px;
+}
+
+.auth-header h1 {
+    font-size: 26px;
+    color: #111827;
+    margin-bottom: 6px;
+}
+
+.auth-header p {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.auth-footer {
+    margin-top: 22px;
+    text-align: center;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.auth-footer a {
+    color: #0b5ed7;
+    font-weight: 700;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================
+   31. PAGE LAYOUT HELPERS
+   ========================= */
+
+.section-heading {
+    margin: 35px 0 20px;
+}
+
+.section-heading h2 {
+    font-size: 26px;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.section-heading p {
+    color: #6b7280;
+}
+
+.section-header:has(> .search-box),
+.section-header:has(> div + .search-box) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    text-align: left;
+}
+
+.section-header:has(> .search-box) .search-box {
+    margin: 0;
+    flex: 1;
+    min-width: 240px;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+}
+
+.card-body {
+    padding: 4px 2px;
+}
+
+.card-body h3 {
+    font-size: 19px;
+    color: #111827;
+    margin-bottom: 8px;
+}
+
+.card-body p {
+    color: #4b5563;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.card-content {
+    padding: 22px;
+}
+
+.card-content h3 {
+    font-size: 19px;
+    color: #111827;
+    margin-bottom: 8px;
+}
+
+.card-content p {
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+
+/* =========================
+   32. ADMIN DASHBOARD
+   ========================= */
+
+.dashboard-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 26px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+.dashboard-card h2 {
+    font-size: 24px;
+    color: #111827;
+    margin-bottom: 12px;
+}
+
+.dashboard-card p {
+    color: #4b5563;
+    margin-bottom: 6px;
+}
+
+.dashboard-card .section-heading {
+    margin-top: 0;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+.stat-icon {
+    width: 54px;
+    height: 54px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: #eaf2ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+}
+
+.card-grid {
+    margin-bottom: 30px;
+}
+
+.card .btn {
+    margin-top: 4px;
+}
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    align-items: start;
+}
+
+.admin-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 26px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+.admin-card h2,
+.admin-card h3 {
+    color: #111827;
+    margin-bottom: 14px;
+}
+
+.admin-card p {
+    color: #4b5563;
+}
+
+
+/* =========================
+   33. PUBLIC COURSES PAGE
+   ========================= */
+
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.course-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    transition: 0.25s ease;
+}
+
+.course-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.09);
+}
+
+.course-card-image {
+    height: 170px;
+    background: #eaf2ff;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.course-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.course-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    background: linear-gradient(135deg, #eaf2ff, #dbeafe);
+}
+
+.course-card-content {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.course-card-content h3 {
+    font-size: 19px;
+    color: #111827;
+    margin: 8px 0;
+}
+
+.course-card-content p {
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 14px;
+}
+
+.course-card-content .btn {
+    margin-top: auto;
+    align-self: flex-start;
+}
+
+.course-category {
+    align-self: flex-start;
+    display: inline-block;
+    background: #eaf2ff;
+    color: #0b5ed7;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+}
+
+.course-meta {
+    color: #6b7280;
+    font-size: 13px;
+    gap: 14px;
+}
+
+.course-filter,
+.course-filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.filter-btn {
+    padding: 9px 20px;
+    border: 1px solid #d1d5db;
+    border-radius: 25px;
+    background: #ffffff;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.filter-btn:hover {
+    border-color: #0b5ed7;
+    color: #0b5ed7;
+}
+
+.filter-btn.active {
+    background: #0b5ed7;
+    border-color: #0b5ed7;
+    color: #ffffff;
+}
+
+.cta-box {
+    background: linear-gradient(135deg, #0b5ed7, #084298);
+    color: #ffffff;
+    border-radius: 16px;
+    padding: 45px 30px;
+    text-align: center;
+}
+
+.cta-box h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.cta-box p {
+    max-width: 560px;
+    margin: 0 auto 22px;
+    opacity: 0.92;
+}
+
+.cta-box .btn {
+    margin: 5px;
+}
+
+.cta-box .btn-primary {
+    background: #ffffff;
+    color: #0b5ed7;
+}
+
+.cta-box .btn-secondary {
+    background: transparent;
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
+.cta-box .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+
+/* =========================
+   34. TESTS (list + attempt page)
+   ========================= */
+
+.test-info {
+    margin: 12px 0 16px;
+    padding: 12px 14px;
+    background: #f9fafb;
+    border: 1px solid #eef0f3;
+    border-radius: 8px;
+}
+
+.test-info p {
+    margin: 0 0 4px;
+    font-size: 13px;
+    color: #4b5563;
+}
+
+.test-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.test-options label,
+.test-options .option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #ffffff;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.test-options label:hover,
+.test-options .option:hover {
+    border-color: #0b5ed7;
+    background: #f3f8ff;
+}
+
+.test-options input {
+    accent-color: #0b5ed7;
+}
+
+.badge {
+    background: #eaf2ff;
+    color: #0b5ed7;
+}
+
+
+/* =========================
+   35. STUDENT PROFILE PAGE
+   ========================= */
+
+.profile-page {
+    padding: 40px 0 20px;
+}
+
+.profile-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.profile-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+}
+
+.profile-avatar {
+    width: 84px;
+    height: 84px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #0b5ed7;
+    color: #ffffff;
+    font-size: 34px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.profile-detail {
+    padding: 14px 16px;
+    background: #f9fafb;
+    border: 1px solid #eef0f3;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #111827;
+    word-break: break-word;
+}
+
+.detail-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: #6b7280;
+    margin-bottom: 4px;
+}
+
+
+/* =========================
+   36. LOADING SPINNER (alias)
+   ========================= */
+
+.loading-spinner {
+    width: 36px;
+    height: 36px;
+    margin: 0 auto 12px;
+    border: 4px solid #e5e7eb;
+    border-top-color: #0b5ed7;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+
+/* =========================
+   37. TABLES (admin lists)
+   ========================= */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.card table th,
+.card table td,
+.admin-card table th,
+.admin-card table td {
+    padding: 11px 12px;
+    text-align: left;
+    border-bottom: 1px solid #eef0f3;
+    font-size: 14px;
+}
+
+
+/* =========================
+   38. FOOTER (simple version)
+   ========================= */
+
+.footer-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 35px;
+}
+
+.footer-content h3 {
+    color: #ffffff;
+    font-size: 21px;
+    margin-bottom: 12px;
+}
+
+.footer-content h4 {
+    color: #ffffff;
+    margin-bottom: 13px;
+}
+
+.footer-content p {
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+.footer-content a {
+    display: block;
+    color: #9ca3af;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.footer-content a:hover {
+    color: #ffffff;
+}
+
+.site-footer .container > p,
+.site-footer > .footer-bottom {
+    text-align: center;
+    color: #9ca3af;
+    font-size: 13px;
+}
+
+
+/* =========================
+   39. RESPONSIVE (extra rules)
+   ========================= */
+
+@media (max-width: 1000px) {
+
+    .course-grid,
+    .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .admin-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .header-inner,
+    .nav-container {
+        min-height: 65px;
+    }
+
+    .main-nav .btn {
+        width: 100%;
+    }
+
+    .section-heading h2 {
+        font-size: 22px;
+    }
+
+    .profile-details {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-card {
+        padding: 26px 20px;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .stat-card {
+        padding: 18px;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .course-grid,
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .button-group,
+    .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .button-group .btn,
+    .form-actions .btn {
+        width: 100%;
+    }
+
+    .cta-box {
+        padding: 32px 18px;
+    }
+
+    .cta-box h2 {
+        font-size: 23px;
+    }
+}
+
+
+/* =========================
+   40. YOUTUBE LATEST VIDEOS
+   ========================= */
+
+.video-thumbnail {
+    overflow: hidden;
+}
+
+.video-thumbnail img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.video-thumbnail iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.yt-thumb {
+    cursor: pointer;
+}
+
+.yt-thumb .play-button {
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    transition: transform 0.2s ease;
+}
+
+.yt-thumb:hover .play-button {
+    transform: scale(1.1);
+}
+
+.yt-date {
+    color: #6b7280;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+@media (max-width: 1000px) {
+    .video-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .video-grid {
+        grid-template-columns: 1fr;
+    }
+}

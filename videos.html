@@ -366,6 +366,9 @@
 
 <script>
 
+const urlParams = new URLSearchParams(window.location.search);
+const selectedCourseId = urlParams.get("course");
+
 document.addEventListener(
     "DOMContentLoaded",
     function () {
@@ -428,7 +431,7 @@ document.addEventListener(
 
         let allVideos = [];
 
-        let selectedCourse = "all";
+        let selectedCourse = selectedCourseId || "all";
 
 
         /* ================= ESCAPE HTML ================= */
@@ -604,21 +607,20 @@ document.addEventListener(
 
             try {
 
-                const snapshot =
                 let videoQuery = db
-                  .collection("videos")
-                 .where("status", "==", "active");
+                    .collection("videos")
+                    .where("status", "==", "active");
 
-            if (selectedCourseId) {
-                  videoQuery = videoQuery.where(
-                     "courseId",
-                     "==",
-                     selectedCourseId
-                  );
-            }
+                // If opened from My Courses, filter videos to that course.
+                if (selectedCourseId) {
+                    videoQuery = videoQuery.where(
+                        "courseId",
+                        "==",
+                        selectedCourseId
+                    );
+                }
 
-            const snapshot = await videoQuery.get();
-
+                const snapshot = await videoQuery.get();
 
                 allVideos = [];
 
@@ -700,18 +702,11 @@ document.addEventListener(
 
 
                 videosContainer.innerHTML = `
-
                     <div class="alert alert-error">
-
                         Unable to load videos.
-
                         <br><br>
-
-                        Please check Firebase
-                        Firestore connection.
-
+                        ${escapeHTML(error && error.message ? error.message : "Please check Firebase Firestore connection.")}
                     </div>
-
                 `;
 
             }
