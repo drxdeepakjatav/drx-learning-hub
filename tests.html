@@ -35,6 +35,7 @@
 
             <a href="index.html">Home</a>
             <a href="courses.html">Courses</a>
+            <a href="learn.html">Learn</a>
             <a href="videos.html">Videos</a>
             <a href="notes.html">Notes</a>
             <a href="tests.html" class="active">Tests</a>
@@ -66,6 +67,15 @@
 
     <div class="container">
 
+        <!-- Course / unit filter message -->
+
+        <div
+            id="filterBanner"
+            class="filter-banner"
+            style="display:none;">
+        </div>
+
+
         <!-- Search -->
 
         <div class="search-box">
@@ -81,15 +91,11 @@
 
         <!-- Loading -->
 
-        <div
-            id="loading"
-            class="empty-state">
+        <div id="loading" class="empty-state">
 
             <div class="loading-spinner"></div>
 
-            <p>
-                Loading tests...
-            </p>
+            <p>Loading tests...</p>
 
         </div>
 
@@ -105,26 +111,16 @@
 
         <!-- Tests -->
 
-        <div
-            id="testsContainer"
-            class="course-grid">
-        </div>
+        <div id="testsContainer" class="course-grid"></div>
 
 
         <!-- Empty -->
 
-        <div
-            id="emptyState"
-            class="empty-state"
-            style="display:none;">
+        <div id="emptyState" class="empty-state" style="display:none;">
 
-            <h3>
-                No Tests Available
-            </h3>
+            <h3>No Tests Available</h3>
 
-            <p>
-                New tests will appear here soon.
-            </p>
+            <p>New tests will appear here soon.</p>
 
         </div>
 
@@ -140,10 +136,8 @@
         <div class="footer-bottom">
 
             <p>
-                ©
-                <span id="currentYear"></span>
-                DRx Learning Hub.
-                All Rights Reserved.
+                © <span id="currentYear"></span>
+                DRx Learning Hub. All Rights Reserved.
             </p>
 
         </div>
@@ -155,446 +149,358 @@
 
 <script>
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-        const testsContainer =
-            document.getElementById(
-                "testsContainer"
-            );
-
-        const loading =
-            document.getElementById(
-                "loading"
-            );
-
-        const emptyState =
-            document.getElementById(
-                "emptyState"
-            );
-
-        const errorMessage =
-            document.getElementById(
-                "errorMessage"
-            );
-
-        const searchInput =
-            document.getElementById(
-                "searchTest"
-            );
+    const testsContainer = document.getElementById("testsContainer");
+    const loading = document.getElementById("loading");
+    const emptyState = document.getElementById("emptyState");
+    const errorMessage = document.getElementById("errorMessage");
+    const searchInput = document.getElementById("searchTest");
+    const filterBanner = document.getElementById("filterBanner");
 
 
-        let allTests = [];
+    // From the Learn page:  tests.html?course=BP102T&unit=2
+
+    const params = new URLSearchParams(window.location.search);
+
+    const filterCourse = (params.get("course") || "").trim();
+
+    const filterUnit = (params.get("unit") || "").trim();
+
+    let filterActive = !!filterCourse;
+
+    let allTests = [];
 
 
-        /* ================= ESCAPE HTML ================= */
+    function escapeHTML(value) {
 
-        function escapeHTML(value) {
-
-            if (
-                value === null ||
-                value === undefined
-            ) {
-                return "";
-            }
-
-            return String(value)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-
+        if (value === null || value === undefined) {
+            return "";
         }
 
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
 
-        /* ================= LOAD TESTS ================= */
-
-        async function loadTests() {
-
-            try {
-
-                loading.style.display =
-                    "block";
-
-                emptyState.style.display =
-                    "none";
-
-                errorMessage.style.display =
-                    "none";
+    }
 
 
-                const snapshot =
-                    await db
-                        .collection("tests")
-                        .where(
-                            "status",
-                            "==",
-                            "active"
-                        )
-                        .get();
+    /* ================= COURSE / UNIT FILTER ================= */
 
+    function matchesFilter(test) {
 
-                allTests = [];
-
-
-                snapshot.forEach(
-                    function (doc) {
-
-                        allTests.push({
-
-                            id: doc.id,
-
-                            ...doc.data()
-
-                        });
-
-                    }
-                );
-
-
-                /* Sort newest first */
-
-                allTests.sort(
-                    function (a, b) {
-
-                        const aTime =
-                            a.createdAt &&
-                            a.createdAt.toMillis
-                                ? a.createdAt.toMillis()
-                                : 0;
-
-                        const bTime =
-                            b.createdAt &&
-                            b.createdAt.toMillis
-                                ? b.createdAt.toMillis()
-                                : 0;
-
-                        return bTime - aTime;
-
-                    }
-                );
-
-
-                loading.style.display =
-                    "none";
-
-
-                renderTests(
-                    allTests
-                );
-
-            }
-
-            catch (error) {
-
-                console.error(
-                    "Test loading error:",
-                    error
-                );
-
-
-                loading.style.display =
-                    "none";
-
-
-                errorMessage.textContent =
-                    "Unable to load tests. " +
-                    error.message;
-
-
-                errorMessage.style.display =
-                    "block";
-
-            }
-
+        if (!filterActive) {
+            return true;
         }
 
-
-        /* ================= RENDER TESTS ================= */
-
-        function renderTests(
-            tests
+        if (
+            String(test.courseId || "").toLowerCase() !==
+            filterCourse.toLowerCase()
         ) {
+            return false;
+        }
 
-            testsContainer.innerHTML =
-                "";
+        if (!filterUnit) {
+            return true;
+        }
 
+        const unitText = String(test.unit || "").toLowerCase().trim();
 
-            if (
-                tests.length === 0
-            ) {
+        // tests for all units are shown in every unit
 
-                emptyState.style.display =
-                    "block";
+        if (!unitText || unitText === "all units" || unitText === "all") {
+            return true;
+        }
 
-                return;
+        const numbers = unitText.match(/\d+/g) || [];
 
-            }
+        return numbers.indexOf(String(Number(filterUnit))) !== -1;
 
+    }
 
-            emptyState.style.display =
-                "none";
+    function updateBanner() {
 
+        if (!filterCourse) {
 
-            tests.forEach(
-                function (test) {
+            filterBanner.style.display = "none";
 
-                    const card =
-                        document.createElement(
-                            "div"
-                        );
+            return;
 
+        }
 
-                    card.className =
-                        "course-card";
+        filterBanner.style.display = "block";
 
+        if (filterActive) {
 
-                    const questionsCount =
-                        Array.isArray(
-                            test.questions
-                        )
-                            ? test.questions.length
-                            : (
-                                test.totalQuestions ||
-                                0
-                            );
-
-
-                    const totalMarks =
-                        Number(
-                            test.totalMarks
-                        ) || 0;
-
-
-                    const duration =
-                        Number(
-                            test.duration
-                        ) || 0;
-
-
-                    card.innerHTML = `
-
-                        <div class="card-content">
-
-                            <span class="badge">
-                                Online Test
-                            </span>
-
-                            <h3>
-                                ${escapeHTML(
-                                    test.title ||
-                                    "Untitled Test"
-                                )}
-                            </h3>
-
-                            <p>
-                                ${escapeHTML(
-                                    test.description ||
-                                    "Test your knowledge with MCQ questions."
-                                )}
-                            </p>
-
-
-                            <div class="test-info">
-
-                                <p>
-                                    <strong>
-                                        Course:
-                                    </strong>
-
-                                    ${escapeHTML(
-                                        test.courseId ||
-                                        "-"
-                                    )}
-                                </p>
-
-
-                                <p>
-                                    <strong>
-                                        Unit:
-                                    </strong>
-
-                                    ${escapeHTML(
-                                        test.unit ||
-                                        "All Units"
-                                    )}
-                                </p>
-
-
-                                <p>
-                                    <strong>
-                                        Questions:
-                                    </strong>
-
-                                    ${questionsCount}
-                                </p>
-
-
-                                <p>
-                                    <strong>
-                                        Marks:
-                                    </strong>
-
-                                    ${totalMarks}
-                                </p>
-
-
-                                <p>
-                                    <strong>
-                                        Duration:
-                                    </strong>
-
-                                    ${duration} minutes
-                                </p>
-
-                            </div>
-
-
-                            <button
-                                class="btn btn-primary start-test"
-                                data-id="${escapeHTML(
-                                    test.id
-                                )}">
-
-                                Start Test
-
-                            </button>
-
-                        </div>
-
-                    `;
-
-
-                    testsContainer.appendChild(
-                        card
-                    );
-
-                }
-            );
-
+            filterBanner.innerHTML =
+                "Showing tests for <strong>" + escapeHTML(filterCourse) + "</strong>" +
+                (filterUnit ? ", <strong>Unit " + escapeHTML(filterUnit) + "</strong>" : "") +
+                ". <a href=\"#\" id=\"showAllTests\">Show all tests</a>";
 
             document
-                .querySelectorAll(
-                    ".start-test"
-                )
-                .forEach(
-                    function (button) {
+                .getElementById("showAllTests")
+                .addEventListener("click", function (event) {
 
-                        button.addEventListener(
-                            "click",
-                            function () {
+                    event.preventDefault();
 
-                                const testId =
-                                    this.dataset.id;
+                    filterActive = false;
 
+                    updateBanner();
 
-                                window.location.href =
-                                    "test-attempt.html?id=" +
-                                    encodeURIComponent(
-                                        testId
-                                    );
+                    applySearch();
 
-                            }
-                        );
+                });
 
-                    }
-                );
+        } else {
+
+            filterBanner.innerHTML =
+                "Showing all tests. <a href=\"#\" id=\"showCourseTests\">Show only " +
+                escapeHTML(filterCourse) + (filterUnit ? " Unit " + escapeHTML(filterUnit) : "") +
+                " tests</a>";
+
+            document
+                .getElementById("showCourseTests")
+                .addEventListener("click", function (event) {
+
+                    event.preventDefault();
+
+                    filterActive = true;
+
+                    updateBanner();
+
+                    applySearch();
+
+                });
 
         }
 
-
-        /* ================= SEARCH ================= */
-
-        searchInput.addEventListener(
-            "input",
-            function () {
-
-                const keyword =
-                    this.value
-                        .trim()
-                        .toLowerCase();
+    }
 
 
-                if (!keyword) {
+    /* ================= LOAD TESTS ================= */
 
-                    renderTests(
-                        allTests
-                    );
+    async function loadTests() {
 
-                    return;
+        try {
 
-                }
-
-
-                const filtered =
-                    allTests.filter(
-                        function (test) {
-
-                            return (
-
-                                String(
-                                    test.title ||
-                                    ""
-                                )
-                                .toLowerCase()
-                                .includes(
-                                    keyword
-                                )
-
-                                ||
-
-                                String(
-                                    test.courseId ||
-                                    ""
-                                )
-                                .toLowerCase()
-                                .includes(
-                                    keyword
-                                )
-
-                                ||
-
-                                String(
-                                    test.unit ||
-                                    ""
-                                )
-                                .toLowerCase()
-                                .includes(
-                                    keyword
-                                )
-
-                                ||
-
-                                String(
-                                    test.description ||
-                                    ""
-                                )
-                                .toLowerCase()
-                                .includes(
-                                    keyword
-                                )
-
-                            );
-
-                        }
-                    );
+            loading.style.display = "block";
+            emptyState.style.display = "none";
+            errorMessage.style.display = "none";
 
 
-                renderTests(
-                    filtered
+            const snapshot = await db
+                .collection("tests")
+                .where("status", "==", "active")
+                .get();
+
+
+            allTests = [];
+
+            snapshot.forEach(function (doc) {
+
+                allTests.push({
+                    id: doc.id,
+                    ...doc.data()
+                });
+
+            });
+
+
+            allTests.sort(function (a, b) {
+
+                const aTime =
+                    a.createdAt && a.createdAt.toMillis
+                        ? a.createdAt.toMillis()
+                        : 0;
+
+                const bTime =
+                    b.createdAt && b.createdAt.toMillis
+                        ? b.createdAt.toMillis()
+                        : 0;
+
+                return bTime - aTime;
+
+            });
+
+
+            loading.style.display = "none";
+
+            updateBanner();
+
+            applySearch();
+
+        }
+
+        catch (error) {
+
+            console.error("Test loading error:", error);
+
+            loading.style.display = "none";
+
+            errorMessage.textContent =
+                "Unable to load tests. " + error.message;
+
+            errorMessage.style.display = "block";
+
+        }
+
+    }
+
+
+    /* ================= RENDER TESTS ================= */
+
+    function renderTests(tests) {
+
+        testsContainer.innerHTML = "";
+
+        if (tests.length === 0) {
+
+            emptyState.style.display = "block";
+
+            return;
+
+        }
+
+        emptyState.style.display = "none";
+
+
+        tests.forEach(function (test) {
+
+            const card = document.createElement("div");
+
+            card.className = "course-card";
+
+
+            const questionsCount =
+                Array.isArray(test.questions)
+                    ? test.questions.length
+                    : (test.totalQuestions || 0);
+
+            const totalMarks = Number(test.totalMarks) || 0;
+
+            const duration = Number(test.duration) || 0;
+
+
+            card.innerHTML = `
+
+                <div class="card-content">
+
+                    <span class="badge">
+                        Online Test
+                    </span>
+
+                    <h3>
+                        ${escapeHTML(test.title || "Untitled Test")}
+                    </h3>
+
+                    <p>
+                        ${escapeHTML(
+                            test.description ||
+                            "Test your knowledge with MCQ questions."
+                        )}
+                    </p>
+
+                    <div class="test-info">
+
+                        <p>
+                            <strong>Course:</strong>
+                            ${escapeHTML(test.courseId || "-")}
+                        </p>
+
+                        <p>
+                            <strong>Unit:</strong>
+                            ${escapeHTML(test.unit || "All Units")}
+                        </p>
+
+                        <p>
+                            <strong>Questions:</strong>
+                            ${questionsCount}
+                        </p>
+
+                        <p>
+                            <strong>Marks:</strong>
+                            ${totalMarks}
+                        </p>
+
+                        <p>
+                            <strong>Duration:</strong>
+                            ${duration} minutes
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="btn btn-primary start-test"
+                        data-id="${escapeHTML(test.id)}">
+                        Start Test
+                    </button>
+
+                </div>
+
+            `;
+
+            testsContainer.appendChild(card);
+
+        });
+
+
+        document.querySelectorAll(".start-test").forEach(function (button) {
+
+            button.addEventListener("click", function () {
+
+                window.location.href =
+                    "test-attempt.html?id=" +
+                    encodeURIComponent(this.dataset.id);
+
+            });
+
+        });
+
+    }
+
+
+    /* ================= SEARCH ================= */
+
+    function applySearch() {
+
+        const keyword = searchInput.value.trim().toLowerCase();
+
+        const base = allTests.filter(matchesFilter);
+
+        if (!keyword) {
+
+            renderTests(base);
+
+            return;
+
+        }
+
+        renderTests(
+            base.filter(function (test) {
+
+                return (
+                    String(test.title || "").toLowerCase().includes(keyword) ||
+                    String(test.courseId || "").toLowerCase().includes(keyword) ||
+                    String(test.unit || "").toLowerCase().includes(keyword) ||
+                    String(test.description || "").toLowerCase().includes(keyword)
                 );
 
-            }
+            })
         );
 
+    }
 
-        /* ================= START ================= */
+    searchInput.addEventListener("input", applySearch);
 
-        loadTests();
 
-    });
+    /* ================= START ================= */
+
+    loadTests();
+
+});
 
 </script>
 

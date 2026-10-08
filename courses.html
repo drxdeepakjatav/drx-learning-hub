@@ -36,6 +36,7 @@
 
             <a href="index.html">Home</a>
             <a href="courses.html" class="active">Courses</a>
+            <a href="learn.html">Learn</a>
             <a href="videos.html">Videos</a>
             <a href="notes.html">Notes</a>
             <a href="tests.html">Tests</a>
@@ -86,39 +87,19 @@
 
 
         <!-- Category Filter -->
-        <div class="course-filter">
+        <div class="course-filter" id="categoryFilter">
 
-            <button
-                class="filter-btn active"
-                data-category="all">
-                All
-            </button>
-
-            <button
-                class="filter-btn"
-                data-category="bpharm">
-                B.Pharm
-            </button>
-
-            <button
-                class="filter-btn"
-                data-category="mpharm">
-                M.Pharm
-            </button>
-
-            <button
-                class="filter-btn"
-                data-category="mmlt">
-                MMLT
-            </button>
-
-            <button
-                class="filter-btn"
-                data-category="other">
-                Other
-            </button>
+            <button class="filter-btn active" data-category="all">All</button>
+            <button class="filter-btn" data-category="bpharm">B.Pharm</button>
+            <button class="filter-btn" data-category="mpharm">M.Pharm</button>
+            <button class="filter-btn" data-category="mmlt">MMLT</button>
+            <button class="filter-btn" data-category="other">Other</button>
 
         </div>
+
+
+        <!-- Year / Semester Filter (built automatically) -->
+        <div class="course-filter" id="termFilter" style="display:none;"></div>
 
 
         <!-- Loading -->
@@ -140,10 +121,7 @@
 
 
         <!-- No Courses -->
-        <div
-            id="noCourses"
-            class="empty-state"
-            style="display:none;">
+        <div id="noCourses" class="empty-state" style="display:none;">
 
             <h3>No Courses Available</h3>
 
@@ -155,15 +133,12 @@
 
 
         <!-- No Search Result -->
-        <div
-            id="noSearchResults"
-            class="empty-state"
-            style="display:none;">
+        <div id="noSearchResults" class="empty-state" style="display:none;">
 
             <h3>No Matching Course</h3>
 
             <p>
-                Try another course name or category.
+                Try another course name, category or semester.
             </p>
 
         </div>
@@ -239,9 +214,7 @@
 
                 <a href="login.html">Login</a>
                 <a href="signup.html">Signup</a>
-                <a href="student-profile.html">
-                    Student Profile
-                </a>
+                <a href="student-profile.html">Student Profile</a>
 
             </div>
 
@@ -262,428 +235,8 @@
 </footer>
 
 
-<!-- ================= FIREBASE COURSE LOGIC ================= -->
-<script>
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    const coursesContainer =
-        document.getElementById("coursesContainer");
-
-    const coursesLoading =
-        document.getElementById("coursesLoading");
-
-    const noCourses =
-        document.getElementById("noCourses");
-
-    const noSearchResults =
-        document.getElementById("noSearchResults");
-
-    const courseSearch =
-        document.getElementById("courseSearch");
-
-    const filterButtons =
-        document.querySelectorAll(".filter-btn");
-
-
-    let allCourses = [];
-
-    let selectedCategory = "all";
-
-
-    /* ================= ESCAPE HTML ================= */
-
-    function escapeHTML(value) {
-
-        if (value === null || value === undefined) {
-            return "";
-        }
-
-        return String(value)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-
-    }
-
-
-    /* ================= LOAD COURSES ================= */
-
-    async function loadCourses() {
-
-        try {
-
-            coursesLoading.style.display = "block";
-
-            coursesContainer.style.display = "none";
-
-            noCourses.style.display = "none";
-
-            noSearchResults.style.display = "none";
-
-
-            const snapshot = await db
-                .collection("courses")
-                .where("status", "==", "active")
-                .get();
-
-
-            allCourses = [];
-
-
-            snapshot.forEach(function (doc) {
-
-                const data = doc.data();
-
-                allCourses.push({
-
-                    id: doc.id,
-
-                    ...data
-
-                });
-
-            });
-
-
-            /* Newest courses first */
-
-            allCourses.sort(function (a, b) {
-
-                const aTime =
-                    a.createdAt &&
-                    a.createdAt.toMillis
-                        ? a.createdAt.toMillis()
-                        : 0;
-
-                const bTime =
-                    b.createdAt &&
-                    b.createdAt.toMillis
-                        ? b.createdAt.toMillis()
-                        : 0;
-
-                return bTime - aTime;
-
-            });
-
-
-            coursesLoading.style.display = "none";
-
-
-            if (allCourses.length === 0) {
-
-                noCourses.style.display = "block";
-
-                return;
-
-            }
-
-
-            renderCourses();
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "Error loading courses:",
-                error
-            );
-
-            coursesLoading.style.display = "none";
-
-            coursesContainer.style.display = "block";
-
-            coursesContainer.innerHTML = `
-
-                <div class="alert alert-error">
-
-                    Unable to load courses.
-
-                    <br>
-
-                    Please try again later.
-
-                </div>
-
-            `;
-
-        }
-
-    }
-
-
-    /* ================= RENDER COURSES ================= */
-
-    function renderCourses() {
-
-        const searchText =
-            courseSearch.value
-                .trim()
-                .toLowerCase();
-
-
-        const filteredCourses =
-            allCourses.filter(function (course) {
-
-                const categoryMatch =
-                    selectedCategory === "all" ||
-                    String(course.category || "")
-                        .toLowerCase()
-                        === selectedCategory;
-
-
-                const searchMatch =
-
-                    !searchText ||
-
-                    String(course.title || "")
-                        .toLowerCase()
-                        .includes(searchText)
-
-                    ||
-
-                    String(course.courseId || "")
-                        .toLowerCase()
-                        .includes(searchText)
-
-                    ||
-
-                    String(course.description || "")
-                        .toLowerCase()
-                        .includes(searchText);
-
-
-                return categoryMatch && searchMatch;
-
-            });
-
-
-        coursesContainer.innerHTML = "";
-
-
-        if (filteredCourses.length === 0) {
-
-            coursesContainer.style.display = "none";
-
-            noCourses.style.display = "none";
-
-            noSearchResults.style.display = "block";
-
-            return;
-
-        }
-
-
-        noCourses.style.display = "none";
-
-        noSearchResults.style.display = "none";
-
-        coursesContainer.style.display = "grid";
-
-
-        filteredCourses.forEach(function (course) {
-
-            const title =
-                escapeHTML(course.title || "Untitled Course");
-
-            const description =
-                escapeHTML(
-                    course.description ||
-                    "Start learning with DRx Learning Hub."
-                );
-
-            const courseId =
-                escapeHTML(course.courseId || course.id);
-
-            const category =
-                escapeHTML(
-                    String(course.category || "other")
-                        .toUpperCase()
-                );
-
-            const lessons =
-                escapeHTML(course.lessons || "0");
-
-            const image =
-                course.imageUrl ||
-                course.image ||
-                "";
-
-
-            const imageHTML = image
-
-                ? `
-
-                    <img
-                        src="${escapeHTML(image)}"
-                        alt="${title}"
-                        loading="lazy"
-                        onerror="this.style.display='none';"
-                    >
-
-                  `
-
-                : `
-
-                    <div class="course-image-placeholder">
-
-                        📚
-
-                    </div>
-
-                  `;
-
-
-            const card = document.createElement("div");
-
-            card.className = "course-card";
-
-
-            card.innerHTML = `
-
-                <div class="course-card-image">
-
-                    ${imageHTML}
-
-                </div>
-
-
-                <div class="course-card-content">
-
-                    <span class="course-category">
-
-                        ${category}
-
-                    </span>
-
-
-                    <h3>
-
-                        ${title}
-
-                    </h3>
-
-
-                    <p>
-
-                        ${description}
-
-                    </p>
-
-
-                    <div class="course-meta">
-
-                        <span>
-
-                            📘 ${courseId}
-
-                        </span>
-
-                        <span>
-
-                            📚 ${lessons} Lessons
-
-                        </span>
-
-                    </div>
-
-
-                    <a
-                        href="login.html"
-                        class="btn btn-primary">
-
-                        Start Learning
-
-                    </a>
-
-                </div>
-
-            `;
-
-
-            coursesContainer.appendChild(card);
-
-        });
-
-    }
-
-
-    /* ================= SEARCH ================= */
-
-    courseSearch.addEventListener(
-        "input",
-        renderCourses
-    );
-
-
-    /* ================= CATEGORY FILTER ================= */
-
-    filterButtons.forEach(function (button) {
-
-        button.addEventListener(
-            "click",
-            function () {
-
-                filterButtons.forEach(function (btn) {
-
-                    btn.classList.remove("active");
-
-                });
-
-
-                button.classList.add("active");
-
-
-                selectedCategory =
-                    button.dataset.category;
-
-
-                renderCourses();
-
-            }
-        );
-
-    });
-
-
-    /* ================= START ================= */
-
-    if (typeof db !== "undefined") {
-
-        loadCourses();
-
-    } else {
-
-        console.error(
-            "Firebase Firestore is not available."
-        );
-
-        coursesLoading.style.display = "none";
-
-        coursesContainer.style.display = "block";
-
-        coursesContainer.innerHTML = `
-
-            <div class="alert alert-error">
-
-                Firebase connection error.
-
-                <br>
-
-                Please check firebase-config.js.
-
-            </div>
-
-        `;
-
-    }
-
-});
-
-</script>
+<!-- ================= COURSE LOGIC ================= -->
+<script src="courses.js"></script>
 
 </body>
 </html>

@@ -479,17 +479,26 @@ document.addEventListener("DOMContentLoaded", function () {
        13. AUTO HIDE ALERT
        ========================= */
 
+    /* Only alerts that are already visible are auto-hidden.
+       Hidden message boxes (login, signup, forms) must stay in the
+       page so that errors can be shown later. */
+
     const alerts =
         document.querySelectorAll(".alert");
 
-    alerts.forEach(function (alert) {
+    alerts.forEach(function (alertBox) {
+
+        if (window.getComputedStyle(alertBox).display === "none") {
+            return;
+        }
 
         setTimeout(function () {
 
-            alert.style.opacity = "0";
+            alertBox.style.opacity = "0";
 
             setTimeout(function () {
-                alert.remove();
+                alertBox.style.display = "none";
+                alertBox.style.opacity = "1";
             }, 400);
 
         }, 5000);

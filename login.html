@@ -273,8 +273,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             setTimeout(function () {
 
-                window.location.href =
-                    "student-profile.html";
+                var next = new URLSearchParams(window.location.search).get("next");
+
+                // only allow safe local pages like learn.html?course=BP102T
+                if (!next || !/^[\w\-]+\.html(\?[\w\-=&%.]*)?$/.test(next)) {
+                    next = "student-profile.html";
+                }
+
+                window.location.href = next;
 
             }, 1000);
 

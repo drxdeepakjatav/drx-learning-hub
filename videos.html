@@ -45,6 +45,10 @@
                 Courses
             </a>
 
+            <a href="learn.html">
+                Learn
+            </a>
+
             <a href="videos.html"
                class="active">
                 Videos
@@ -96,6 +100,11 @@
 <section class="section">
 
     <div class="container">
+
+        <!-- Course filter message (when opened from Learn / My Courses) -->
+
+        <div id="courseBanner" class="filter-banner" style="display:none;"></div>
+
 
         <!-- Search -->
 
@@ -368,6 +377,37 @@
 
 const urlParams = new URLSearchParams(window.location.search);
 const selectedCourseId = urlParams.get("course");
+
+if (selectedCourseId) {
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const banner = document.getElementById("courseBanner");
+
+        if (!banner) {
+            return;
+        }
+
+        const strong = document.createElement("strong");
+
+        strong.textContent = selectedCourseId;
+
+        const link = document.createElement("a");
+
+        link.href = "videos.html";
+
+        link.textContent = "Show all videos";
+
+        banner.appendChild(document.createTextNode("Showing videos for "));
+        banner.appendChild(strong);
+        banner.appendChild(document.createTextNode(". "));
+        banner.appendChild(link);
+
+        banner.style.display = "block";
+
+    });
+
+}
 
 document.addEventListener(
     "DOMContentLoaded",

@@ -101,6 +101,11 @@
 
     <div class="container">
 
+        <!-- Course / unit filter message -->
+
+        <div id="unitBanner" class="filter-banner" style="display:none;"></div>
+
+
         <!-- Search -->
 
         <div class="search-box">
@@ -352,6 +357,29 @@
 <script>
 const urlParams = new URLSearchParams(window.location.search);
 const selectedCourseId = urlParams.get("course");
+const selectedUnit = (urlParams.get("unit") || "").trim();
+
+// From the Learn page:  notes.html?course=BP102T&unit=2
+let unitFilterActive = !!(selectedCourseId && selectedUnit);
+
+function unitMatches(note) {
+
+    if (!unitFilterActive) {
+        return true;
+    }
+
+    const unitText = String(note.unit || "").toLowerCase().trim();
+
+    // notes for all units are shown in every unit
+
+    if (!unitText || unitText === "all units" || unitText === "all") {
+        return true;
+    }
+
+    const numbers = unitText.match(/\d+/g) || [];
+
+    return numbers.indexOf(String(Number(selectedUnit))) !== -1;
+}
 document.addEventListener(
     "DOMContentLoaded",
     function () {
@@ -390,6 +418,51 @@ document.addEventListener(
         let allNotes = [];
 
         let selectedFilter = "all";
+
+
+        /* ================= UNIT BANNER ================= */
+
+        function updateUnitBanner() {
+
+            const banner = document.getElementById("unitBanner");
+
+            if (!banner || !selectedCourseId || !selectedUnit) {
+                return;
+            }
+
+            banner.style.display = "block";
+
+            if (unitFilterActive) {
+
+                banner.innerHTML =
+                    "Showing notes for <strong>" + escapeHTML(selectedCourseId) +
+                    "</strong>, <strong>Unit " + escapeHTML(selectedUnit) +
+                    "</strong>. <a href=\"#\" id=\"toggleUnitFilter\">Show all units</a>";
+
+            } else {
+
+                banner.innerHTML =
+                    "Showing notes of all units of <strong>" + escapeHTML(selectedCourseId) +
+                    "</strong>. <a href=\"#\" id=\"toggleUnitFilter\">Show only Unit " +
+                    escapeHTML(selectedUnit) + "</a>";
+
+            }
+
+            document
+                .getElementById("toggleUnitFilter")
+                .addEventListener("click", function (event) {
+
+                    event.preventDefault();
+
+                    unitFilterActive = !unitFilterActive;
+
+                    updateUnitBanner();
+
+                    renderNotes();
+
+                });
+
+        }
 
 
         /* ================= ESCAPE HTML ================= */
@@ -445,6 +518,8 @@ document.addEventListener(
                 noNotes.style.display =
                     "none";
 
+
+                updateUnitBanner();
 
                 let noteQuery = db
     .collection("notes")
@@ -638,6 +713,7 @@ const snapshot = await noteQuery.get();
 
                     return (
                         filterMatch &&
+                        unitMatches(note) &&
                         searchMatch
                     );
 

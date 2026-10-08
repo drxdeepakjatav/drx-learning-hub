@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Units & PDFs | DRx Admin</title>
+
+    <link rel="stylesheet" href="../style.css">
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <script src="../firebase-config.js"></script>
+    <script src="../script.js" defer></script>
+</head>
+
+<body>
+
+<header class="site-header">
+
+    <div class="container header-inner">
+
+        <a href="dashboard.html" class="logo">
+            DRx Learning Hub
+        </a>
+
+        <button class="menu-toggle" id="menuToggle">☰</button>
+
+        <nav class="main-nav" id="mainNav">
+
+            <a href="dashboard.html">Dashboard</a>
+            <a href="courses.html">Courses</a>
+            <a href="units.html" class="active">Units / PDFs</a>
+            <a href="../learn.html">Website</a>
+
+            <button id="logoutBtn" class="btn btn-danger" type="button">
+                Logout
+            </button>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<main>
+
+<section class="page-header">
+
+    <div class="container">
+
+        <h1>Units & PDFs</h1>
+
+        <p>
+            Add unit wise PDF links. They appear automatically on the Learn page.
+        </p>
+
+    </div>
+
+</section>
+
+
+<section class="section">
+
+<div class="container">
+
+    <div class="admin-card">
+
+        <h2 id="formTitle">Add New Unit</h2>
+
+        <form id="unitForm">
+
+            <input type="hidden" id="editingUnitId">
+
+            <div class="form-group">
+
+                <label for="unitCourse">Course</label>
+
+                <select id="unitCourse" required>
+                    <option value="">Loading courses...</option>
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="unitNumber">Unit Number</label>
+
+                <input
+                    type="number"
+                    id="unitNumber"
+                    min="1"
+                    placeholder="1"
+                    required
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="unitTitle">Unit Title</label>
+
+                <input
+                    type="text"
+                    id="unitTitle"
+                    placeholder="e.g. Introduction to Python"
+                    required
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="unitPdf">PDF Link</label>
+
+                <input
+                    type="url"
+                    id="unitPdf"
+                    placeholder="https://drive.google.com/file/d/.../view"
+                    required
+                >
+
+                <small>
+                    Google Drive link (share: "Anyone with the link") or a direct .pdf link.
+                </small>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="unitStatus">Status</label>
+
+                <select id="unitStatus">
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+
+            </div>
+
+            <div class="form-actions">
+
+                <button type="submit" class="btn btn-primary" id="saveUnitBtn">
+                    Add Unit
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="cancelEditBtn"
+                    style="display:none;"
+                >
+                    Cancel Edit
+                </button>
+
+            </div>
+
+        </form>
+
+        <div id="unitMessage" class="alert" style="display:none; margin-top:15px;"></div>
+
+    </div>
+
+
+    <div class="section-heading">
+
+        <h2 id="listTitle">Units</h2>
+
+        <p>Select a course above to see its units.</p>
+
+    </div>
+
+    <div id="unitList" class="cards-grid"></div>
+
+    <div id="noUnits" class="empty-state" style="display:none;">
+        <h3>No units yet</h3>
+        <p>Add the first unit for this course.</p>
+    </div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<footer class="site-footer">
+
+    <div class="container">
+
+        <div class="footer-bottom">
+
+            <p>
+                © <span class="current-year"></span>
+                DRx Learning Hub. All Rights Reserved.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<script src="../admin-units.js"></script>
+
+</body>
+</html>
