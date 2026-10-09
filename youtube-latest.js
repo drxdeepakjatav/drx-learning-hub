@@ -4,7 +4,7 @@
    automatically. No manual upload needed.
 
    Usage on any page:
-   <div class="video-grid" id="latestVideos" data-limit="6"></div>
+   <div class="video-grid" data-youtube-latest data-limit="6"></div>
    <script src="youtube-latest.js"></script>
    ========================================================= */
 
@@ -20,7 +20,7 @@
         // OPTIONAL: if auto-detect fails, paste your channel ID here
         // (starts with UC..., 24 characters).
         // YouTube Studio > Settings > Channel > Advanced settings
-        channelId: "",
+        channelId: "UC9eyA1MFu5se42_ZRasHOMg",
 
         // How long to keep the list in the browser (minutes)
         cacheMinutes: 30
@@ -242,17 +242,25 @@
 
     document.addEventListener("DOMContentLoaded", async function () {
 
-        var container = document.getElementById("latestVideos");
-        if (!container) return;
+        var containers = document.querySelectorAll("[data-youtube-latest]");
 
-        renderLoading(container);
+        if (!containers.length) return;
+
+        containers.forEach(renderLoading);
 
         try {
+
             var videos = await getVideos();
-            renderVideos(container, videos);
+
+            containers.forEach(function (container) {
+                renderVideos(container, videos);
+            });
+
         } catch (error) {
+
             console.error("YouTube latest videos error:", error);
-            renderError(container);
+
+            containers.forEach(renderError);
         }
     });
 

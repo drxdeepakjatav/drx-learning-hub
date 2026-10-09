@@ -2331,3 +2331,64 @@ table {
     font-weight: 700;
     text-decoration: underline;
 }
+
+
+/* =========================
+   43. LOGO
+   (logo-icon.png is shown automatically before the site name on
+   every page, so no HTML change is needed. Files must be in the
+   same folder as style.css)
+   ========================= */
+
+.logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+}
+
+.logo::before {
+    content: "";
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    background: url("logo-icon.png") center / contain no-repeat;
+}
+
+/* full logo above the heading on login / signup cards */
+
+.auth-header:not(:has(.card-icon))::before {
+    content: "";
+    display: block;
+    width: 220px;
+    height: 163px;
+    margin: 0 auto 14px;
+    background: url("logo.png") center / contain no-repeat;
+}
+
+/* use the same image anywhere with <img class="logo-img" src="logo.png"> */
+
+.logo-img {
+    display: block;
+    height: 56px;
+    width: auto;
+    max-width: 100%;
+}
+
+@media (max-width: 768px) {
+
+    .logo::before {
+        width: 38px;
+        height: 38px;
+    }
+
+    .logo {
+        gap: 8px;
+        font-size: 19px;
+    }
+
+    .auth-header:not(:has(.card-icon))::before {
+        width: 170px;
+        height: 126px;
+    }
+}

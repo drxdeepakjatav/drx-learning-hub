@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Video Lectures | DRx Learning Hub</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="icon" href="favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
     <link rel="stylesheet" href="style.css">
 
@@ -101,6 +104,45 @@
 
     <div class="container">
 
+        <!-- ================= LATEST FROM YOUTUBE CHANNEL ================= -->
+
+        <div id="channelSection">
+
+            <div class="section-heading" style="margin-top:0;">
+
+                <h2>
+                    🔥 Latest from our YouTube Channel
+                </h2>
+
+                <p>
+                    New videos appear here automatically.
+                </p>
+
+            </div>
+
+            <div class="video-grid" data-youtube-latest data-limit="6"></div>
+
+            <div class="text-center mt-30">
+
+                <a href="https://www.youtube.com/@drxdeepakjatav"
+                   target="_blank"
+                   rel="noopener"
+                   class="btn btn-secondary">
+                    Visit YouTube Channel
+                </a>
+
+            </div>
+
+        </div>
+
+        <script>
+            // When opened for one course (videos.html?course=...), show only that course's videos
+            if (new URLSearchParams(window.location.search).get("course")) {
+                document.getElementById("channelSection").remove();
+            }
+        </script>
+
+
         <!-- Course filter message (when opened from Learn / My Courses) -->
 
         <div id="courseBanner" class="filter-banner" style="display:none;"></div>
@@ -157,7 +199,7 @@
              style="display:none;">
 
             <h2 class="section-title">
-                Latest Videos
+                Course Videos
             </h2>
 
             <div
@@ -1282,6 +1324,8 @@ document.addEventListener(
     });
 
 </script>
+
+<script src="youtube-latest.js"></script>
 
 </body>
 </html>
