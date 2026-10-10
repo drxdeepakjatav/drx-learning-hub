@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,6 +14,7 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="icon" href="favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
     <link rel="stylesheet" href="style.css">
 
 </head>
@@ -64,7 +64,7 @@
                 Tests
             </a>
 
-            <a href="about.html">
+            <a href="index.html#about">
                 About
             </a>
 
@@ -189,6 +189,27 @@
                 </div>
 
 
+                <!-- COURSE -->
+
+                <div class="form-group">
+
+                    <label for="signupCourse">
+                        Course you want to join
+                    </label>
+
+                    <select id="signupCourse">
+                        <option value="">I will choose later</option>
+                    </select>
+
+                    <small>
+                        Free courses open immediately. For paid courses the first units
+                        are free, and the rest open after payment. You can enroll in
+                        more courses later from your profile.
+                    </small>
+
+                </div>
+
+
                 <!-- BUTTON -->
 
                 <button
@@ -198,6 +219,11 @@
                 >
                     Create Account
                 </button>
+
+                <p class="form-note">
+                    By creating an account you agree to our
+                    <a href="privacy-policy.html">Privacy Policy</a>.
+                </p>
 
             </form>
 
@@ -246,6 +272,8 @@
 
 <script src="firebase-config.js"></script>
 
+<script src="enroll-helper.js"></script>
+
 <script src="script.js"></script>
 
 
@@ -263,6 +291,62 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const button =
         document.getElementById("signupButton");
+
+    const courseSelect =
+        document.getElementById("signupCourse");
+
+    let courseMap = {};
+
+
+    // Load courses into the dropdown
+
+    (async function loadCourseOptions() {
+
+        try {
+
+            const snapshot = await db
+                .collection("courses")
+                .where("status", "==", "active")
+                .get();
+
+            const list = [];
+
+            snapshot.forEach(function (doc) {
+                list.push(Object.assign({ id: doc.id }, doc.data()));
+            });
+
+            list.sort(function (a, b) {
+                return String(a.title || a.id).localeCompare(String(b.title || b.id));
+            });
+
+            list.forEach(function (course) {
+
+                courseMap[course.id] = course;
+
+                const option = document.createElement("option");
+
+                option.value = course.id;
+
+                option.textContent =
+                    (course.title || course.id) + " (" +
+                    DRX_ENROLL.priceLabel(course) + ")";
+
+                courseSelect.appendChild(option);
+            });
+
+            // signup.html?course=BP102T selects the course automatically
+
+            const preset = new URLSearchParams(window.location.search).get("course");
+
+            if (preset && courseMap[preset]) {
+                courseSelect.value = preset;
+            }
+
+        } catch (error) {
+            console.error("Could not load courses:", error);
+        }
+
+    })();
 
 
     signupForm.addEventListener("submit", async function (event) {
@@ -345,10 +429,50 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
 
 
+            // Enroll in the chosen course
+
+            let nextPage = "student-profile.html";
+
+            let successText = "Account created successfully!";
+
+            const chosen = courseMap[courseSelect.value];
+
+            if (chosen) {
+
+                try {
+
+                    if (chosen.accessType === "free") {
+
+                        await DRX_ENROLL.enrollFree(user, name, chosen, []);
+
+                        successText =
+                            "Account created! You are enrolled in " +
+                            (chosen.title || chosen.id) + ".";
+
+                    } else {
+
+                        await DRX_ENROLL.requestPaid(user, name, chosen);
+
+                        successText =
+                            "Account created! Complete the payment to unlock all units of " +
+                            (chosen.title || chosen.id) + ".";
+                    }
+
+                    nextPage =
+                        "learn.html?course=" + encodeURIComponent(chosen.id);
+
+                } catch (enrollError) {
+
+                    // the account is already created, so do not stop here
+
+                    console.error("Enrollment step failed:", enrollError);
+                }
+            }
+
+
             message.style.display = "block";
 
-            message.textContent =
-                "Account created successfully!";
+            message.textContent = successText;
 
 
             message.classList.add("success");
@@ -358,10 +482,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             setTimeout(function () {
 
-                window.location.href =
-                    "student-profile.html";
+                window.location.href = nextPage;
 
-            }, 1500);
+            }, 1800);
 
 
         } catch (error) {
@@ -411,4 +534,3 @@ document.addEventListener("DOMContentLoaded", function () {
 </body>
 
 </html>
-```

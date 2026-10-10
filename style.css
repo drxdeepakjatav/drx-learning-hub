@@ -2392,3 +2392,362 @@ table {
         height: 126px;
     }
 }
+
+
+/* =========================
+   44. PRIVACY POLICY + CONTACT PAGES
+   ========================= */
+
+.policy-content {
+    max-width: 860px;
+    margin: 0 auto;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+.policy-content h2 {
+    font-size: 21px;
+    color: #111827;
+    margin: 30px 0 10px;
+}
+
+.policy-content p {
+    color: #4b5563;
+    line-height: 1.8;
+    margin-bottom: 12px;
+}
+
+.policy-content ul {
+    margin: 0 0 14px 22px;
+    list-style: disc;
+}
+
+.policy-content li {
+    color: #4b5563;
+    line-height: 1.8;
+    margin-bottom: 8px;
+}
+
+.policy-content a {
+    color: #0b5ed7;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.policy-meta {
+    font-size: 13px;
+    font-weight: 700;
+    color: #6b7280 !important;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.contact-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+.contact-card .learn-icon {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.contact-card h3 {
+    font-size: 18px;
+    color: #111827;
+    margin-bottom: 6px;
+}
+
+.contact-card p {
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.contact-form-box {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.06);
+}
+
+.contact-form-box h2 {
+    font-size: 24px;
+    color: #111827;
+    margin-bottom: 18px;
+}
+
+.form-note {
+    margin-top: 12px;
+    font-size: 12px;
+    color: #6b7280;
+    text-align: center;
+}
+
+.form-note a {
+    color: #0b5ed7;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.hp-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+@media (max-width: 900px) {
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .policy-content {
+        padding: 26px 20px;
+    }
+
+    .contact-form-box {
+        padding: 24px 18px;
+    }
+}
+
+
+/* =========================
+   45. FREE / PAID COURSES
+   ========================= */
+
+.price-tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.price-tag.free {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+.price-tag.paid {
+    background: #fff3cd;
+    color: #664d03;
+}
+
+.learn-card.locked {
+    background: #f9fafb;
+    opacity: 0.85;
+}
+
+.learn-card.locked .count-badge {
+    background: #fff3cd;
+    color: #664d03;
+}
+
+.lock-note {
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    background: #fff3cd;
+    border: 1px solid #ffe69c;
+    border-radius: 10px;
+    color: #664d03;
+    font-weight: 600;
+}
+
+.free-tag {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: #d1e7dd;
+    color: #0f5132;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.buy-box {
+    margin: 0 0 25px;
+    padding: 24px;
+    background: #ffffff;
+    border: 2px solid #0b5ed7;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(11, 94, 215, 0.12);
+}
+
+.buy-box h3 {
+    font-size: 20px;
+    color: #111827;
+    margin-bottom: 8px;
+}
+
+.buy-box p {
+    color: #4b5563;
+    margin-bottom: 10px;
+}
+
+.buy-box ol {
+    margin: 0 0 16px 20px;
+    list-style: decimal;
+    color: #4b5563;
+}
+
+.buy-box li {
+    margin-bottom: 6px;
+}
+
+.buy-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.buy-note {
+    font-size: 13px;
+    color: #6b7280 !important;
+}
+
+.upi-qr {
+    display: block;
+    width: 200px;
+    max-width: 100%;
+    margin: 14px 0;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+}
+
+.learn-title .count-badge {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 3px 12px;
+    border-radius: 20px;
+    background: #eaf2ff;
+    color: #0b5ed7;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+/* =========================
+   46. PROFILE PHOTO + COURSES (student profile)
+   ========================= */
+
+.profile-avatar {
+    background-size: cover;
+    background-position: center;
+}
+
+.extras-card {
+    margin-top: 25px;
+}
+
+.extras-card h2 {
+    font-size: 22px;
+    color: #111827;
+    margin-bottom: 8px;
+}
+
+.extras-help {
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 14px;
+}
+
+.photo-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.photo-preview {
+    width: 96px;
+    height: 96px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #0b5ed7 center / cover no-repeat;
+    color: #ffffff;
+    font-size: 38px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.photo-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.enroll-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.enroll-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding: 14px 16px;
+    background: #f9fafb;
+    border: 1px solid #eef0f3;
+    border-radius: 10px;
+}
+
+.enroll-meta {
+    display: block;
+    margin-top: 2px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.pending-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: #fff3cd;
+    color: #664d03;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.extras-message {
+    margin-top: 14px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.extras-message.ok {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+.extras-message.bad {
+    background: #f8d7da;
+    color: #842029;
+}

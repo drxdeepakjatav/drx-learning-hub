@@ -1,7 +1,11 @@
 /* =========================================================
    DRx LEARNING HUB - ADMIN: UNITS & PDF LINKS
-   Collection: units
-   Fields: courseId, unitNumber, title, pdfUrl, status
+
+   units/{id}      : courseId, unitNumber, title, status
+                     (anyone logged in can see the list)
+   unitFiles/{id}  : courseId, unitNumber, pdfUrl
+                     (only free units, enrolled students and
+                      admin can open it - same id as the unit)
    ========================================================= */
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -24,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var currentAdmin = null;
     var units = [];
+    var courseMap = {};
 
 
     function esc(value) {
@@ -40,6 +45,15 @@ document.addEventListener("DOMContentLoaded", function () {
         message.className = "alert " + (type === "success" ? "success" : "alert-error");
         message.textContent = text;
         message.style.opacity = "1";
+    }
+
+    function freeLimit(course) {
+
+        if (!course) return 0;
+
+        if (course.accessType === "free") return Infinity;
+
+        return Number(course.freeUnits) || 0;
     }
 
 
@@ -89,8 +103,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
         var list = [];
 
+        courseMap = {};
+
         snapshot.forEach(function (doc) {
-            list.push({ id: doc.id, title: doc.data().title || doc.id });
+
+            var data = doc.data();
+
+            courseMap[doc.id] = data;
+
+            list.push({ id: doc.id, title: data.title || doc.id });
         });
 
         list.sort(function (a, b) {
@@ -125,15 +146,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
         try {
 
-            var snapshot = await db
-                .collection("units")
-                .where("courseId", "==", courseId)
-                .get();
+            var results = await Promise.all([
+                db.collection("units").where("courseId", "==", courseId).get(),
+                db.collection("unitFiles").where("courseId", "==", courseId).get()
+            ]);
+
+            var files = {};
+
+            results[1].forEach(function (doc) {
+                files[doc.id] = doc.data().pdfUrl || "";
+            });
 
             units = [];
 
-            snapshot.forEach(function (doc) {
-                units.push(Object.assign({ id: doc.id }, doc.data()));
+            results[0].forEach(function (doc) {
+                units.push(Object.assign({ id: doc.id, pdfUrl: files[doc.id] || "" }, doc.data()));
             });
 
             units.sort(function (a, b) {
@@ -160,7 +187,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         noUnits.style.display = "none";
 
+        var limit = freeLimit(courseMap[unitCourse.value]);
+
         units.forEach(function (unit) {
+
+            var isFree = Number(unit.unitNumber) <= limit;
 
             var card = document.createElement("div");
 
@@ -168,10 +199,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
             card.innerHTML =
                 '<div class="card-body">' +
-                    "<h3>Unit " + esc(unit.unitNumber) + "</h3>" +
+                    "<h3>Unit " + esc(unit.unitNumber) + " " + (isFree ? "🆓" : "🔒") + "</h3>" +
                     "<p>" + esc(unit.title || "") + "</p>" +
+                    "<p><strong>Access:</strong> " + (isFree ? "Free" : "Paid (enrolled students)") + "</p>" +
                     "<p><strong>Status:</strong> " + esc(unit.status || "active") + "</p>" +
-                    '<p><a href="' + esc(unit.pdfUrl) + '" target="_blank" rel="noopener">Open PDF link</a></p>' +
+                    (unit.pdfUrl
+                        ? '<p><a href="' + esc(unit.pdfUrl) + '" target="_blank" rel="noopener">Open PDF link</a></p>'
+                        : "<p>No PDF link</p>") +
                     '<div class="button-group" style="margin-top:12px;">' +
                         '<button class="btn btn-primary edit-unit" data-id="' + esc(unit.id) + '" type="button">Edit</button>' +
                         '<button class="btn btn-danger delete-unit" data-id="' + esc(unit.id) + '" type="button">Delete</button>' +
@@ -203,7 +237,6 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // same unit number should not repeat in one course
         var duplicate = units.some(function (u) {
             return Number(u.unitNumber) === number && u.id !== editingId;
         });
@@ -218,31 +251,47 @@ document.addEventListener("DOMContentLoaded", function () {
 
         try {
 
-            var data = {
+            var unitRef = editingId
+                ? db.collection("units").doc(editingId)
+                : db.collection("units").doc();
+
+            var fileRef = db.collection("unitFiles").doc(unitRef.id);
+
+            var stamp = firebase.firestore.FieldValue.serverTimestamp();
+
+            var batch = db.batch();
+
+            var unitData = {
                 courseId: courseId,
                 unitNumber: number,
                 title: title,
-                pdfUrl: pdfUrl,
                 status: status,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt: stamp,
                 updatedBy: currentAdmin.uid
             };
 
             if (editingId) {
 
-                await db.collection("units").doc(editingId).update(data);
-
-                showMessage("Unit updated successfully!", "success");
+                batch.update(unitRef, unitData);
 
             } else {
 
-                data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                data.createdBy = currentAdmin.uid;
+                unitData.createdAt = stamp;
+                unitData.createdBy = currentAdmin.uid;
 
-                await db.collection("units").add(data);
-
-                showMessage("Unit added successfully!", "success");
+                batch.set(unitRef, unitData);
             }
+
+            batch.set(fileRef, {
+                courseId: courseId,
+                unitNumber: number,
+                pdfUrl: pdfUrl,
+                updatedAt: stamp
+            });
+
+            await batch.commit();
+
+            showMessage(editingId ? "Unit updated successfully!" : "Unit added successfully!", "success");
 
             var keepCourse = courseId;
 
@@ -252,7 +301,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             await loadUnits();
 
-            // suggest next unit number
             var maxNumber = units.reduce(function (m, u) {
                 return Math.max(m, Number(u.unitNumber) || 0);
             }, 0);
@@ -308,7 +356,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             try {
 
-                await db.collection("units").doc(deleteBtn.dataset.id).delete();
+                var id = deleteBtn.dataset.id;
+
+                var batch = db.batch();
+
+                batch.delete(db.collection("units").doc(id));
+                batch.delete(db.collection("unitFiles").doc(id));
+
+                await batch.commit();
 
                 showMessage("Unit deleted.", "success");
 

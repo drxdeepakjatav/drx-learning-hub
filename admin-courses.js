@@ -88,6 +88,30 @@ document.addEventListener("DOMContentLoaded", function () {
     const coursePlaylist =
         document.getElementById("coursePlaylist");
 
+    const courseAccess =
+        document.getElementById("courseAccess");
+
+    const coursePrice =
+        document.getElementById("coursePrice");
+
+    const courseFreeUnits =
+        document.getElementById("courseFreeUnits");
+
+    const coursePaidGroup =
+        document.getElementById("coursePaidGroup");
+
+
+    function updateAccessUI() {
+
+        coursePaidGroup.style.display =
+            courseAccess.value === "paid" ? "block" : "none";
+
+    }
+
+    courseAccess.addEventListener("change", updateAccessUI);
+
+    updateAccessUI();
+
     const courseLessons =
         document.getElementById("courseLessons");
 
@@ -241,6 +265,19 @@ document.addEventListener("DOMContentLoaded", function () {
             const playlistUrl =
                 coursePlaylist.value.trim();
 
+            const accessType =
+                courseAccess.value === "free" ? "free" : "paid";
+
+            const price =
+                accessType === "paid"
+                    ? Math.max(0, Number(coursePrice.value) || 0)
+                    : 0;
+
+            const freeUnits =
+                accessType === "paid"
+                    ? Math.max(0, Math.floor(Number(courseFreeUnits.value) || 0))
+                    : 0;
+
             const lessons =
                 Number(courseLessons.value) || 0;
 
@@ -313,6 +350,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
                             playlistUrl: playlistUrl,
 
+                            accessType: accessType,
+
+                            price: price,
+
+                            freeUnits: freeUnits,
+
                             lessons: lessons,
 
                             status: status,
@@ -380,6 +423,12 @@ document.addEventListener("DOMContentLoaded", function () {
                             image: image,
 
                             playlistUrl: playlistUrl,
+
+                            accessType: accessType,
+
+                            price: price,
+
+                            freeUnits: freeUnits,
 
                             lessons: lessons,
 
@@ -628,6 +677,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 </p>
 
                 <p>
+                    <strong>Access:</strong>
+                    ${
+                        course.accessType === "free"
+                            ? "Free"
+                            : "Paid ₹" + escapeHTML(course.price || 0) +
+                              " (first " + escapeHTML(course.freeUnits || 0) + " units free)"
+                    }
+                </p>
+
+                <p>
                     <strong>Lessons:</strong>
                     ${Number(course.lessons) || 0}
                 </p>
@@ -796,6 +855,17 @@ document.addEventListener("DOMContentLoaded", function () {
             coursePlaylist.value =
                 course.playlistUrl || "";
 
+            courseAccess.value =
+                course.accessType === "free" ? "free" : "paid";
+
+            coursePrice.value =
+                course.price || "";
+
+            courseFreeUnits.value =
+                course.freeUnits || "";
+
+            updateAccessUI();
+
             courseImage.value =
                 course.image || "";
 
@@ -921,6 +991,8 @@ document.addEventListener("DOMContentLoaded", function () {
     function resetForm() {
 
         courseForm.reset();
+
+        updateAccessUI();
 
         updateTermUI("");
 

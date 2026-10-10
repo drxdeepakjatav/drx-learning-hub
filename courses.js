@@ -259,6 +259,18 @@ document.addEventListener("DOMContentLoaded", function () {
             const lessons =
                 escapeHTML(course.lessons || "0");
 
+            const priceText =
+                course.accessType === "free"
+                    ? "FREE"
+                    : (Number(course.price) ? "₹" + Number(course.price) : "Paid");
+
+            const freeCount = Number(course.freeUnits) || 0;
+
+            const priceNote =
+                course.accessType !== "free" && freeCount > 0
+                    ? " • first " + freeCount + " unit" + (freeCount > 1 ? "s" : "") + " free"
+                    : "";
+
             const image =
                 course.imageUrl || course.image || "";
 
@@ -299,6 +311,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     <div class="course-meta">
                         <span>📘 ${courseId}</span>
                         <span>📚 ${lessons} Lessons</span>
+                        <span class="price-tag ${course.accessType === "free" ? "free" : "paid"}">
+                            ${escapeHTML(priceText)}${escapeHTML(priceNote)}
+                        </span>
                     </div>
 
                     <a href="learn.html?course=${encodeURIComponent(course.id)}" class="btn btn-primary">

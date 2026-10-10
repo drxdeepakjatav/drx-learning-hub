@@ -1,7 +1,12 @@
 /* =========================================================
    DRx LEARNING HUB - LEARN PAGE
    Category > Semester/Year > Course > Unit > PDF
-   Online Test button, Course Video Playlist, Notes button
+
+   Free / Paid:
+   - Free course          : every unit open for logged in students
+   - Paid course          : first N units free (freeUnits),
+                            other units open after enrollment
+   - Admin                : everything open
    ========================================================= */
 
 (function () {
@@ -20,6 +25,8 @@
 
     var courses = [];
     var unitsCache = {};
+    var enrolled = {};
+    var isAdmin = false;
 
     var state = { category: "", term: "", course: "", unit: "" };
 
@@ -97,6 +104,120 @@
         return m
             ? "https://www.youtube-nocookie.com/embed/videoseries?list=" + m[1]
             : "";
+    }
+
+
+    /* ================= FREE / PAID RULES ================= */
+
+    function freeLimit(course) {
+
+        if (course.accessType === "free") return Infinity;
+
+        return Number(course.freeUnits) || 0;
+    }
+
+    // whole course open (free course, enrolled student or admin)
+    function courseUnlocked(course) {
+
+        return isAdmin || !!enrolled[course.id] || course.accessType === "free";
+    }
+
+    function unitUnlocked(course, unit) {
+
+        return courseUnlocked(course) ||
+               Number(unit.unitNumber) <= freeLimit(course);
+    }
+
+    function priceLabel(course) {
+
+        if (course.accessType === "free") return "FREE";
+
+        var price = Number(course.price) || 0;
+
+        return price ? "₹" + price : "Paid";
+    }
+
+    function courseBadge(course) {
+
+        if (isAdmin) return priceLabel(course);
+
+        if (enrolled[course.id]) return "Enrolled ✓";
+
+        var text = priceLabel(course);
+
+        var free = Number(course.freeUnits) || 0;
+
+        if (course.accessType !== "free" && free > 0) {
+            text += " • first " + free + " unit" + (free > 1 ? "s" : "") + " free";
+        }
+
+        return text;
+    }
+
+    function buyBoxHtml(course) {
+
+        var pay = window.DRX_PAYMENT || {};
+
+        var price = Number(course.price) || 0;
+
+        var title = course.title || course.id;
+
+        var free = Number(course.freeUnits) || 0;
+
+        var html =
+            '<div class="buy-box">' +
+                "<h3>🔒 Enroll in " + esc(title) + "</h3>" +
+                "<p>" +
+                    (price ? "Course fee: <strong>₹" + price + "</strong>. " : "This is a paid course. ") +
+                    (free > 0 ? "The first " + free + " unit" + (free > 1 ? "s are" : " is") + " free to preview." : "") +
+                "</p>" +
+                "<ol>" +
+                    "<li>Pay the course fee" + (pay.upiId ? " using UPI" : "") + ".</li>" +
+                    "<li>Send your payment screenshot or UTR number through the Contact page.</li>" +
+                    "<li>We enroll you, and all units open in your account.</li>" +
+                "</ol>";
+
+        html += '<div class="buy-actions">';
+
+        if (pay.upiId && price) {
+
+            var upiLink =
+                "upi://pay?pa=" + encodeURIComponent(pay.upiId) +
+                "&pn=" + encodeURIComponent(pay.payeeName || "DRx Learning Hub") +
+                "&am=" + price +
+                "&cu=INR&tn=" + encodeURIComponent("Course " + course.id);
+
+            html += '<a class="btn btn-primary" href="' + esc(upiLink) + '">Pay ₹' + price + ' with UPI</a>';
+        }
+
+        var contactUrl =
+            "contact.html?subject=" + encodeURIComponent("Course Enrollment") +
+            "&message=" + encodeURIComponent(
+                "I want to enroll in " + title + " (" + course.id + ")" +
+                (price ? ", fee ₹" + price : "") +
+                ".\nPayment UTR / reference: "
+            );
+
+        html += '<a class="btn btn-secondary" href="' + esc(contactUrl) + '">I have paid / Contact to enroll</a>';
+
+        html += "</div>";
+
+        if (pay.upiId) {
+            html += '<p class="buy-note">UPI ID: <strong>' + esc(pay.upiId) + "</strong>" +
+                    " (the UPI button works on mobile phones)</p>";
+        }
+
+        if (pay.qrImage) {
+            html += '<img class="upi-qr" src="' + esc(pay.qrImage) + '" alt="UPI QR code">';
+        }
+
+        if (pay.note) {
+            html += '<p class="buy-note">' + esc(pay.note) + "</p>";
+        }
+
+        html += "</div>";
+
+        return html;
     }
 
 
@@ -264,14 +385,7 @@
         });
 
         if (!keys.length) {
-
-            content.innerHTML =
-                '<div class="empty-state">' +
-                    "<h3>You are not enrolled in any course yet</h3>" +
-                    "<p>Once you are enrolled in a course, it will appear here.</p>" +
-                    '<a href="courses.html" class="btn btn-primary">Browse Courses</a>' +
-                "</div>";
-
+            emptyMessage("No courses yet", "Courses will appear here when admin adds them.");
             return;
         }
 
@@ -342,7 +456,13 @@
             termLabel(state.term),
             "Select your course.",
             list.map(function (c) {
-                return { key: c.id, icon: "📘", title: c.title || c.id, text: c.id };
+                return {
+                    key: c.id,
+                    icon: enrolled[c.id] ? "✅" : (c.accessType === "free" ? "🆓" : "📘"),
+                    title: c.title || c.id,
+                    text: c.id,
+                    badge: courseBadge(c)
+                };
             }),
             function (card) {
                 go({ category: state.category, term: state.term, course: card.key, unit: "" });
@@ -393,12 +513,28 @@
 
         var hasPlaylist = !!playlistEmbedUrl(course.playlistUrl);
 
+        var playlistButton;
+
+        if (!hasPlaylist) {
+
+            playlistButton =
+                '<button class="btn btn-secondary" type="button" disabled>📺 Playlist Coming Soon</button>';
+
+        } else if (!courseUnlocked(course)) {
+
+            playlistButton =
+                '<button class="btn btn-secondary" type="button" disabled>🔒 Playlist (enrolled students)</button>';
+
+        } else {
+
+            playlistButton =
+                '<button class="btn btn-secondary" type="button" id="playlistBtn">📺 Course Video Playlist</button>';
+        }
+
         return '' +
             '<div class="unit-actions">' +
                 '<a class="btn btn-primary" href="' + esc(testUrl(course, unit)) + '">📝 Online Test</a>' +
-                (hasPlaylist
-                    ? '<button class="btn btn-secondary" type="button" id="playlistBtn">📺 Course Video Playlist</button>'
-                    : '<button class="btn btn-secondary" type="button" disabled>📺 Playlist Coming Soon</button>') +
+                playlistButton +
                 '<a class="btn btn-primary" href="' + esc(notesUrl(course, unit)) + '">📖 Notes</a>' +
             '</div>' +
             '<div class="playlist-box" id="playlistBox" style="display:none;"></div>';
@@ -453,8 +589,14 @@
 
         var html =
             '<div class="learn-title"><h2>' + esc(course.title || course.id) + "</h2>" +
-            "<p>" + esc(course.description || "") + "</p></div>" +
-            actionsHtml(course, null);
+            "<p>" + esc(course.description || "") + "</p>" +
+            '<span class="count-badge">' + esc(courseBadge(course)) + "</span></div>";
+
+        if (!courseUnlocked(course)) {
+            html += buyBoxHtml(course);
+        }
+
+        html += actionsHtml(course, null);
 
         if (!units.length) {
             html += '<div class="empty-state"><h3>No units yet</h3><p>Units and PDFs will appear here soon.</p></div>';
@@ -466,12 +608,19 @@
         html += '<div class="learn-grid">';
 
         units.forEach(function (unit, index) {
+
+            var open = unitUnlocked(course, unit);
+
+            var label = !open
+                ? "🔒 Locked"
+                : (courseUnlocked(course) ? "View PDF" : "🆓 Free preview");
+
             html +=
-                '<div class="learn-card" data-index="' + index + '">' +
-                    '<div class="learn-icon">📄</div>' +
+                '<div class="learn-card' + (open ? "" : " locked") + '" data-index="' + index + '">' +
+                    '<div class="learn-icon">' + (open ? "📄" : "🔒") + "</div>" +
                     "<h3>Unit " + esc(unit.unitNumber) + "</h3>" +
                     "<p>" + esc(unit.title || "") + "</p>" +
-                    '<span class="count-badge">View PDF</span>' +
+                    '<span class="count-badge">' + label + "</span>" +
                 "</div>";
         });
 
@@ -525,19 +674,66 @@
         var prev = units[index - 1];
         var next = units[index + 1];
 
-        var embed = pdfEmbedUrl(unit.pdfUrl);
+        var header =
+            '<div class="learn-title"><h2>Unit ' + esc(unit.unitNumber) + ": " + esc(unit.title || "") + "</h2>" +
+            "<p>" + esc(course.title || course.id) + "</p></div>";
+
+        var viewer = "";
+
+        if (!unitUnlocked(course, unit)) {
+
+            viewer =
+                '<div class="lock-note">🔒 This unit is available to enrolled students.</div>' +
+                buyBoxHtml(course);
+
+        } else {
+
+            var pdfUrl = "";
+            var problem = "";
+
+            try {
+
+                var fileDoc = await db.collection("unitFiles").doc(unit.id).get();
+
+                if (fileDoc.exists) {
+                    pdfUrl = fileDoc.data().pdfUrl || "";
+                }
+
+                if (!pdfUrl) {
+                    problem = "The PDF for this unit has not been added yet.";
+                }
+
+            } catch (error) {
+
+                console.error(error);
+
+                problem = "permission";
+            }
+
+            if (problem === "permission") {
+
+                viewer =
+                    '<div class="lock-note">🔒 This unit is available to enrolled students.</div>' +
+                    buyBoxHtml(course);
+
+            } else if (problem) {
+
+                viewer = '<div class="empty-state"><h3>PDF not available</h3><p>' + esc(problem) + "</p></div>";
+
+            } else {
+
+                viewer =
+                    (courseUnlocked(course) ? "" : '<p class="free-tag">🆓 Free preview unit</p>') +
+                    '<div class="pdf-viewer"><iframe src="' + esc(pdfEmbedUrl(pdfUrl)) + '" title="PDF" allowfullscreen></iframe></div>' +
+                    '<p style="margin-top:10px;"><a href="' + esc(pdfUrl) +
+                    '" target="_blank" rel="noopener" class="btn btn-secondary btn-small">Open PDF in new tab</a></p>';
+            }
+        }
 
         content.innerHTML =
-            '<div class="learn-title"><h2>Unit ' + esc(unit.unitNumber) + ": " + esc(unit.title || "") + "</h2>" +
-            "<p>" + esc(course.title || course.id) + "</p></div>" +
-
-            '<div class="pdf-viewer"><iframe src="' + esc(embed) + '" title="PDF" allowfullscreen></iframe></div>' +
-
-            '<p style="margin-top:10px;"><a href="' + esc(unit.pdfUrl) +
-            '" target="_blank" rel="noopener" class="btn btn-secondary btn-small">Open PDF in new tab</a></p>' +
-
+            header +
+            viewer +
             actionsHtml(course, unit) +
-
             '<div class="unit-nav">' +
                 (prev ? '<button class="btn btn-secondary" id="prevUnit" type="button">← Unit ' + esc(prev.unitNumber) + "</button>" : "<span></span>") +
                 (next ? '<button class="btn btn-primary" id="nextUnit" type="button">Unit ' + esc(next.unitNumber) + " →</button>" : "<span></span>") +
@@ -568,15 +764,13 @@
 
         renderBreadcrumb();
 
-        // link to a course the student is not enrolled in
-
         if (state.course && !courseById(state.course)) {
 
             content.innerHTML =
                 '<div class="empty-state">' +
-                    "<h3>You are not enrolled in this course</h3>" +
-                    "<p>Please contact the admin to get enrolled in <strong>" + esc(state.course) + "</strong>.</p>" +
-                    '<a href="learn.html" class="btn btn-primary">My Courses</a>' +
+                    "<h3>Course not found</h3>" +
+                    "<p>The course <strong>" + esc(state.course) + "</strong> is not available.</p>" +
+                    '<a href="learn.html" class="btn btn-primary">All Courses</a>' +
                 "</div>";
 
             return;
@@ -596,51 +790,35 @@
     async function loadCourses(user) {
 
         courses = [];
-
-        // Admin can see every active course
+        enrolled = {};
 
         var adminDoc = await db.collection("admins").doc(user.uid).get();
 
-        if (adminDoc.exists) {
+        isAdmin = adminDoc.exists;
 
-            var all = await db
-                .collection("courses")
-                .where("status", "==", "active")
-                .get();
+        var snapshot = await db
+            .collection("courses")
+            .where("status", "==", "active")
+            .get();
 
-            all.forEach(function (doc) {
-                courses.push(Object.assign({ id: doc.id }, doc.data()));
-            });
-
-        } else {
-
-            // Student sees only the courses he/she is enrolled in
-
-            var studentDoc = await db.collection("students").doc(user.uid).get();
-
-            var ids =
-                studentDoc.exists
-                    ? (studentDoc.data().enrolledCourses || [])
-                    : [];
-
-            var docs = await Promise.all(
-                ids.map(function (id) {
-                    return db.collection("courses").doc(id).get();
-                })
-            );
-
-            docs.forEach(function (doc) {
-
-                if (doc.exists && doc.data().status === "active") {
-                    courses.push(Object.assign({ id: doc.id }, doc.data()));
-                }
-
-            });
-        }
+        snapshot.forEach(function (doc) {
+            courses.push(Object.assign({ id: doc.id }, doc.data()));
+        });
 
         courses.sort(function (a, b) {
             return String(a.title || a.id).localeCompare(String(b.title || b.id));
         });
+
+        if (!isAdmin) {
+
+            var studentDoc = await db.collection("students").doc(user.uid).get();
+
+            var ids = studentDoc.exists ? (studentDoc.data().enrolledCourses || []) : [];
+
+            ids.forEach(function (id) {
+                enrolled[id] = true;
+            });
+        }
     }
 
     document.addEventListener("DOMContentLoaded", function () {

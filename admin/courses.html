@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Manage Courses | DRx Learning Hub</title>
-
     <link rel="icon" type="image/png" href="../favicon.png">
     <link rel="icon" href="../favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="../apple-touch-icon.png">
@@ -272,6 +271,63 @@
                     id="courseImage"
                     placeholder="https://example.com/image.jpg"
                 >
+
+            </div>
+
+
+            <!-- Access (Free / Paid) -->
+
+            <div class="form-group">
+
+                <label for="courseAccess">
+                    Access Type
+                </label>
+
+                <select id="courseAccess">
+
+                    <option value="paid">
+                        Paid course (first few units free)
+                    </option>
+
+                    <option value="free">
+                        Free course (all units free)
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group" id="coursePaidGroup">
+
+                <label for="coursePrice">
+                    Price (₹)
+                </label>
+
+                <input
+                    type="number"
+                    id="coursePrice"
+                    min="0"
+                    step="1"
+                    placeholder="e.g. 499"
+                >
+
+                <label for="courseFreeUnits" style="margin-top:14px;">
+                    Free Units (first N units are free)
+                </label>
+
+                <input
+                    type="number"
+                    id="courseFreeUnits"
+                    min="0"
+                    step="1"
+                    placeholder="e.g. 2"
+                >
+
+                <small>
+                    Example: 2 means Unit 1 and Unit 2 are free for every student.
+                    Other units open only after enrollment.
+                </small>
 
             </div>
 

@@ -27,6 +27,27 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
+    // Prefill from a link such as contact.html?subject=Course Enrollment&message=...
+
+    var params = new URLSearchParams(window.location.search);
+
+    var presetSubject = params.get("subject");
+    var presetMessage = params.get("message");
+
+    if (presetSubject) {
+
+        Array.prototype.forEach.call(subjectInput.options, function (option) {
+            if (option.value === presetSubject) {
+                subjectInput.value = presetSubject;
+            }
+        });
+    }
+
+    if (presetMessage) {
+        textInput.value = presetMessage.slice(0, 2000);
+    }
+
+
     // Fill name and email for logged in students
 
     if (typeof auth !== "undefined") {
