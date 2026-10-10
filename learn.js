@@ -164,6 +164,8 @@
 
         var free = Number(course.freeUnits) || 0;
 
+        var online = pay.online !== false && price > 0;
+
         var html =
             '<div class="buy-box">' +
                 "<h3>🔒 Enroll in " + esc(title) + "</h3>" +
@@ -171,15 +173,25 @@
                     (price ? "Course fee: <strong>₹" + price + "</strong>. " : "This is a paid course. ") +
                     (free > 0 ? "The first " + free + " unit" + (free > 1 ? "s are" : " is") + " free to preview." : "") +
                 "</p>" +
-                "<ol>" +
-                    "<li>Pay the course fee" + (pay.upiId ? " using UPI" : "") + ".</li>" +
-                    "<li>Send your payment screenshot or UTR number through the Contact page.</li>" +
-                    "<li>We enroll you, and all units open in your account.</li>" +
-                "</ol>";
+                (online
+                    ? "<ol>" +
+                          "<li>Click <strong>Pay &amp; Enroll</strong> and pay with UPI, card or net banking.</li>" +
+                          "<li>The course opens in your account automatically as soon as the payment is done.</li>" +
+                      "</ol>"
+                    : "<ol>" +
+                          "<li>Pay the course fee" + (pay.upiId ? " using UPI" : "") + ".</li>" +
+                          "<li>Send your payment screenshot or UTR number through the Contact page.</li>" +
+                          "<li>We enroll you, and all units open in your account.</li>" +
+                      "</ol>");
 
         html += '<div class="buy-actions">';
 
-        if (pay.upiId && price) {
+        if (online) {
+
+            html += '<button class="btn btn-primary" type="button" id="payOnlineBtn">Pay ₹' + price + ' &amp; Enroll</button>';
+        }
+
+        if (!online && pay.upiId && price) {
 
             var upiLink =
                 "upi://pay?pa=" + encodeURIComponent(pay.upiId) +
@@ -198,20 +210,23 @@
                 ".\nPayment UTR / reference: "
             );
 
-        html += '<a class="btn btn-secondary" href="' + esc(contactUrl) + '">I have paid / Contact to enroll</a>';
+        html += '<a class="btn btn-secondary" href="' + esc(contactUrl) + '">' +
+                (online ? "Payment problem? Contact us" : "I have paid / Contact to enroll") + "</a>";
 
         html += "</div>";
 
-        if (pay.upiId) {
+        html += '<p class="buy-note" id="payStatus"></p>';
+
+        if (!online && pay.upiId) {
             html += '<p class="buy-note">UPI ID: <strong>' + esc(pay.upiId) + "</strong>" +
                     " (the UPI button works on mobile phones)</p>";
         }
 
-        if (pay.qrImage) {
+        if (!online && pay.qrImage) {
             html += '<img class="upi-qr" src="' + esc(pay.qrImage) + '" alt="UPI QR code">';
         }
 
-        if (pay.note) {
+        if (!online && pay.note) {
             html += '<p class="buy-note">' + esc(pay.note) + "</p>";
         }
 
@@ -564,6 +579,17 @@
         });
     }
 
+    function bindPay(course) {
+
+        var btn = document.getElementById("payOnlineBtn");
+
+        if (!btn || typeof DRX_PAY === "undefined") return;
+
+        btn.addEventListener("click", function () {
+            DRX_PAY.start(course, btn, document.getElementById("payStatus"));
+        });
+    }
+
     async function renderUnits() {
 
         var course = courseById(state.course);
@@ -602,6 +628,7 @@
             html += '<div class="empty-state"><h3>No units yet</h3><p>Units and PDFs will appear here soon.</p></div>';
             content.innerHTML = html;
             bindPlaylist(course);
+        bindPay(course);
             return;
         }
 
@@ -629,6 +656,7 @@
         content.innerHTML = html;
 
         bindPlaylist(course);
+        bindPay(course);
 
         content.querySelectorAll(".learn-card").forEach(function (el) {
             el.addEventListener("click", function () {
@@ -740,6 +768,7 @@
             "</div>";
 
         bindPlaylist(course);
+        bindPay(course);
 
         var prevBtn = document.getElementById("prevUnit");
         var nextBtn = document.getElementById("nextUnit");

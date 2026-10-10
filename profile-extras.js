@@ -316,15 +316,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     action = '<button class="btn btn-primary btn-small enroll-free" data-id="' + esc(c.id) + '" type="button">Enroll Free</button>';
 
-                } else if (requests[c.id]) {
-
-                    action =
-                        '<span class="pending-tag">Request sent</span> ' +
-                        '<a class="btn btn-secondary btn-small" href="learn.html?course=' + encodeURIComponent(c.id) + '">Payment steps</a>';
-
                 } else {
 
-                    action = '<button class="btn btn-primary btn-small enroll-paid" data-id="' + esc(c.id) + '" type="button">Request Enrollment</button>';
+                    action = '<a class="btn btn-primary btn-small" href="learn.html?course=' + encodeURIComponent(c.id) + '">Pay &amp; Enroll</a>';
                 }
 
                 html +=

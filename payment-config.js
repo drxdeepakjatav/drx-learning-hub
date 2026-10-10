@@ -5,6 +5,10 @@
 
 window.DRX_PAYMENT = {
 
+    // true  = students pay online (Razorpay) and the course opens automatically.
+    // false = manual UPI only (the admin enrolls after checking the payment).
+    online: true,
+
     // Your UPI ID, for example "yourname@upi" or "9876543210@ybl".
     // Leave empty ("") if you only want students to contact you.
     upiId: "",
