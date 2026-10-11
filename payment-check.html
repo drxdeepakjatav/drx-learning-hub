@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Payment Setup Check | DRx Learning Hub</title>
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="site-header">
+
+    <div class="container header-inner">
+
+        <a href="index.html" class="logo">
+            DRx Learning Hub
+        </a>
+
+        <nav class="main-nav" id="mainNav">
+            <a href="index.html">Home</a>
+            <a href="learn.html">Learn</a>
+        </nav>
+
+    </div>
+
+</header>
+
+<section class="page-header">
+
+    <div class="container">
+
+        <h1>Payment Setup Check</h1>
+
+        <p>Shows if online payment is set up correctly. No secret value is shown here.</p>
+
+    </div>
+
+</section>
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="policy-content" id="checkBox">
+
+            <div class="empty-state">
+                <div class="loading-spinner"></div>
+                <p>Checking...</p>
+            </div>
+
+        </div>
+
+        <div style="text-align:center; margin-top:20px;">
+            <button class="btn btn-primary" id="recheck" type="button">Check Again</button>
+        </div>
+
+    </div>
+
+</section>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    var box = document.getElementById("checkBox");
+
+    var HELP = {
+
+        CASHFREE_APP_ID: "Cashfree Client ID (Test mode)",
+        CASHFREE_SECRET: "Cashfree Client Secret (Test mode)",
+        CASHFREE_ENV: "Should be: sandbox",
+        FIREBASE_PROJECT_ID: "Should be: drx-learning-hub-2",
+        FIREBASE_WEB_API_KEY: "apiKey from firebase-config.js",
+        FIREBASE_CLIENT_EMAIL: "client_email from the Firebase service account JSON",
+        FIREBASE_PRIVATE_KEY: "private_key from the Firebase service account JSON"
+    };
+
+    function esc(value) {
+        return String(value === null || value === undefined ? "" : value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+    }
+
+    function row(ok, title, detail) {
+
+        return '<p style="margin:10px 0;">' +
+            (ok ? "✅" : "❌") + " <strong>" + esc(title) + "</strong>" +
+            (detail ? '<br><span style="color:#6b7280;font-size:14px;">' + esc(detail) + "</span>" : "") +
+            "</p>";
+    }
+
+    async function check() {
+
+        box.innerHTML =
+            '<div class="empty-state"><div class="loading-spinner"></div><p>Checking...</p></div>';
+
+        var response;
+
+        try {
+
+            response = await fetch("/api/payment-check", { cache: "no-store" });
+
+        } catch (error) {
+
+            box.innerHTML = row(false, "Could not reach the server", error.message);
+
+            return;
+        }
+
+        var type = response.headers.get("content-type") || "";
+
+        // the function is missing: Cloudflare shows the home page instead of JSON
+        if (type.indexOf("application/json") === -1) {
+
+            box.innerHTML =
+                row(false, "The payment functions are NOT active on this website",
+                    "The 'functions' folder was not found by Cloudflare. It must be in the main folder of your GitHub repo (next to index.html), " +
+                    "and the project must be connected to GitHub. Then redeploy.");
+
+            return;
+        }
+
+        var data = await response.json();
+
+        var html = "<h2>Settings in Cloudflare</h2>";
+
+        Object.keys(data.settings).forEach(function (name) {
+
+            var set = data.settings[name] === "set";
+
+            html += row(set, name, set ? "" : "MISSING. " + (HELP[name] || ""));
+        });
+
+        html += "<h2>Connections</h2>";
+
+        html += row(!!data.firebase.ok, "Firebase database",
+            data.firebase.ok ? "Server can read your database." : data.firebase.error);
+
+        html += row(!!data.cashfree.ok, "Cashfree (" + (data.cashfree.mode || "") + ")",
+            data.cashfree.ok ? "Cashfree keys are accepted." : data.cashfree.error);
+
+        html += data.ready
+            ? '<p class="extras-message ok" style="margin-top:20px;">✅ Everything is ready. You can make a test payment.</p>'
+            : '<p class="extras-message bad" style="margin-top:20px;">❌ Fix the red items above, then click "Check Again".</p>';
+
+        box.innerHTML = html;
+    }
+
+    document.getElementById("recheck").addEventListener("click", check);
+
+    check();
+});
+
+</script>
+
+</body>
+</html>
