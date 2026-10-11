@@ -1,6 +1,6 @@
 /* =========================================================
    DRx LEARNING HUB - ONLINE PAYMENT (browser side)
-   Opens the Razorpay window. The server (/api/...) checks the
+   Opens the Cashfree (or Razorpay) window. The server (/api/...) checks the
    payment and unlocks the course automatically.
    ========================================================= */
 
@@ -210,7 +210,7 @@ window.DRX_PAY = (function () {
 
             var token = await user.getIdToken();
 
-            var gateway = (window.DRX_PAYMENT && window.DRX_PAYMENT.gateway) || "razorpay";
+            var gateway = (window.DRX_PAYMENT && window.DRX_PAYMENT.gateway) || "cashfree";
 
             if (gateway === "cashfree") {
 
