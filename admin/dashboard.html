@@ -159,6 +159,25 @@
         </div>
 
 
+        <!-- PAYMENTS -->
+
+        <div class="card">
+
+            <h3>
+                💰 Payments
+            </h3>
+
+            <p>
+                See every online payment and the total received.
+            </p>
+
+            <a href="payments.html" class="btn btn-primary">
+                View Payments
+            </a>
+
+        </div>
+
+
         <!-- MESSAGES -->
 
         <div class="card">
@@ -287,6 +306,57 @@
                 <p>
                     Results
                 </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- UNITS -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">📄</div>
+
+            <div>
+
+                <h3 id="unitCount">0</h3>
+
+                <p>Units</p>
+
+            </div>
+
+        </div>
+
+
+        <!-- PENDING REQUESTS -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">🧾</div>
+
+            <div>
+
+                <h3 id="requestCount">0</h3>
+
+                <p>Pending Requests</p>
+
+            </div>
+
+        </div>
+
+
+        <!-- REVENUE -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">💰</div>
+
+            <div>
+
+                <h3 id="revenueCount">₹0</h3>
+
+                <p>Online Payments</p>
 
             </div>
 
@@ -507,6 +577,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const testCount = document.getElementById("testCount");
     const studentCount = document.getElementById("studentCount");
     const resultCount = document.getElementById("resultCount");
+    const unitCount = document.getElementById("unitCount");
+    const requestCount = document.getElementById("requestCount");
+    const revenueCount = document.getElementById("revenueCount");
 
 
     // ================= AUTH CHECK =================
@@ -583,6 +656,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 resultCount
             );
 
+            loadCollectionCount(
+                "units",
+                unitCount
+            );
+
+            loadCollectionCount(
+                "enrollmentRequests",
+                requestCount
+            );
+
+            loadRevenue(revenueCount);
+
 
         } catch (error) {
 
@@ -622,6 +707,35 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
             element.textContent = "0";
+        }
+
+    }
+
+
+    // ================= REVENUE (online payments) =================
+
+    async function loadRevenue(element) {
+
+        try {
+
+            const snapshot = await db
+                .collection("payments")
+                .get();
+
+            let paise = 0;
+
+            snapshot.forEach(function (doc) {
+                paise += Number(doc.data().amount) || 0;
+            });
+
+            element.textContent =
+                "₹" + (paise / 100).toLocaleString("en-IN");
+
+        } catch (error) {
+
+            console.error("Revenue Error:", error);
+
+            element.textContent = "₹0";
         }
 
     }

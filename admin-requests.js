@@ -136,6 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     "<h3>" + esc(req.courseTitle || req.courseId) + "</h3>" +
                     "<p><strong>Student:</strong> " + esc(req.studentName || "-") + " &lt;" + esc(req.studentEmail) + "&gt;</p>" +
                     "<p><strong>Course ID:</strong> " + esc(req.courseId) + "</p>" +
+                    "<p><strong>UTR / Ref:</strong> " + esc(req.utr || "not given") + "</p>" +
                     "<p><strong>Fee:</strong> " + (course.accessType === "free" ? "Free" : (price ? "₹" + price : "Paid")) + "</p>" +
                     '<p style="color:#6b7280;font-size:13px;">Requested: ' + esc(formatDate(req.createdAt)) + "</p>" +
                     '<div class="button-group" style="margin-top:14px;">' +

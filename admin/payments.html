@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+
+    <title>Payments | DRx Admin</title>
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <link rel="icon" href="../favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+
+    <link rel="stylesheet" href="../style.css">
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <script src="../firebase-config.js"></script>
+    <script src="../script.js" defer></script>
+</head>
+
+<body>
+
+<header class="site-header">
+
+    <div class="container header-inner">
+
+        <a href="dashboard.html" class="logo">DRx Learning Hub</a>
+
+        <button class="menu-toggle" id="menuToggle">☰</button>
+
+        <nav class="main-nav" id="mainNav">
+            <button id="logoutBtn" class="btn btn-danger" type="button">Logout</button>
+        </nav>
+
+    </div>
+
+</header>
+
+<main>
+
+<section class="page-header">
+
+    <div class="container">
+
+        <h1>Payments</h1>
+
+        <p>Online payments received for paid courses.</p>
+
+    </div>
+
+</section>
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div>
+                    <h3 id="totalRevenue">₹0</h3>
+                    <p>Total Received</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">🧾</div>
+                <div>
+                    <h3 id="totalCount">0</h3>
+                    <p>Payments</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="search-box" style="margin-top:25px;">
+            <input type="text" id="paySearch" placeholder="Search name, email, course or payment ID...">
+        </div>
+
+        <div id="payStatus" class="empty-state">
+            <div class="loading-spinner"></div>
+            <p>Loading payments...</p>
+        </div>
+
+        <div id="payList" class="cards-grid" style="grid-template-columns: 1fr;"></div>
+
+    </div>
+
+</section>
+
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        <div class="footer-bottom">
+            <p>© <span class="current-year"></span> DRx Learning Hub. All Rights Reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="../admin-payments.js"></script>
+
+</body>
+</html>

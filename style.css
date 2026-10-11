@@ -2751,3 +2751,76 @@ table {
     background: #f8d7da;
     color: #842029;
 }
+
+
+/* =========================
+   47. UTR BOX (manual UPI payment)
+   ========================= */
+
+.utr-box {
+    margin-top: 16px;
+    padding: 16px;
+    background: #f9fafb;
+    border: 1px dashed #b6d4fe;
+    border-radius: 10px;
+}
+
+.utr-box label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+    color: #111827;
+    font-size: 14px;
+}
+
+.utr-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.utr-row input {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    font-size: 14px;
+}
+
+.utr-row input:focus {
+    outline: none;
+    border-color: #0b5ed7;
+    box-shadow: 0 0 0 3px rgba(11, 94, 215, 0.12);
+}
+
+.submitted-note {
+    color: #0f5132;
+    font-weight: 600;
+    margin: 0;
+}
+
+
+/* =========================
+   48. FOOTER LEGAL LINKS
+   ========================= */
+
+.footer-legal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 22px;
+    padding: 18px 0;
+    margin-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.footer-legal a {
+    color: #9ca3af;
+    font-size: 13px;
+}
+
+.footer-legal a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}

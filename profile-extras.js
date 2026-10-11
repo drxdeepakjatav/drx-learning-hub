@@ -64,6 +64,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             renderEnroll();
 
+            await renderPayments();
+
             // opened from signup / a link: scroll to the enroll box
             if (new URLSearchParams(window.location.search).get("enroll")) {
                 enrollCard.scrollIntoView({ behavior: "smooth" });
@@ -106,6 +108,79 @@ document.addEventListener("DOMContentLoaded", function () {
         snapshot.forEach(function (doc) {
             requests[doc.data().courseId] = true;
         });
+    }
+
+
+    /* ================= MY PAYMENTS ================= */
+
+    async function renderPayments() {
+
+        var card = document.getElementById("payCard");
+
+        if (!card) {
+
+            card = document.createElement("div");
+
+            card.className = "profile-card extras-card";
+
+            card.id = "payCard";
+
+            enrollCard.parentNode.insertBefore(card, enrollCard.nextSibling);
+        }
+
+        try {
+
+            var snapshot = await db
+                .collection("payments")
+                .where("studentId", "==", currentUser.uid)
+                .get();
+
+            var rows = [];
+
+            snapshot.forEach(function (doc) {
+                rows.push(Object.assign({ id: doc.id }, doc.data()));
+            });
+
+            if (!rows.length) {
+                card.style.display = "none";
+                return;
+            }
+
+            rows.sort(function (a, b) {
+                var at = a.createdAt && a.createdAt.toMillis ? a.createdAt.toMillis() : 0;
+                var bt = b.createdAt && b.createdAt.toMillis ? b.createdAt.toMillis() : 0;
+                return bt - at;
+            });
+
+            card.style.display = "";
+
+            var html = "<h2>My Payments</h2>" + '<div class="enroll-list">';
+
+            rows.forEach(function (r) {
+
+                var date = r.createdAt && r.createdAt.toDate
+                    ? r.createdAt.toDate().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
+                    : "";
+
+                html +=
+                    '<div class="enroll-row">' +
+                        "<div><strong>" + esc(r.courseTitle || r.courseId) + "</strong>" +
+                            '<span class="enroll-meta">' + esc(date) + " • ID: " + esc(r.id) + "</span></div>" +
+                        "<div><strong>₹" + (Number(r.amount || 0) / 100).toLocaleString("en-IN") + "</strong> " +
+                            '<span class="pending-tag" style="background:#d1e7dd;color:#0f5132;">' + esc(r.status || "paid") + "</span></div>" +
+                    "</div>";
+            });
+
+            html += "</div>";
+
+            card.innerHTML = html;
+
+        } catch (error) {
+
+            console.error("Payments error:", error);
+
+            card.style.display = "none";
+        }
     }
 
 

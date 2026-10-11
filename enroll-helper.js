@@ -54,20 +54,26 @@ window.DRX_ENROLL = (function () {
     }
 
     // paid course: ask the admin to enroll (after payment)
-    async function requestPaid(user, studentName, course) {
+    async function requestPaid(user, studentName, course, utr) {
+
+        var data = {
+            studentId: user.uid,
+            studentName: studentName || user.displayName || "",
+            studentEmail: user.email || "",
+            courseId: course.id,
+            courseTitle: course.title || course.id,
+            status: "pending",
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        if (utr) {
+            data.utr = String(utr).slice(0, 30);
+        }
 
         await db
             .collection("enrollmentRequests")
             .doc(user.uid + "_" + course.id)
-            .set({
-                studentId: user.uid,
-                studentName: studentName || user.displayName || "",
-                studentEmail: user.email || "",
-                courseId: course.id,
-                courseTitle: course.title || course.id,
-                status: "pending",
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
+            .set(data);
     }
 
     return {

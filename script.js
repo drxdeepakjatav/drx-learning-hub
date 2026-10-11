@@ -46,21 +46,31 @@ document.addEventListener("DOMContentLoaded", function () {
        2. ACTIVE NAVIGATION
        ========================= */
 
+    function pageName(value) {
+
+        return String(value || "")
+            .split("#")[0]
+            .split("?")[0]
+            .split("/")
+            .pop()
+            .replace(/\.html$/, "") || "index";
+    }
+
     const currentPage =
-        window.location.pathname.split("/").pop() || "index.html";
+        pageName(window.location.pathname);
 
     const navigationLinks =
         document.querySelectorAll(".main-nav a");
 
     navigationLinks.forEach(function (link) {
 
-        const linkPage =
-            link.getAttribute("href");
+        const href = link.getAttribute("href");
 
         if (
-            linkPage &&
-            linkPage !== "#" &&
-            linkPage === currentPage
+            href &&
+            href !== "#" &&
+            href.indexOf("#") === -1 &&
+            pageName(href) === currentPage
         ) {
             link.classList.add("active");
         }
@@ -648,3 +658,222 @@ function escapeHTML(value) {
         .replace(/'/g, "&#039;");
 
 }
+
+
+
+/* =========================================================
+   SITE WIDE MENU, FOOTER AND LOGIN LINK
+   Keeps every page consistent without editing each page.
+   ========================================================= */
+
+(function () {
+
+    var isAdmin = /\/admin(\/|$)/.test(window.location.pathname);
+
+    var prefix = isAdmin ? "../" : "";
+
+    function baseName(href) {
+
+        return String(href || "")
+            .split("?")[0]
+            .split("/")
+            .pop()
+            .replace(/\.html$/, "");
+    }
+
+    function makeLink(text, href) {
+
+        var a = document.createElement("a");
+
+        a.href = href;
+        a.textContent = text;
+
+        return a;
+    }
+
+
+    /* ---------- student site menu ---------- */
+
+    var SITE_MENU = [
+        ["Home", "index.html"],
+        ["Courses", "courses.html"],
+        ["Learn", "learn.html"],
+        ["Videos", "videos.html"],
+        ["Notes", "notes.html"],
+        ["Tests", "tests.html"],
+        ["About", "about.html"],
+        ["Contact", "contact.html"]
+    ];
+
+    function buildSiteMenu() {
+
+        var nav = document.querySelector(".main-nav");
+
+        if (!nav) return;
+
+        // old links that pointed to the About section of the home page
+        Array.prototype.forEach.call(nav.querySelectorAll("a"), function (a) {
+
+            var href = a.getAttribute("href") || "";
+
+            if (/index(\.html)?#about$/.test(href) || /(^|\/)about(\.html)?$/.test(href)) {
+
+                a.setAttribute("href", prefix + "about.html");
+            }
+        });
+
+        var found = {};
+
+        Array.prototype.forEach.call(nav.querySelectorAll("a"), function (a) {
+
+            var name = baseName(a.getAttribute("href"));
+
+            if (name && !found[name]) found[name] = a;
+        });
+
+        var anchorPoint =
+            nav.querySelector(".nav-login") ||
+            nav.querySelector("button") ||
+            null;
+
+        SITE_MENU.forEach(function (item, index) {
+
+            var name = baseName(item[1]);
+
+            if (found[name]) return;
+
+            var link = makeLink(item[0], prefix + item[1]);
+
+            // put it before the next menu item that already exists
+            var before = null;
+
+            for (var i = index + 1; i < SITE_MENU.length; i++) {
+
+                var later = found[baseName(SITE_MENU[i][1])];
+
+                if (later) { before = later; break; }
+            }
+
+            nav.insertBefore(link, before || anchorPoint);
+
+            found[name] = link;
+        });
+    }
+
+
+    /* ---------- footer legal links ---------- */
+
+    function buildFooter() {
+
+        var footer = document.querySelector(".site-footer");
+
+        if (!footer || footer.querySelector('a[href$="terms.html"]')) return;
+
+        var row = document.createElement("div");
+
+        row.className = "footer-legal";
+
+        [
+            ["Privacy Policy", "privacy-policy.html"],
+            ["Terms & Conditions", "terms.html"],
+            ["Refund Policy", "refund-policy.html"],
+            ["About", "about.html"],
+            ["Contact", "contact.html"]
+        ].forEach(function (item) {
+            row.appendChild(makeLink(item[0], prefix + item[1]));
+        });
+
+        var bottom = footer.querySelector(".footer-bottom");
+
+        if (bottom && bottom.parentNode) {
+            bottom.parentNode.insertBefore(row, bottom);
+        } else {
+            (footer.querySelector(".container") || footer).appendChild(row);
+        }
+    }
+
+
+    /* ---------- Login becomes My Profile after login ---------- */
+
+    function buildLoginLink() {
+
+        if (typeof firebase === "undefined" || !firebase.apps || !firebase.apps.length) return;
+
+        if (typeof firebase.auth !== "function") return;
+
+        firebase.auth().onAuthStateChanged(function (user) {
+
+            if (!user) return;
+
+            Array.prototype.forEach.call(document.querySelectorAll(".nav-login"), function (a) {
+
+                a.textContent = "My Profile";
+                a.setAttribute("href", prefix + "student-profile.html");
+            });
+        });
+    }
+
+
+    /* ---------- admin menu ---------- */
+
+    var ADMIN_MENU = [
+        ["Dashboard", "dashboard.html"],
+        ["Courses", "courses.html"],
+        ["Units", "units.html"],
+        ["Videos", "videos.html"],
+        ["Notes", "notes.html"],
+        ["Tests", "tests.html"],
+        ["Students", "students.html"],
+        ["Enrollments", "enrollments.html"],
+        ["Requests", "requests.html"],
+        ["Payments", "payments.html"],
+        ["Messages", "messages.html"],
+        ["Results", "results.html"]
+    ];
+
+    function buildAdminMenu() {
+
+        var nav = document.querySelector(".main-nav");
+
+        if (!nav) return;
+
+        var current = baseName(window.location.pathname) || "dashboard";
+
+        // keep the Logout button (it already has its click handler)
+        var keep = nav.querySelector("button");
+
+        Array.prototype.forEach.call(nav.querySelectorAll("a"), function (a) {
+            a.parentNode.removeChild(a);
+        });
+
+        ADMIN_MENU.forEach(function (item) {
+
+            var link = makeLink(item[0], item[1]);
+
+            if (baseName(item[1]) === current) link.className = "active";
+
+            nav.insertBefore(link, keep || null);
+        });
+
+        var site = makeLink("View Site", "../index.html");
+
+        nav.insertBefore(site, keep || null);
+    }
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        if (isAdmin) {
+
+            // the login page of the admin has no menu to rebuild
+            if (!/admin-login/.test(window.location.pathname)) buildAdminMenu();
+
+        } else {
+
+            buildSiteMenu();
+            buildFooter();
+            buildLoginLink();
+        }
+    });
+
+})();

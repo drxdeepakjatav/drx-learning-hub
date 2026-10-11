@@ -179,9 +179,9 @@
                           "<li>The course opens in your account automatically as soon as the payment is done.</li>" +
                       "</ol>"
                     : "<ol>" +
-                          "<li>Pay the course fee" + (pay.upiId ? " using UPI" : "") + ".</li>" +
-                          "<li>Send your payment screenshot or UTR number through the Contact page.</li>" +
-                          "<li>We enroll you, and all units open in your account.</li>" +
+                          "<li>Pay the course fee" + (pay.upiId ? " using the UPI button / QR below" : " by UPI") + ".</li>" +
+                          "<li>Enter your UTR / transaction ID below and submit it.</li>" +
+                          "<li>We check the payment and enroll you. All units then open in your account.</li>" +
                       "</ol>");
 
         html += '<div class="buy-actions">';
@@ -216,6 +216,19 @@
         html += "</div>";
 
         html += '<p class="buy-note" id="payStatus"></p>';
+
+        if (!online) {
+
+            html +=
+                '<div class="utr-box" id="utrBox">' +
+                    '<label for="utrInput">After paying, enter your UTR / transaction ID</label>' +
+                    '<div class="utr-row">' +
+                        '<input type="text" id="utrInput" maxlength="30" placeholder="e.g. 412345678901" autocomplete="off">' +
+                        '<button class="btn btn-primary" type="button" id="utrBtn">Submit payment details</button>' +
+                    "</div>" +
+                    '<p class="buy-note" id="utrStatus"></p>' +
+                "</div>";
+        }
 
         if (!online && pay.upiId) {
             html += '<p class="buy-note">UPI ID: <strong>' + esc(pay.upiId) + "</strong>" +
@@ -579,6 +592,78 @@
         });
     }
 
+    async function bindManual(course) {
+
+        var box = document.getElementById("utrBox");
+
+        if (!box) return;
+
+        var user = auth.currentUser;
+
+        if (!user) return;
+
+        var requestRef = db.collection("enrollmentRequests").doc(user.uid + "_" + course.id);
+
+        function submittedHtml(utr) {
+
+            return '<p class="submitted-note">✅ Your payment details' +
+                (utr ? " (" + esc(utr) + ")" : "") +
+                " are submitted. We will check the payment and enroll you soon.</p>";
+        }
+
+        try {
+
+            var existing = await requestRef.get();
+
+            if (existing.exists) {
+                box.innerHTML = submittedHtml(existing.data().utr);
+                return;
+            }
+
+        } catch (error) {
+            console.error(error);
+        }
+
+        var input = document.getElementById("utrInput");
+        var button = document.getElementById("utrBtn");
+        var status = document.getElementById("utrStatus");
+
+        button.addEventListener("click", async function () {
+
+            var utr = input.value.trim();
+
+            if (!/^[A-Za-z0-9]{8,30}$/.test(utr)) {
+
+                status.textContent = "Please enter a valid UTR / transaction ID (8 to 30 letters or numbers).";
+                status.style.color = "#b02a37";
+
+                return;
+            }
+
+            button.disabled = true;
+
+            try {
+
+                var studentDoc = await db.collection("students").doc(user.uid).get();
+
+                var name = studentDoc.exists ? studentDoc.data().name : user.displayName;
+
+                await DRX_ENROLL.requestPaid(user, name, course, utr);
+
+                box.innerHTML = submittedHtml(utr);
+
+            } catch (error) {
+
+                console.error(error);
+
+                button.disabled = false;
+
+                status.textContent = "Could not submit: " + error.message;
+                status.style.color = "#b02a37";
+            }
+        });
+    }
+
     function bindPay(course) {
 
         var btn = document.getElementById("payOnlineBtn");
@@ -629,6 +714,7 @@
             content.innerHTML = html;
             bindPlaylist(course);
         bindPay(course);
+        bindManual(course);
             return;
         }
 
@@ -657,6 +743,7 @@
 
         bindPlaylist(course);
         bindPay(course);
+        bindManual(course);
 
         content.querySelectorAll(".learn-card").forEach(function (el) {
             el.addEventListener("click", function () {
@@ -769,6 +856,7 @@
 
         bindPlaylist(course);
         bindPay(course);
+        bindManual(course);
 
         var prevBtn = document.getElementById("prevUnit");
         var nextBtn = document.getElementById("nextUnit");
