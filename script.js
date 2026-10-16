@@ -874,27 +874,6 @@ function escapeHTML(value) {
             buildFooter();
             buildLoginLink();
         }
-
-
-    // Page poora load hone ke baad code chalega
-  window.addEventListener('load', function() {
-    var popup = document.getElementById("drxPopup");
-    var closeButton = document.getElementById("closeBtn");
-
-    // 2 second (2000 ms) baad popup dikhana
-    setTimeout(function() {
-      if (popup) {
-        popup.style.display = "flex";
-      }
-    }, 2000);
-
-    // X (cross) par click karne se popup band karna
-    if (closeButton) {
-      closeButton.onclick = function() {
-        popup.style.display = "none";
-      };
-    }
-  });
     });
 
 })();
