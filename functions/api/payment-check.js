@@ -9,6 +9,7 @@ import { cashfreeBase } from "../_lib/cashfree.js";
 const NAMES = [
     "CASHFREE_APP_ID",
     "CASHFREE_SECRET",
+    "CASHFREE_WEBHOOK_SECRET",
     "CASHFREE_ENV",
     "FIREBASE_PROJECT_ID",
     "FIREBASE_WEB_API_KEY",
@@ -56,7 +57,7 @@ export async function onRequestGet(context) {
             headers: {
                 "x-client-id": env.CASHFREE_APP_ID,
                 "x-client-secret": env.CASHFREE_SECRET,
-                "x-api-version": "2023-08-01"
+                "x-api-version": "2025-01-01"
             }
         });
 
