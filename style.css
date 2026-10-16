@@ -2824,84 +2824,126 @@ table {
     color: #ffffff;
     text-decoration: underline;
 }
-.notification-bar {
-  width: 100%;
-  background-color: #f1f5f9; /* Background color */
-  color: #1a60d6; /* Text color */
-  padding: 8px 0;
-  overflow: hidden;
-  white-space: nowrap;
+
+
+/* =========================
+   49. NOTICE LINE (moving announcements under the header)
+   ========================= */
+
+.notice-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 14px;
+    background: #fff7e0;
+    border-bottom: 1px solid #ffe08a;
+    color: #5c4300;
+    font-size: 14px;
+    font-weight: 600;
+    min-height: 42px;
 }
 
-.notification-bar p {
-  display: inline-block;
-  padding-left: 100%;
-  animation: scroll-left 15s linear infinite; /* 15s ko kam/zyada karke speed adjust karein */
-  margin: 0;
-  font-weight: bold;
-  font-size: 14px;
+.notice-label {
+    flex-shrink: 0;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: #f59e0b;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
 }
 
-@keyframes scroll-left {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-/* Popup ke piche ka dark background */
-.popup-overlay {
-  display: none; /* Shuru mein chhupa rahega */
-  position: fixed;
-  top: 0; 
-  left: 0; 
-  width: 100%; 
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 1000;
-  justify-content: center;
-  align-items: center;
+.notice-window {
+    position: relative;
+    flex: 1;
+    height: 42px;
+    overflow: hidden;
 }
 
-/* Popup ka main box */
-.popup-content {
-  background: white;
-  padding: 25px;
-  border-radius: 10px;
-  text-align: center;
-  max-width: 400px;
-  width: 90%;
-  box-shadow: 0px 5px 15px rgba(0,0,0,0.3);
-  position: relative;
-  font-family: Arial, sans-serif;
+.notice-track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 42px;
+    line-height: 42px;
+    white-space: nowrap;
+    transform: translateX(var(--notice-start, 100%));
+    animation: noticeScroll var(--notice-duration, 20s) linear infinite;
 }
 
-/* Close button (x) ki styling */
-.close-btn {
-  position: absolute;
-  top: 10px; 
-  right: 15px;
-  font-size: 24px;
-  font-weight: bold;
-  cursor: pointer;
-  color: #666;
-}
-.close-btn:hover {
-  color: red;
+.notice-bar:hover .notice-track {
+    animation-play-state: paused;
 }
 
-/* Button ki styling */
-.popup-btn {
-  display: inline-block;
-  margin-top: 15px;
-  padding: 10px 20px;
-  background-color: #1a60d6; /* DRx Learning Hub Blue */
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;
-  font-weight: bold;
+.notice-track a {
+    color: #0b5ed7;
+    text-decoration: underline;
 }
-.popup-btn:hover {
-  background-color: #124bb0;
+
+.notice-sep {
+    display: inline-block;
+    margin: 0 28px;
+    color: #f59e0b;
+}
+
+.notice-close {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #5c4300;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.notice-close:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+@keyframes noticeScroll {
+    from { transform: translateX(var(--notice-start, 100%)); }
+    to   { transform: translateX(-100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .notice-track {
+        animation: none;
+        transform: none;
+        position: static;
+        white-space: normal;
+        height: auto;
+        line-height: 1.5;
+        padding: 8px 0;
+    }
+
+    .notice-window {
+        height: auto;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .notice-label {
+        display: none;
+    }
+}
+
+
+/* =========================
+   50. LOGOUT LINK IN THE MENU
+   ========================= */
+
+.main-nav .nav-logout {
+    color: #dc3545;
+    font-weight: 700;
+}
+
+.main-nav .nav-logout:hover {
+    background: #fdecee;
+    color: #b02a37;
 }

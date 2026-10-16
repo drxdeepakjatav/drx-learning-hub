@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+
+    <title>Notifications | DRx Admin</title>
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <link rel="icon" href="../favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+
+    <link rel="stylesheet" href="../style.css">
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <script src="../firebase-config.js"></script>
+    <script src="../script.js" defer></script>
+</head>
+
+<body>
+
+<header class="site-header">
+
+    <div class="container header-inner">
+
+        <a href="dashboard.html" class="logo">DRx Learning Hub</a>
+
+        <button class="menu-toggle" id="menuToggle">☰</button>
+
+        <nav class="main-nav" id="mainNav">
+            <button id="logoutBtn" class="btn btn-danger" type="button">Logout</button>
+        </nav>
+
+    </div>
+
+</header>
+
+<main>
+
+<section class="page-header">
+
+    <div class="container">
+
+        <h1>Notifications</h1>
+
+        <p>
+            These messages move in a line below the header on every page of the website.
+        </p>
+
+    </div>
+
+</section>
+
+<section class="section">
+
+<div class="container">
+
+    <div class="admin-card">
+
+        <h2 id="formTitle">Add New Notification</h2>
+
+        <form id="noticeForm">
+
+            <input type="hidden" id="editingId">
+
+            <div class="form-group">
+
+                <label for="noticeText">Notification Text</label>
+
+                <input
+                    type="text"
+                    id="noticeText"
+                    maxlength="200"
+                    placeholder="e.g. New batch for B.Pharm Semester 1 starts on 1 November!"
+                    required
+                >
+
+                <small>Keep it short (up to 200 letters).</small>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="noticeLink">Link (optional)</label>
+
+                <input
+                    type="text"
+                    id="noticeLink"
+                    placeholder="https://... or courses.html"
+                >
+
+                <small>If you add a link, students can click the notification to open it.</small>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="noticeUntil">Show until (optional)</label>
+
+                <input type="date" id="noticeUntil">
+
+                <small>After this date the notification hides by itself. Leave empty to show it always.</small>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="noticeActive">Status</label>
+
+                <select id="noticeActive">
+                    <option value="true">Active (visible)</option>
+                    <option value="false">Hidden</option>
+                </select>
+
+            </div>
+
+            <div class="form-actions">
+
+                <button type="submit" class="btn btn-primary" id="saveBtn">Add Notification</button>
+
+                <button type="button" class="btn btn-secondary" id="cancelBtn" style="display:none;">Cancel Edit</button>
+
+            </div>
+
+        </form>
+
+        <div id="noticeMessage" class="alert" style="display:none; margin-top:15px;"></div>
+
+    </div>
+
+
+    <div class="section-heading">
+
+        <h2>All Notifications</h2>
+
+        <p>Visible notifications appear on the website within about 2 minutes.</p>
+
+    </div>
+
+    <div id="noticeList" class="cards-grid" style="grid-template-columns: 1fr;"></div>
+
+    <div id="noNotices" class="empty-state" style="display:none;">
+        <h3>No notifications yet</h3>
+        <p>Add the first one above.</p>
+    </div>
+
+</div>
+
+</section>
+
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        <div class="footer-bottom">
+            <p>© <span class="current-year"></span> DRx Learning Hub. All Rights Reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="../admin-notifications.js"></script>
+
+</body>
+</html>

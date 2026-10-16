@@ -716,7 +716,7 @@ function escapeHTML(value) {
 
             var href = a.getAttribute("href") || "";
 
-            if (/index(\.html)?#about$/.test(href) || /(^|\/)about(\.html)?$/.test(href)) {
+            if (/^(index(\.html)?)?#about$/.test(href) || /(^|\/)about(\.html)?$/.test(href)) {
 
                 a.setAttribute("href", prefix + "about.html");
             }
@@ -728,7 +728,17 @@ function escapeHTML(value) {
 
             var name = baseName(a.getAttribute("href"));
 
-            if (name && !found[name]) found[name] = a;
+            if (!name) return;
+
+            if (found[name]) {
+
+                // the same page twice in the menu - keep only the first one
+                a.parentNode.removeChild(a);
+
+            } else {
+
+                found[name] = a;
+            }
         });
 
         var anchorPoint =
@@ -793,22 +803,119 @@ function escapeHTML(value) {
     }
 
 
-    /* ---------- Login becomes My Profile after login ---------- */
+    /* ---------- keep the student logged in on EVERY page ----------
+       Pages that do not load Firebase get it loaded here, so the menu
+       shows "My Profile" + "Logout" after login on all pages.        */
+
+    var FIREBASE_URL = "https://www.gstatic.com/firebasejs/10.12.2/";
+
+    var FIREBASE_CONFIG = {
+        apiKey: "AIzaSyCWZpckA8cwboV6RVHAN57p7b8vXUByKNc",
+        authDomain: "drx-learning-hub-2.firebaseapp.com",
+        projectId: "drx-learning-hub-2",
+        storageBucket: "drx-learning-hub-2.firebasestorage.app",
+        messagingSenderId: "748103606890",
+        appId: "1:748103606890:web:6ada6d6a8ac94217532013"
+    };
+
+    function loadScript(src, done) {
+
+        var tag = document.createElement("script");
+
+        tag.src = src;
+
+        tag.onload = function () { done(null); };
+
+        tag.onerror = function () { done(new Error("load failed")); };
+
+        document.head.appendChild(tag);
+    }
+
+    function withAuth(callback) {
+
+        function ready() {
+
+            try {
+
+                if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+
+                callback(firebase.auth());
+
+            } catch (error) {
+
+                console.warn("Login check:", error.message);
+            }
+        }
+
+        if (typeof firebase !== "undefined" && typeof firebase.auth === "function") {
+            ready();
+            return;
+        }
+
+        if (typeof firebase === "undefined") {
+
+            loadScript(FIREBASE_URL + "firebase-app-compat.js", function (error) {
+
+                if (error) return;
+
+                loadScript(FIREBASE_URL + "firebase-auth-compat.js", function (error2) {
+                    if (!error2) ready();
+                });
+            });
+
+            return;
+        }
+
+        loadScript(FIREBASE_URL + "firebase-auth-compat.js", function (error) {
+            if (!error) ready();
+        });
+    }
 
     function buildLoginLink() {
 
-        if (typeof firebase === "undefined" || !firebase.apps || !firebase.apps.length) return;
+        var nav = document.querySelector(".main-nav");
 
-        if (typeof firebase.auth !== "function") return;
+        var login = nav && nav.querySelector(".nav-login");
 
-        firebase.auth().onAuthStateChanged(function (user) {
+        if (!login) return;
 
-            if (!user) return;
+        withAuth(function (auth) {
 
-            Array.prototype.forEach.call(document.querySelectorAll(".nav-login"), function (a) {
+            auth.onAuthStateChanged(function (user) {
 
-                a.textContent = "My Profile";
-                a.setAttribute("href", prefix + "student-profile.html");
+                var logout = nav.querySelector(".nav-logout");
+
+                if (user) {
+
+                    login.textContent = "My Profile";
+                    login.setAttribute("href", prefix + "student-profile.html");
+
+                    // pages that already have their own Logout button keep it
+                    if (!logout && !nav.querySelector("#logoutBtn")) {
+
+                        logout = makeLink("Logout", "#");
+
+                        logout.className = "nav-logout";
+
+                        logout.addEventListener("click", function (event) {
+
+                            event.preventDefault();
+
+                            auth.signOut().then(function () {
+                                window.location.href = prefix + "index.html";
+                            });
+                        });
+
+                        login.parentNode.insertBefore(logout, login.nextSibling);
+                    }
+
+                } else {
+
+                    login.textContent = "Login";
+                    login.setAttribute("href", prefix + "login.html");
+
+                    if (logout) logout.parentNode.removeChild(logout);
+                }
             });
         });
     }
@@ -827,6 +934,7 @@ function escapeHTML(value) {
         ["Enrollments", "enrollments.html"],
         ["Requests", "requests.html"],
         ["Payments", "payments.html"],
+        ["Notifications", "notifications.html"],
         ["Messages", "messages.html"],
         ["Results", "results.html"]
     ];
@@ -875,5 +983,31 @@ function escapeHTML(value) {
             buildLoginLink();
         }
     });
+
+})();
+
+
+
+/* =========================================================
+   NOTICE LINE (moving announcements below the header)
+   ========================================================= */
+
+(function () {
+
+    if (/\/admin(\/|$)/.test(window.location.pathname)) return;
+
+    var me = document.currentScript;
+
+    var src = me && me.src
+        ? me.src.replace(/script\.js(\?.*)?$/, "ticker.js")
+        : "ticker.js";
+
+    var tag = document.createElement("script");
+
+    tag.src = src;
+
+    tag.defer = true;
+
+    document.head.appendChild(tag);
 
 })();
