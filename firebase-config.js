@@ -13,6 +13,9 @@ if (!firebase.apps.length) {
 }
 
 var auth = firebase.auth();
+
+// keep the student logged in on all pages, until he logs out
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function () {});
 var db = firebase.firestore();
 
 console.log("Firebase Connected");

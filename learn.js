@@ -753,6 +753,51 @@
         });
     }
 
+    // shows the PDF inside the page (the Drive link is never given to the browser)
+    async function startPdf(course, unit) {
+
+        var reader = document.getElementById("pdfReader");
+
+        if (!reader || typeof DRX_PDF === "undefined") return;
+
+        var fileName =
+            (course.id + "-Unit-" + unit.unitNumber + "-" + String(unit.title || "").replace(/[^A-Za-z0-9]+/g, "-"))
+                .replace(/-+$/, "") + ".pdf";
+
+        try {
+
+            await DRX_PDF.show({
+                unitId: unit.id,
+                container: reader,
+                downloadButton: document.getElementById("pdfDownload"),
+                fileName: fileName
+            });
+
+        } catch (error) {
+
+            console.error("PDF error:", error);
+
+            var toolbar = document.querySelector(".pdf-toolbar");
+
+            if (toolbar) toolbar.style.display = "none";
+
+            if (error.status === 403) {
+
+                reader.innerHTML =
+                    '<div class="lock-note">🔒 This unit is available to enrolled students.</div>' +
+                    buyBoxHtml(course);
+
+                bindPay(course);
+                bindManual(course);
+
+            } else {
+
+                reader.innerHTML =
+                    '<div class="empty-state"><h3>PDF not available</h3><p>' + esc(error.message) + "</p></div>";
+            }
+        }
+    }
+
     async function renderUnitView() {
 
         var course = courseById(state.course);
@@ -803,46 +848,17 @@
 
         } else {
 
-            var pdfUrl = "";
-            var problem = "";
+            var freeTag = courseUnlocked(course)
+                ? ""
+                : '<p class="free-tag">🆓 Free preview unit</p>';
 
-            try {
-
-                var fileDoc = await db.collection("unitFiles").doc(unit.id).get();
-
-                if (fileDoc.exists) {
-                    pdfUrl = fileDoc.data().pdfUrl || "";
-                }
-
-                if (!pdfUrl) {
-                    problem = "The PDF for this unit has not been added yet.";
-                }
-
-            } catch (error) {
-
-                console.error(error);
-
-                problem = "permission";
-            }
-
-            if (problem === "permission") {
-
-                viewer =
-                    '<div class="lock-note">🔒 This unit is available to enrolled students.</div>' +
-                    buyBoxHtml(course);
-
-            } else if (problem) {
-
-                viewer = '<div class="empty-state"><h3>PDF not available</h3><p>' + esc(problem) + "</p></div>";
-
-            } else {
-
-                viewer =
-                    (courseUnlocked(course) ? "" : '<p class="free-tag">🆓 Free preview unit</p>') +
-                    '<div class="pdf-viewer"><iframe src="' + esc(pdfEmbedUrl(pdfUrl)) + '" title="PDF" allowfullscreen></iframe></div>' +
-                    '<p style="margin-top:10px;"><a href="' + esc(pdfUrl) +
-                    '" target="_blank" rel="noopener" class="btn btn-secondary btn-small">Open PDF in new tab</a></p>';
-            }
+            viewer =
+                freeTag +
+                '<div class="pdf-toolbar">' +
+                    '<span class="pdf-title">Unit ' + esc(unit.unitNumber) + " PDF</span>" +
+                    '<a class="btn btn-primary btn-small disabled" id="pdfDownload" href="#">⬇ Download PDF</a>' +
+                "</div>" +
+                '<div class="pdf-reader" id="pdfReader"></div>';
         }
 
         content.innerHTML =
@@ -857,6 +873,8 @@
         bindPlaylist(course);
         bindPay(course);
         bindManual(course);
+
+        startPdf(course, unit);
 
         var prevBtn = document.getElementById("prevUnit");
         var nextBtn = document.getElementById("nextUnit");

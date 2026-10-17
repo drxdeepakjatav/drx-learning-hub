@@ -5,7 +5,7 @@ import { HttpError } from "./http.js";
 
 const encoder = new TextEncoder();
 
-let cachedToken = { value: "", expires: 0 };
+const tokenCache = {};
 
 
 function base64url(input) {
@@ -38,17 +38,24 @@ function pemToBuffer(pem) {
 
 async function getAccessToken(env) {
 
+    return getGoogleToken(env, "https://www.googleapis.com/auth/datastore");
+}
+
+export async function getGoogleToken(env, scope) {
+
     const now = Math.floor(Date.now() / 1000);
 
-    if (cachedToken.value && cachedToken.expires - 60 > now) {
-        return cachedToken.value;
+    const cached = tokenCache[scope];
+
+    if (cached && cached.expires - 60 > now) {
+        return cached.value;
     }
 
     const header = { alg: "RS256", typ: "JWT" };
 
     const claims = {
         iss: env.FIREBASE_CLIENT_EMAIL,
-        scope: "https://www.googleapis.com/auth/datastore",
+        scope: scope,
         aud: "https://oauth2.googleapis.com/token",
         iat: now,
         exp: now + 3600
@@ -80,12 +87,12 @@ async function getAccessToken(env) {
         throw new Error("Google token error: " + (data.error_description || data.error));
     }
 
-    cachedToken = {
+    tokenCache[scope] = {
         value: data.access_token,
         expires: now + (data.expires_in || 3600)
     };
 
-    return cachedToken.value;
+    return data.access_token;
 }
 
 

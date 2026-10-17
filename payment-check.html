@@ -145,6 +145,14 @@ document.addEventListener("DOMContentLoaded", function () {
         html += row(!!data.cashfree.ok, "Cashfree (" + (data.cashfree.mode || "") + ")",
             data.cashfree.ok ? "Cashfree keys are accepted." : data.cashfree.error);
 
+        if (data.drive) {
+
+            html += row(!!data.drive.ok, "Google Drive (PDF viewing)",
+                data.drive.ok
+                    ? "Drive API is on. Share your PDF folder with: " + (data.service_account_email || "the service account email") + " (Viewer)."
+                    : data.drive.error);
+        }
+
         html += data.ready
             ? '<p class="extras-message ok" style="margin-top:20px;">✅ Everything is ready. You can make a test payment.</p>'
             : '<p class="extras-message bad" style="margin-top:20px;">❌ Fix the red items above, then click "Check Again".</p>';
