@@ -21,6 +21,10 @@ function driveFileId(url) {
 
 async function fetchFromDrive(env, fileId) {
 
+    const email = env.FIREBASE_CLIENT_EMAIL || "the service account";
+
+    let hint = "";
+
     // 1) private file shared with the service account (best, nothing is public)
     try {
 
@@ -31,23 +35,57 @@ async function fetchFromDrive(env, fileId) {
             { headers: { Authorization: "Bearer " + token } }
         );
 
-        if (response.ok) return response;
+        if (response.ok) return { response: response, hint: "" };
+
+        const body = await response.text();
+
+        console.error("Drive API status", response.status, body.slice(0, 300));
+
+        if (/SERVICE_DISABLED|accessNotConfigured|has not been used/i.test(body)) {
+
+            hint = "Google Drive API is not turned on. Turn it on in Google Cloud Console (APIs and Services > Library > Google Drive API) for project " +
+                   (env.FIREBASE_PROJECT_ID || "") + ".";
+
+        } else if (response.status === 404 || response.status === 403) {
+
+            hint = "Google Drive cannot open this file for the server. Share the PDF (or its folder) with " + email +
+                   " as Viewer, or set the file to 'Anyone with the link'.";
+
+        } else if (response.status === 400 && /not.*binary|export/i.test(body)) {
+
+            hint = "This link is a Google Docs file, not a PDF. Upload the PDF file to Drive and use its link.";
+
+        } else {
+
+            hint = "Google Drive answered with status " + response.status + ".";
+        }
 
     } catch (error) {
 
         console.error("Drive API:", error.message);
+
+        hint = "The server could not talk to Google Drive (" + error.message + ").";
     }
 
     // 2) file shared as "Anyone with the link"
-    const publicResponse = await fetch(
-        "https://drive.usercontent.google.com/download?id=" + fileId + "&export=download&confirm=t"
-    );
+    try {
 
-    const type = publicResponse.headers.get("content-type") || "";
+        const publicResponse = await fetch(
+            "https://drive.usercontent.google.com/download?id=" + fileId + "&export=download&confirm=t"
+        );
 
-    if (publicResponse.ok && type.indexOf("text/html") === -1) return publicResponse;
+        const type = publicResponse.headers.get("content-type") || "";
 
-    return null;
+        if (publicResponse.ok && type.indexOf("text/html") === -1) {
+            return { response: publicResponse, hint: "" };
+        }
+
+    } catch (error) {
+
+        console.error("Public download:", error.message);
+    }
+
+    return { response: null, hint: hint };
 }
 
 export async function onRequestGet(context) {
@@ -107,23 +145,50 @@ export async function onRequestGet(context) {
         }
 
         // ---- get the file ----
-        let upstream;
+        let upstream = null;
 
-        const id = driveFileId(file.pdfUrl);
+        let hint = "";
 
-        if (id) {
+        const link = String(file.pdfUrl);
 
-            upstream = await fetchFromDrive(env, id);
+        const id = driveFileId(link);
 
-        } else if (/^https:\/\//i.test(file.pdfUrl)) {
+        if (/\/folders\//.test(link)) {
 
-            upstream = await fetch(file.pdfUrl);
+            hint = "The saved link is a Drive FOLDER link. Open the PDF itself in Drive, copy the link of that file and save it in Admin > Units.";
 
-            if (!upstream.ok) upstream = null;
+        } else if (id) {
+
+            const result = await fetchFromDrive(env, id);
+
+            upstream = result.response;
+
+            hint = result.hint;
+
+        } else if (/^https:\/\//i.test(link)) {
+
+            const direct = await fetch(link);
+
+            if (direct.ok) upstream = direct;
+
+            else hint = "The saved PDF link did not open (status " + direct.status + ").";
+
+        } else {
+
+            hint = "The saved link is not a valid Google Drive file link.";
         }
 
         if (!upstream) {
-            throw new HttpError(502, "The PDF could not be opened. Please tell the admin.");
+
+            // only the admin sees the exact reason
+            const admin = await getDoc(env, "admins/" + user.uid);
+
+            throw new HttpError(
+                502,
+                admin && hint
+                    ? "PDF could not be opened. " + hint
+                    : "The PDF could not be opened. Please tell the admin."
+            );
         }
 
         return new Response(upstream.body, {
