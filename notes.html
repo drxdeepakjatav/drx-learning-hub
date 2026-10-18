@@ -397,6 +397,25 @@ document.addEventListener(
                 "notesContainer"
             );
 
+        // View / Open PDF: the PDF opens inside the website (no Google Drive page)
+        container.addEventListener("click", function (event) {
+
+            const button = event.target.closest(".view-note-btn");
+
+            if (!button || typeof DRX_PDF === "undefined") {
+                return;
+            }
+
+            const title = button.dataset.title || "Note";
+
+            DRX_PDF.openModal({
+                title: title,
+                url: "/api/note-pdf?note=" + encodeURIComponent(button.dataset.id),
+                fileName: title.replace(/[^A-Za-z0-9]+/g, "-").replace(/-+$/, "") + ".pdf"
+            });
+        });
+
+
         const noNotes =
             document.getElementById(
                 "noNotes"
@@ -900,11 +919,11 @@ const snapshot = await noteQuery.get();
                     ${
                         pdfUrl
                             ? `
-                                <a
-                                    href="${escapeHTML(pdfUrl)}"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="btn btn-primary">
+                                <button
+                                    type="button"
+                                    class="btn btn-primary view-note-btn"
+                                    data-id="${escapeHTML(note.id)}"
+                                    data-title="${title}">
 
                                     ${
                                         noteType === "pdf"
@@ -912,7 +931,7 @@ const snapshot = await noteQuery.get();
                                             : "View Note"
                                     }
 
-                                </a>
+                                </button>
                               `
                             : ""
                     }
@@ -1061,6 +1080,8 @@ const snapshot = await noteQuery.get();
     });
 
 </script>
+
+<script src="pdf-viewer.js"></script>
 
 </body>
 </html>

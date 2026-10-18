@@ -871,24 +871,147 @@ function escapeHTML(value) {
         });
     }
 
+    /* ---------- profile icon (photo or first letter of the name) ---------- */
+
+    var FIRESTORE_STUDENT_URL =
+        "https://firestore.googleapis.com/v1/projects/" + FIREBASE_CONFIG.projectId +
+        "/databases/(default)/documents/students/";
+
+    var AVATAR_REFRESH_MS = 10 * 60 * 1000;
+
+    function avatarCacheKey(uid) {
+        return "drx_avatar_" + uid;
+    }
+
+    function readAvatarCache(uid) {
+
+        try {
+            return JSON.parse(localStorage.getItem(avatarCacheKey(uid)) || "null");
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function writeAvatarCache(uid, photo, name) {
+
+        try {
+
+            localStorage.setItem(avatarCacheKey(uid), JSON.stringify({
+                photo: photo || "",
+                name: name || "",
+                time: Date.now()
+            }));
+
+        } catch (e) { }
+    }
+
+    function paintAvatar(link, user, cache) {
+
+        var name = (cache && cache.name) || user.displayName || user.email || "S";
+
+        var letter = (String(name).trim().charAt(0) || "S").toUpperCase();
+
+        var photo = cache && /^data:image\//.test(cache.photo || "") ? cache.photo : "";
+
+        link.classList.add("nav-avatar");
+
+        link.setAttribute("title", "My Profile");
+
+        link.setAttribute("aria-label", "My Profile");
+
+        link.setAttribute("href", prefix + "student-profile.html");
+
+        link.textContent = "";
+
+        var circle = document.createElement("span");
+
+        circle.className = "avatar-circle";
+
+        if (photo) {
+
+            circle.style.backgroundImage = "url('" + photo + "')";
+
+        } else {
+
+            circle.textContent = letter;
+        }
+
+        link.appendChild(circle);
+    }
+
+    // read the name and photo from the student's profile (only now and then)
+    async function refreshAvatar(user, link) {
+
+        var cache = readAvatarCache(user.uid);
+
+        if (cache && Date.now() - cache.time < AVATAR_REFRESH_MS) return;
+
+        try {
+
+            var token = await user.getIdToken();
+
+            var response = await fetch(FIRESTORE_STUDENT_URL + user.uid, {
+                headers: { Authorization: "Bearer " + token }
+            });
+
+            if (!response.ok) return;
+
+            var doc = await response.json();
+
+            var fields = doc.fields || {};
+
+            writeAvatarCache(
+                user.uid,
+                fields.photo && fields.photo.stringValue,
+                fields.name && fields.name.stringValue
+            );
+
+            paintAvatar(link, user, readAvatarCache(user.uid));
+
+        } catch (error) {
+
+            console.warn("Avatar:", error.message);
+        }
+    }
+
     function buildLoginLink() {
 
         var nav = document.querySelector(".main-nav");
 
-        var login = nav && nav.querySelector(".nav-login");
+        if (!nav) return;
 
-        if (!login) return;
+        // the Login link, or on student pages the Profile link
+        var link =
+            nav.querySelector(".nav-login") ||
+            nav.querySelector('a[href$="student-profile.html"]');
+
+        if (!link) return;
+
+        var original = link.textContent;
+
+        var originalHref = link.getAttribute("href");
 
         withAuth(function (auth) {
 
+            var currentUser = null;
+
+            // the profile page tells us when the photo changed
+            window.addEventListener("drx-avatar", function () {
+
+                if (currentUser) paintAvatar(link, currentUser, readAvatarCache(currentUser.uid));
+            });
+
             auth.onAuthStateChanged(function (user) {
+
+                currentUser = user;
 
                 var logout = nav.querySelector(".nav-logout");
 
                 if (user) {
 
-                    login.textContent = "My Profile";
-                    login.setAttribute("href", prefix + "student-profile.html");
+                    paintAvatar(link, user, readAvatarCache(user.uid));
+
+                    refreshAvatar(user, link);
 
                     // pages that already have their own Logout button keep it
                     if (!logout && !nav.querySelector("#logoutBtn")) {
@@ -906,13 +1029,20 @@ function escapeHTML(value) {
                             });
                         });
 
-                        login.parentNode.insertBefore(logout, login.nextSibling);
+                        link.parentNode.insertBefore(logout, link.nextSibling);
                     }
 
                 } else {
 
-                    login.textContent = "Login";
-                    login.setAttribute("href", prefix + "login.html");
+                    link.classList.remove("nav-avatar");
+
+                    link.removeAttribute("title");
+
+                    link.removeAttribute("aria-label");
+
+                    link.textContent = original;
+
+                    link.setAttribute("href", originalHref);
 
                     if (logout) logout.parentNode.removeChild(logout);
                 }

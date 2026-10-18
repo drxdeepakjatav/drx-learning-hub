@@ -186,7 +186,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /* ================= PROFILE PHOTO ================= */
 
+    // remember the photo for the menu icon on every page
+    function shareAvatar() {
+
+        try {
+
+            localStorage.setItem("drx_avatar_" + currentUser.uid, JSON.stringify({
+                photo: student.photo || "",
+                name: student.name || currentUser.displayName || "",
+                time: Date.now()
+            }));
+
+        } catch (e) { }
+
+        window.dispatchEvent(new Event("drx-avatar"));
+    }
+
     function showPhotoInAvatar() {
+
+        shareAvatar();
 
         if (!avatar) return;
 

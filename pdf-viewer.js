@@ -44,22 +44,24 @@ window.DRX_PDF = (function () {
         });
     }
 
-    async function fetchPdf(unitId) {
+    async function fetchPdf(url, loginNeeded) {
 
-        var user = auth.currentUser;
+        var user = (typeof auth !== "undefined") ? auth.currentUser : null;
 
-        if (!user) {
+        var headers = {};
+
+        if (user) {
+
+            headers.Authorization = "Bearer " + (await user.getIdToken());
+
+        } else if (loginNeeded) {
+
             var loginError = new Error("Please log in to open this PDF.");
             loginError.status = 401;
             throw loginError;
         }
 
-        var token = await user.getIdToken();
-
-        var response = await fetch("/api/pdf?unit=" + encodeURIComponent(unitId), {
-            headers: { Authorization: "Bearer " + token },
-            cache: "no-store"
-        });
+        var response = await fetch(url, { headers: headers, cache: "no-store" });
 
         var type = response.headers.get("content-type") || "";
 
@@ -164,14 +166,17 @@ window.DRX_PDF = (function () {
 
     /* ---------- public function ---------- */
 
-    // options: unitId, container, downloadButton, fileName
+    // options: container, downloadButton, fileName and either
+    //   unitId  (course unit, login needed)   or   url  (public file, e.g. a note)
     async function show(options) {
 
         var container = options.container;
 
         container.innerHTML = '<div class="pdf-status">Loading PDF...</div>';
 
-        var results = await Promise.all([loadPdfJs(), fetchPdf(options.unitId)]);
+        var url = options.url || ("/api/pdf?unit=" + encodeURIComponent(options.unitId));
+
+        var results = await Promise.all([loadPdfJs(), fetchPdf(url, !options.url)]);
 
         var buffer = results[1];
 
@@ -184,7 +189,7 @@ window.DRX_PDF = (function () {
 
             options.downloadButton.href = blobUrl;
 
-            options.downloadButton.setAttribute("download", options.fileName || "unit.pdf");
+            options.downloadButton.setAttribute("download", options.fileName || "file.pdf");
 
             options.downloadButton.classList.remove("disabled");
         }
@@ -194,8 +199,84 @@ window.DRX_PDF = (function () {
         container.innerHTML = "";
 
         await drawPages(pdf, container);
+
+        return blobUrl;
     }
 
-    return { show: show };
+    // opens a pop-up reader on top of the page (used on the Notes page)
+    function openModal(options) {
+
+        var overlay = document.createElement("div");
+
+        overlay.className = "pdf-modal";
+
+        overlay.innerHTML =
+            '<div class="pdf-modal-box">' +
+                '<div class="pdf-modal-bar">' +
+                    '<strong class="pdf-modal-title"></strong>' +
+                    '<span class="pdf-modal-actions">' +
+                        '<a class="btn btn-primary btn-small disabled" href="#">⬇ Download</a>' +
+                        '<button class="btn btn-secondary btn-small" type="button">✕ Close</button>' +
+                    "</span>" +
+                "</div>" +
+                '<div class="pdf-reader pdf-modal-reader"></div>' +
+            "</div>";
+
+        overlay.querySelector(".pdf-modal-title").textContent = options.title || "PDF";
+
+        var reader = overlay.querySelector(".pdf-modal-reader");
+
+        var download = overlay.querySelector("a.btn");
+
+        var blobUrl = "";
+
+        document.body.appendChild(overlay);
+
+        document.body.style.overflow = "hidden";
+
+        function close() {
+
+            document.removeEventListener("keydown", onKey);
+
+            document.body.style.overflow = "";
+
+            if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+
+            if (blobUrl) URL.revokeObjectURL(blobUrl);
+        }
+
+        function onKey(event) {
+            if (event.key === "Escape") close();
+        }
+
+        document.addEventListener("keydown", onKey);
+
+        overlay.querySelector("button").addEventListener("click", close);
+
+        overlay.addEventListener("click", function (event) {
+            if (event.target === overlay) close();
+        });
+
+        show({
+            url: options.url,
+            container: reader,
+            downloadButton: download,
+            fileName: options.fileName
+        }).then(function (url) {
+
+            blobUrl = url;
+
+        }).catch(function (error) {
+
+            console.error("PDF error:", error);
+
+            reader.innerHTML =
+                '<div class="empty-state"><h3>PDF not available</h3><p>' +
+                String(error.message || "The PDF could not be opened.")
+                    .replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</p></div>";
+        });
+    }
+
+    return { show: show, openModal: openModal };
 
 })();
