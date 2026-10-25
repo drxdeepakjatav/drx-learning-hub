@@ -27,6 +27,8 @@
     var unitsCache = {};
     var enrolled = {};
     var isAdmin = false;
+    var guest = true;      // not logged in
+    var allFree = false;   // admin switch: all study material is free for everyone
 
     var state = { category: "", term: "", course: "", unit: "" };
 
@@ -119,7 +121,7 @@
     // whole course open (free course, enrolled student or admin)
     function courseUnlocked(course) {
 
-        return isAdmin || !!enrolled[course.id] || course.accessType === "free";
+        return allFree || isAdmin || !!enrolled[course.id] || course.accessType === "free";
     }
 
     function unitUnlocked(course, unit) {
@@ -139,6 +141,8 @@
 
     function courseBadge(course) {
 
+        if (allFree) return "FREE for now";
+
         if (isAdmin) return priceLabel(course);
 
         if (enrolled[course.id]) return "Enrolled ✓";
@@ -155,6 +159,23 @@
     }
 
     function buyBoxHtml(course) {
+
+        // visitors who are not logged in: ask them to login / create an account first
+        if (guest) {
+
+            var nextPage = "learn.html?course=" + encodeURIComponent(course.id);
+
+            var fee = Number(course.price) || 0;
+
+            return '<div class="buy-box">' +
+                "<h3>🔒 Enroll in " + esc(course.title || course.id) + "</h3>" +
+                "<p>" + (fee ? "Course fee: <strong>₹" + fee + "</strong>. " : "") +
+                "Create a free account or log in to enroll and open all units.</p>" +
+                '<div class="buy-actions">' +
+                    '<a class="btn btn-primary" href="login.html?next=' + encodeURIComponent(nextPage) + '">Login</a>' +
+                    '<a class="btn btn-secondary" href="signup.html?course=' + encodeURIComponent(course.id) + '">Create Free Account</a>' +
+                "</div></div>";
+        }
 
         var pay = window.DRX_PAYMENT || {};
 
@@ -183,6 +204,16 @@
                           "<li>Enter your UTR / transaction ID below and submit it.</li>" +
                           "<li>We check the payment and enroll you. All units then open in your account.</li>" +
                       "</ol>");
+
+        if (online) {
+
+            html +=
+                '<div class="phone-row">' +
+                    '<label for="payPhone">Mobile number (needed for the payment receipt)</label>' +
+                    '<input type="tel" id="payPhone" inputmode="numeric" maxlength="10" ' +
+                        'placeholder="10-digit mobile number" autocomplete="tel">' +
+                "</div>";
+        }
 
         html += '<div class="buy-actions">';
 
@@ -670,8 +701,37 @@
 
         if (!btn || typeof DRX_PAY === "undefined") return;
 
+        var phoneInput = document.getElementById("payPhone");
+
+        try {
+
+            var savedPhone = localStorage.getItem("drx_phone");
+
+            if (savedPhone && phoneInput && !phoneInput.value) phoneInput.value = savedPhone;
+
+        } catch (e) { }
+
         btn.addEventListener("click", function () {
-            DRX_PAY.start(course, btn, document.getElementById("payStatus"));
+
+            var statusEl = document.getElementById("payStatus");
+
+            var phone = phoneInput ? phoneInput.value.replace(/\D/g, "") : "";
+
+            if (!/^[6-9]\d{9}$/.test(phone)) {
+
+                if (statusEl) {
+                    statusEl.textContent = "Please enter your 10-digit mobile number.";
+                    statusEl.style.color = "#b02a37";
+                }
+
+                if (phoneInput) phoneInput.focus();
+
+                return;
+            }
+
+            try { localStorage.setItem("drx_phone", phone); } catch (e) { }
+
+            DRX_PAY.start(course, btn, statusEl, { phone: phone });
         });
     }
 
@@ -781,7 +841,7 @@
 
             if (toolbar) toolbar.style.display = "none";
 
-            if (error.status === 403) {
+            if (error.status === 401 || error.status === 403) {
 
                 reader.innerHTML =
                     '<div class="lock-note">🔒 This unit is available to enrolled students.</div>' +
@@ -899,6 +959,14 @@
 
         renderBreadcrumb();
 
+        if (allFree && !document.getElementById("freeNowBanner")) {
+
+            breadcrumb.insertAdjacentHTML(
+                "beforebegin",
+                '<div class="filter-banner" id="freeNowBanner">🎉 All study material is FREE right now. No login needed.</div>'
+            );
+        }
+
         if (state.course && !courseById(state.course)) {
 
             content.innerHTML =
@@ -926,10 +994,27 @@
 
         courses = [];
         enrolled = {};
+        isAdmin = false;
+        guest = !user;
 
-        var adminDoc = await db.collection("admins").doc(user.uid).get();
+        // admin switch: all study material free for everyone
+        try {
 
-        isAdmin = adminDoc.exists;
+            var settings = await db.collection("settings").doc("site").get();
+
+            allFree = settings.exists && settings.data().allFree === true;
+
+        } catch (error) {
+
+            allFree = false;
+        }
+
+        if (user) {
+
+            var adminDoc = await db.collection("admins").doc(user.uid).get();
+
+            isAdmin = adminDoc.exists;
+        }
 
         var snapshot = await db
             .collection("courses")
@@ -944,7 +1029,7 @@
             return String(a.title || a.id).localeCompare(String(b.title || b.id));
         });
 
-        if (!isAdmin) {
+        if (user && !isAdmin) {
 
             var studentDoc = await db.collection("students").doc(user.uid).get();
 
@@ -966,15 +1051,7 @@
 
         auth.onAuthStateChanged(async function (user) {
 
-            if (!user) {
-
-                window.location.href =
-                    "login.html?next=" +
-                    encodeURIComponent("learn.html" + window.location.search);
-
-                return;
-            }
-
+            // visitors can read the study material without logging in
             try {
 
                 await loadCourses(user);

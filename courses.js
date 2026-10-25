@@ -317,7 +317,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     </div>
 
                     <a href="learn.html?course=${encodeURIComponent(course.id)}" class="btn btn-primary">
-                        Start Learning
+                        View Study Material
                     </a>
 
                 </div>

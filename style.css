@@ -3156,3 +3156,52 @@ table {
         height: 100%;
     }
 }
+
+
+/* =========================
+   55. FORGOT PASSWORD LINK
+   ========================= */
+
+.forgot-row {
+    margin: -6px 0 16px;
+    text-align: right;
+    font-size: 14px;
+}
+
+.forgot-row a {
+    color: #0b5ed7;
+    font-weight: 600;
+}
+
+.forgot-row a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================
+   56. SWITCH ROW (admin settings)
+   ========================= */
+
+.switch-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.switch-row input {
+    width: 22px;
+    height: 22px;
+    margin-top: 3px;
+    flex-shrink: 0;
+    accent-color: #0b5ed7;
+}
+
+.switch-row small {
+    color: #6b7280;
+    line-height: 1.6;
+}

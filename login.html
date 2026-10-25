@@ -11,6 +11,18 @@
     >
 
     <title>Student Login | DRx Learning Hub</title>
+    <meta name="description" content="Login to your DRx Learning Hub account.">
+    <meta name="theme-color" content="#0b5ed7">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="DRx Learning Hub">
+    <meta property="og:title" content="Student Login | DRx Learning Hub">
+    <meta property="og:description" content="Login to your DRx Learning Hub account.">
+    <meta property="og:url" content="https://drx-learning-hub.pages.dev/login.html">
+    <meta property="og:image" content="https://drx-learning-hub.pages.dev/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Student Login | DRx Learning Hub">
+    <meta name="twitter:description" content="Login to your DRx Learning Hub account.">
+    <meta name="twitter:image" content="https://drx-learning-hub.pages.dev/og-image.png">
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="icon" href="favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -153,6 +165,11 @@
                 </div>
 
 
+                <p class="forgot-row">
+                    <a href="#" id="forgotLink">Forgot password?</a>
+                </p>
+
+
                 <!-- LOGIN BUTTON -->
 
                 <button
@@ -229,6 +246,52 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const button =
         document.getElementById("loginButton");
+
+
+    // Forgot password: Firebase emails a reset link
+
+    document
+        .getElementById("forgotLink")
+        .addEventListener("click", async function (event) {
+
+            event.preventDefault();
+
+            const email =
+                document.getElementById("loginEmail").value.trim();
+
+            message.style.display = "block";
+
+            message.style.opacity = "1";
+
+            if (!email) {
+
+                message.classList.remove("success");
+
+                message.textContent =
+                    "Type your email in the box above first, then click Forgot password.";
+
+                return;
+            }
+
+            try {
+
+                await auth.sendPasswordResetEmail(email);
+
+                message.classList.add("success");
+
+                message.textContent =
+                    "If this email has an account, a password reset link has been sent. Please check your inbox and the spam folder.";
+
+            } catch (error) {
+
+                message.classList.remove("success");
+
+                message.textContent =
+                    error.code === "auth/invalid-email"
+                        ? "Please enter a valid email address."
+                        : "Could not send the email right now. Please try again later.";
+            }
+        });
 
 
     loginForm.addEventListener("submit", async function (event) {

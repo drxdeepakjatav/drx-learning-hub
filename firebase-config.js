@@ -18,4 +18,3 @@ var auth = firebase.auth();
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function () {});
 var db = firebase.firestore();
 
-console.log("Firebase Connected");

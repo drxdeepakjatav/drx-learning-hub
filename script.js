@@ -1065,6 +1065,7 @@ function escapeHTML(value) {
         ["Requests", "requests.html"],
         ["Payments", "payments.html"],
         ["Notifications", "notifications.html"],
+        ["Settings", "settings.html"],
         ["Messages", "messages.html"],
         ["Results", "results.html"]
     ];

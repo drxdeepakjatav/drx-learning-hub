@@ -176,7 +176,7 @@ window.DRX_PDF = (function () {
 
         var url = options.url || ("/api/pdf?unit=" + encodeURIComponent(options.unitId));
 
-        var results = await Promise.all([loadPdfJs(), fetchPdf(url, !options.url)]);
+        var results = await Promise.all([loadPdfJs(), fetchPdf(url, false)]);
 
         var buffer = results[1];
 

@@ -1,0 +1,29 @@
+# Cloudflare Pages - security and cache settings
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(self)
+
+/admin/*
+  X-Robots-Tag: noindex, nofollow
+
+/api/*
+  Cache-Control: no-store
+  X-Robots-Tag: noindex
+
+/payment-check.html
+  X-Robots-Tag: noindex, nofollow
+
+/favicon.png
+  Cache-Control: public, max-age=86400
+
+/favicon.ico
+  Cache-Control: public, max-age=86400
+
+/logo-icon.png
+  Cache-Control: public, max-age=86400
+
+/og-image.png
+  Cache-Control: public, max-age=86400

@@ -15,7 +15,7 @@ export async function onRequestPost(context) {
     try {
 
         needEnv(env, [
-            "CASHFREE_APP_ID", "CASHFREE_SECRET", "CASHFREE_WEBHOOK_SECRET",
+            "CASHFREE_APP_ID", "CASHFREE_SECRET",
             "FIREBASE_PROJECT_ID", "FIREBASE_CLIENT_EMAIL", "FIREBASE_PRIVATE_KEY"
         ]);
 
@@ -25,7 +25,7 @@ export async function onRequestPost(context) {
 
         const signature = request.headers.get("x-webhook-signature") || "";
 
-        const expected = await webhookSignature(env.CASHFREE_WEBHOOK_SECRET, timestamp, rawBody);
+        const expected = await webhookSignature(env.CASHFREE_SECRET, timestamp, rawBody);
 
         if (!safeEqual(expected, signature)) {
             return json({ error: "Invalid signature" }, 400);

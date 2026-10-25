@@ -20,7 +20,17 @@ export async function onRequestGet(context) {
             "FIREBASE_CLIENT_EMAIL", "FIREBASE_PRIVATE_KEY"
         ]);
 
-        const user = await verifyUser(env, request);
+        // login is optional: free material can be opened by anyone
+        let user = null;
+
+        try {
+
+            user = await verifyUser(env, request);
+
+        } catch (error) {
+
+            user = null;
+        }
 
         const unitId = new URL(request.url).searchParams.get("unit") || "";
 
@@ -41,10 +51,17 @@ export async function onRequestGet(context) {
         }
 
         // ---- who may open this unit? ----
-        let allowed = course.accessType === "free" ||
+        const settings = await getDoc(env, "settings/site");
+
+        let allowed = (settings && settings.allFree === true) ||
+                      course.accessType === "free" ||
                       Number(file.unitNumber) <= (Number(course.freeUnits) || 0);
 
         if (!allowed) {
+
+            if (!user) {
+                throw new HttpError(401, "Please log in to open this unit.");
+            }
 
             const admin = await getDoc(env, "admins/" + user.uid);
 
@@ -70,7 +87,7 @@ export async function onRequestGet(context) {
         if (!result.response) {
 
             // only the admin sees the exact reason
-            const admin = await getDoc(env, "admins/" + user.uid);
+            const admin = user ? await getDoc(env, "admins/" + user.uid) : null;
 
             throw new HttpError(
                 502,

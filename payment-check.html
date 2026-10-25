@@ -9,6 +9,11 @@
 
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="style.css">
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
 </head>
 
 <body>
@@ -100,11 +105,26 @@ document.addEventListener("DOMContentLoaded", function () {
         box.innerHTML =
             '<div class="empty-state"><div class="loading-spinner"></div><p>Checking...</p></div>';
 
+        var user = auth.currentUser;
+
+        if (!user) {
+
+            box.innerHTML =
+                row(false, "Please log in as admin first",
+                    "This page shows private setup details, so only the admin can open it.") +
+                '<p><a class="btn btn-primary" href="admin/admin-login.html">Admin Login</a></p>';
+
+            return;
+        }
+
         var response;
 
         try {
 
-            response = await fetch("/api/payment-check", { cache: "no-store" });
+            response = await fetch("/api/payment-check", {
+                cache: "no-store",
+                headers: { Authorization: "Bearer " + (await user.getIdToken()) }
+            });
 
         } catch (error) {
 
@@ -127,6 +147,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         var data = await response.json();
+
+        if (data.error) {
+
+            box.innerHTML = row(false, data.error, "");
+
+            return;
+        }
 
         var html = "<h2>Settings in Cloudflare</h2>";
 
@@ -162,7 +189,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("recheck").addEventListener("click", check);
 
-    check();
+    auth.onAuthStateChanged(function () { check(); });
 });
 
 </script>

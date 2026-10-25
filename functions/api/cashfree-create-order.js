@@ -67,6 +67,21 @@ export async function onRequestPost(context) {
             throw new HttpError(400, "You are already enrolled in this course.");
         }
 
+        // real mobile number of the student (Cashfree needs one)
+        let phone = String(body.phone || "").replace(/\D/g, "");
+
+        if (!/^[6-9]\d{9}$/.test(phone)) {
+
+            if (env.CASHFREE_ENV === "sandbox") {
+
+                phone = "9999999999";
+
+            } else {
+
+                throw new HttpError(400, "Please enter your 10-digit mobile number.");
+            }
+        }
+
         const orderId = "drx" + Date.now() + randomPart();
 
         const origin = new URL(request.url).origin;
@@ -78,8 +93,7 @@ export async function onRequestPost(context) {
             customer_details: {
                 customer_id: user.uid,
                 customer_email: user.email || "student@example.com",
-                // Cashfree needs a phone number. Students are not asked for one.
-                customer_phone: "9999999999"
+                customer_phone: phone
             },
             order_meta: {
                 return_url: origin + "/learn.html?course=" + encodeURIComponent(courseId) + "&cforder={order_id}",

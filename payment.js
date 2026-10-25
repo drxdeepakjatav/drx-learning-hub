@@ -89,9 +89,9 @@ window.DRX_PAY = (function () {
         return api("/api/cashfree-verify", { orderId: orderId }, token);
     }
 
-    async function startCashfree(course, user, token, say) {
+    async function startCashfree(course, user, token, say, extra) {
 
-        var order = await api("/api/cashfree-create-order", { courseId: course.id }, token);
+        var order = await api("/api/cashfree-create-order", { courseId: course.id, phone: (extra && extra.phone) || "" }, token);
 
         await loadCashfree();
 
@@ -206,7 +206,7 @@ window.DRX_PAY = (function () {
     document.addEventListener("DOMContentLoaded", resumeAfterRedirect);
 
 
-    async function start(course, button, statusEl) {
+    async function start(course, button, statusEl, extra) {
 
         function say(text, bad) {
 
@@ -240,7 +240,7 @@ window.DRX_PAY = (function () {
 
             if (gateway === "cashfree") {
 
-                await startCashfree(course, user, token, say);
+                await startCashfree(course, user, token, say, extra || {});
 
                 say("Payment successful! Your course is now unlocked.");
 
