@@ -163,22 +163,38 @@
                 </div>
 
 
-                <!-- Course -->
+                <!-- Course: shown for notes, hidden for syllabus -->
 
-                <div class="form-group">
+                <div class="form-group" id="courseField">
 
                     <label for="courseId">
                         Course *
                     </label>
 
-                    <select
-                        id="courseId"
-                        required>
+                    <select id="courseId">
 
                         <option value="">
                             Loading courses...
                         </option>
 
+                    </select>
+
+                </div>
+
+                <!-- Year: shown only for syllabus -->
+
+                <div class="form-group" id="yearField" style="display:none;">
+
+                    <label for="syllabusYear">
+                        Syllabus Year *
+                    </label>
+
+                    <select id="syllabusYear">
+                        <option value="">Select Year</option>
+                        <option value="1st Year">1st Year (Semester I & II)</option>
+                        <option value="2nd Year">2nd Year (Semester III & IV)</option>
+                        <option value="3rd Year">3rd Year (Semester V & VI)</option>
+                        <option value="4th Year">4th Year (Semester VII & VIII)</option>
                     </select>
 
                 </div>
@@ -478,6 +494,22 @@ document.addEventListener(
             document.getElementById(
                 "courseId"
             );
+
+        const courseField = document.getElementById("courseField");
+        const yearField = document.getElementById("yearField");
+        const syllabusYear = document.getElementById("syllabusYear");
+        const noteTypeSelect = document.getElementById("noteType");
+
+        function updateNoteTypeFields() {
+            const isSyllabus = noteTypeSelect.value === "syllabus";
+            courseField.style.display = isSyllabus ? "none" : "block";
+            yearField.style.display = isSyllabus ? "block" : "none";
+            courseSelect.required = !isSyllabus;
+            syllabusYear.required = isSyllabus;
+        }
+
+        noteTypeSelect.addEventListener("change", updateNoteTypeFields);
+        updateNoteTypeFields();
 
 
         let editingNoteId = null;
@@ -945,15 +977,11 @@ document.addEventListener(
                 </p>
 
 
-                <p>
-
-                    <strong>
-                        Course:
-                    </strong>
-
-                    ${courseId}
-
-                </p>
+                ${
+                    typeValue === "syllabus"
+                        ? '<p><strong>Year:</strong> ' + escapeHTML(note.year || "Not set") + '</p>'
+                        : '<p><strong>Course:</strong> ' + courseId + '</p>'
+                }
 
 
                 <p>
@@ -1165,9 +1193,11 @@ document.addEventListener(
                 const pdfFile =
                     document.getElementById("pdfFile").files[0];
 
+                const selectedYear = syllabusYear.value;
+
                 if (
                     !title ||
-                    !courseId ||
+                    (noteType === "syllabus" ? !selectedYear : !courseId) ||
                     (!pdfUrl && !pdfFile)
                 ) {
 
@@ -1230,9 +1260,11 @@ document.addEventListener(
 
                         noteType: noteType,
 
-                        courseId: courseId,
+                        courseId: noteType === "syllabus" ? "" : courseId,
 
-                        unit: unit,
+                        year: noteType === "syllabus" ? selectedYear : "",
+
+                        unit: noteType === "syllabus" ? "" : unit,
 
                         description: description,
 
@@ -1381,6 +1413,9 @@ document.addEventListener(
                 .value =
                     note.courseId ||
                     "";
+
+            syllabusYear.value = note.year || "";
+            updateNoteTypeFields();
 
 
             document
