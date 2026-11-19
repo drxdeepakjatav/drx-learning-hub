@@ -417,12 +417,15 @@ document.addEventListener(
                 "notesContainer"
             );
 
-        // View / Open PDF: the PDF opens inside the website (no Google Drive page)
-        container.addEventListener("click", function (event) {
+        // Open the PDF when the student clicks anywhere on a note card.
+        // Links and other controls inside a card keep their own behaviour.
+        function openNotePdf(card) {
+            if (!card || typeof DRX_PDF === "undefined") {
+                return;
+            }
 
-            const button = event.target.closest(".view-note-btn");
-
-            if (!button || typeof DRX_PDF === "undefined") {
+            const button = card.querySelector(".view-note-btn");
+            if (!button) {
                 return;
             }
 
@@ -433,6 +436,35 @@ document.addEventListener(
                 url: "/api/note-pdf?note=" + encodeURIComponent(button.dataset.id),
                 fileName: title.replace(/[^A-Za-z0-9]+/g, "-").replace(/-+$/, "") + ".pdf"
             });
+        }
+
+        container.addEventListener("click", function (event) {
+            const card = event.target.closest(".note-card");
+            if (!card) {
+                return;
+            }
+
+            // Do not hijack clicks on links or form controls.
+            if (event.target.closest("a, input, select, textarea")) {
+                return;
+            }
+
+            openNotePdf(card);
+        });
+
+        // Keyboard accessibility: focus a card and press Enter or Space.
+        container.addEventListener("keydown", function (event) {
+            if (event.key !== "Enter" && event.key !== " ") {
+                return;
+            }
+
+            const card = event.target.closest(".note-card");
+            if (!card || event.target.closest("button, a, input, select, textarea")) {
+                return;
+            }
+
+            event.preventDefault();
+            openNotePdf(card);
         });
 
 
@@ -777,6 +809,10 @@ const snapshot = await noteQuery.get();
 
             card.className =
                 "note-card";
+
+            card.setAttribute("tabindex", "0");
+            card.setAttribute("role", "group");
+            card.setAttribute("aria-label", "Open PDF: " + (note.title || "Study note"));
 
 
             const title =
