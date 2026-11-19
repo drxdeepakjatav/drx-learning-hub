@@ -15,6 +15,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 
     <script src="../firebase-config.js"></script>
     <script src="../script.js" defer></script>
@@ -239,6 +240,27 @@
                 </div>
 
 
+                <!-- PDF Upload -->
+
+                <div class="form-group">
+
+                    <label for="pdfFile">
+                        Upload PDF File (recommended)
+                    </label>
+
+                    <input
+                        type="file"
+                        id="pdfFile"
+                        accept="application/pdf,.pdf">
+
+                    <small>
+                        Select a PDF from your computer. Maximum size: 20 MB.
+                        The file will be uploaded to Firebase Storage.
+                    </small>
+
+                </div>
+
+
                 <!-- PDF / Note Link -->
 
                 <div class="form-group">
@@ -250,11 +272,10 @@
                     <input
                         type="url"
                         id="pdfUrl"
-                        required
                         placeholder="https://example.com/file.pdf">
 
                     <small>
-                        Paste your PDF or document's public URL here.
+                        Or paste an existing public PDF URL here. Uploading a file above will fill this field automatically.
                     </small>
 
                 </div>
@@ -1141,10 +1162,13 @@ document.addEventListener(
                         .value;
 
 
+                const pdfFile =
+                    document.getElementById("pdfFile").files[0];
+
                 if (
                     !title ||
                     !courseId ||
-                    !pdfUrl
+                    (!pdfUrl && !pdfFile)
                 ) {
 
                     showMessage(
@@ -1166,6 +1190,40 @@ document.addEventListener(
 
                 try {
 
+                    let finalPdfUrl = pdfUrl;
+
+                    if (pdfFile) {
+
+                        if (pdfFile.type !== "application/pdf" && !pdfFile.name.toLowerCase().endsWith(".pdf")) {
+                            throw new Error("Please select a valid PDF file.");
+                        }
+
+                        if (pdfFile.size > 20 * 1024 * 1024) {
+                            throw new Error("PDF size must be 20 MB or less.");
+                        }
+
+                        if (!firebase.storage) {
+                            throw new Error("Firebase Storage SDK is not loaded. Refresh the page and try again.");
+                        }
+
+                        saveBtn.textContent = "Uploading PDF...";
+
+                        const safeName = pdfFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+                        const storagePath = "study-materials/" + (noteType === "syllabus" ? "syllabus" : "notes") + "/" + Date.now() + "_" + safeName;
+                        const storageRef = firebase.storage().ref().child(storagePath);
+                        const uploadTask = storageRef.put(pdfFile, { contentType: "application/pdf" });
+
+                        await new Promise(function(resolve, reject) {
+                            uploadTask.on("state_changed", function(snapshot) {
+                                const percent = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                                saveBtn.textContent = "Uploading PDF " + percent + "%";
+                            }, reject, resolve);
+                        });
+
+                        finalPdfUrl = await uploadTask.snapshot.ref.getDownloadURL();
+                        document.getElementById("pdfUrl").value = finalPdfUrl;
+                    }
+
                     const data = {
 
                         title: title,
@@ -1178,7 +1236,7 @@ document.addEventListener(
 
                         description: description,
 
-                        pdfUrl: pdfUrl,
+                        pdfUrl: finalPdfUrl,
 
                         thumbnail: thumbnail,
 
@@ -1453,6 +1511,7 @@ document.addEventListener(
 
 
             noteForm.reset();
+            document.getElementById("pdfFile").value = "";
 
 
             formTitle.textContent =
