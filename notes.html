@@ -170,6 +170,14 @@
 
             </button>
 
+            <button
+                class="filter-btn"
+                data-filter="syllabus">
+
+                Syllabus
+
+            </button>
+
         </div>
 
 
@@ -838,6 +846,16 @@ const snapshot = await noteQuery.get();
 
                 typeLabel =
                     "PDF";
+
+            }
+
+            else if (
+                noteType ===
+                "syllabus"
+            ) {
+
+                typeLabel =
+                    "Syllabus";
 
             }
 
