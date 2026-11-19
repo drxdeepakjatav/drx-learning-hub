@@ -91,7 +91,8 @@ window.DRX_PDF = (function () {
 
     function drawPages(pdf, holder) {
 
-        var width = Math.min(holder.clientWidth || 800, 1000);
+        // Use the full laid-out reader width instead of a temporary narrow flex width.
+        var width = Math.min(Math.max(holder.getBoundingClientRect().width - 28, 320), 1100);
 
         var ratio = window.devicePixelRatio || 1;
 
@@ -116,7 +117,8 @@ window.DRX_PDF = (function () {
 
             var base = page.getViewport({ scale: 1 });
 
-            var viewport = page.getViewport({ scale: (width / base.width) * ratio });
+            var availableWidth = Math.min(Math.max(holder.getBoundingClientRect().width - 28, 320), 1100);
+            var viewport = page.getViewport({ scale: (availableWidth / base.width) * ratio });
 
             var canvas = document.createElement("canvas");
 
