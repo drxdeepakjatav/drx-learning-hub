@@ -153,6 +153,10 @@
                             PDF Study Material
                         </option>
 
+                        <option value="syllabus">
+                            Syllabus
+                        </option>
+
                     </select>
 
                 </div>
@@ -858,11 +862,13 @@ document.addEventListener(
                 );
 
 
-            const type =
-                escapeHTML(
-                    note.noteType ||
-                    "note"
-                );
+            const typeValue = String(note.noteType || "note");
+            const type = escapeHTML(
+                typeValue === "syllabus" ? "Syllabus" :
+                typeValue === "short-note" ? "Short Note" :
+                typeValue === "unit-note" ? "Unit Note" :
+                typeValue === "pdf" ? "PDF Study Material" : typeValue
+            );
 
 
             const courseId =
